@@ -9,7 +9,7 @@
 
 
 ### Estrutura de pastas e arquivos Front-End GestBens
-"
+```
 gestbens-front/
 │
 ├── informacoes-projeto/        # documentação extra do projeto (diagramas, notas)
@@ -107,4 +107,4 @@ gestbens-front/
 ├── package.json                # dependências e scripts
 ├── README.md                   # documentação do projeto
 └── vite.config.js              # configuração do Vite
-"
+```
