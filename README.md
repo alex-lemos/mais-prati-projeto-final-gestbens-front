@@ -1,5 +1,15 @@
-### Estrutura de pastas e arquivos Front-End GestBens
+### Branches usadas no projeto GestBens
+- main
+    - Branch principal e estável.
+    - Usada para deploy e releases.
 
+- develop
+    - Branch de desenvolvimento.
+    - Recebe merge das features antes de ir para main.
+
+
+### Estrutura de pastas e arquivos Front-End GestBens
+"
 gestbens-front/
 │
 ├── informacoes-projeto/        # documentação extra do projeto (diagramas, notas)
@@ -97,3 +107,4 @@ gestbens-front/
 ├── package.json                # dependências e scripts
 ├── README.md                   # documentação do projeto
 └── vite.config.js              # configuração do Vite
+"
