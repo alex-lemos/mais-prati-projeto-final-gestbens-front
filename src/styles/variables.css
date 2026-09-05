@@ -11,6 +11,8 @@
   --cor-campo: #FFFFFF;               /* Branco puro → Fundo principal das telas e campos de entrada */
   --cor-tela: #FAFAFA;                /* Branco acinzentado → Fundo geral das telas e áreas neutras */
   --cor-contorno: #D1E5D4;            /* Cinza claro → Contornos e áreas secundárias */
+  --cor-button: #0077B6;                /* Azul tecnológico → Botões e elementos interativos */
+  --cor-button-hover: #005F8C;          /* Azul escuro → Botões e elementos interativos quando passam o mouse por cima */
 }
 
 
