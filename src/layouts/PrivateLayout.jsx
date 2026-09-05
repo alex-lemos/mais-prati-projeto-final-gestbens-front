@@ -8,7 +8,7 @@ function PrivateLayout() {
     <>
       <Header />
       <div style={{ display: "flex", height: "100vh" }}> 
-      <aside style={{ width: "250px", backgroundColor: "#f23452", padding: "20px" }}>
+      <aside>
         <Sidebar />
       </aside>
             <main style={{ flex: 1, padding: "20px", overflowY: "auto" }}>
@@ -21,3 +21,17 @@ function PrivateLayout() {
 }
 
 export default PrivateLayout;
+
+
+/*
+<div className="private-layout">
+        <aside className="private-sidebar">
+          <Sidebar />
+        </aside>
+
+        <main className="private-content">
+          <Outlet />
+        </main>
+      </div>
+
+*/ 
