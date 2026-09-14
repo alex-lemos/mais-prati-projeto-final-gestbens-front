@@ -1,60 +1,90 @@
-.sidebar{
-    padding: 20px;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    background-color: #b5aeaf;
-    height: 100%;
+.sidebar {
+  width: 240px;
+  background-color: var(--cor-componente); /* cinza claro para sobreposição */
+  color: var(--cor-texto-principal);       /* texto preto */
+  padding: 1.5rem 1rem;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  box-shadow: 2px 0 6px rgba(0, 0, 0, 0.1); /* sombra lateral para efeito de sobreposição */
+  border-right: 1px solid var(--cor-contorno);
 }
 
-.sidebar-menu {
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
-    font-size: 18px;
+.sidebar h2 {
+  margin-bottom: 2rem;
+  font-size: 1.4rem;
+  font-weight: bold;
+  text-align: center;
+  color: var(--cor-texto-principal);
 }
 
-.sidebar-menu a {
-    text-decoration: none;
-    color: white;
-    transition: color 0.3s ease;
+.sidebar ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
 }
 
-.sidebar-menu a:hover {
-    color: #f23452;
+.sidebar li {
+  margin: 0.5rem 0;
 }
 
-.user-info {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 10px;
-    margin-bottom: 20px;
+.sidebar a {
+  color: var(--cor-texto-principal);
+  text-decoration: none;
+  padding: 0.6rem 0.8rem;
+  border-radius: 6px;
+  display: block;
+  transition: background-color 0.3s ease, color 0.3s ease;
+  font-weight: 500;
 }
 
-.user-info img {
-    width: 50px;
-    height: 50px;
-    border-radius: 50%;
+.sidebar a:hover {
+  background-color: var(--cor-principal-claro); /* verde clarinho no hover */
+  color: var(--cor-texto-principal);
 }
 
-.user-info .user-name {
-    margin: 0;
-    font-size: 12px;
-    color: black;
+.sidebar a.active {
+  background-color: var(--cor-principal-escuro); /* verde escuro institucional */
+  font-weight: bold;
+  color: var(--cor-texto-alternativo); /* texto branco no ativo */
 }
 
-.user-info .user-name span {
-    font-weight: bold;
+.private-layout {
+  display: flex;
 }
 
-.user-info .user-role {
-    margin: 0;
-    font-size: 12px;
-    color: black;
+.content {
+  flex: 1;
+  padding: 2rem;
+  background-color: var(--cor-tela); /* fundo branco da tela geral */
 }
 
-.user-info .user-role span {
-    font-weight: bold;
+/* Rodapé da sidebar */
+.sidebar-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: auto;
+  padding-top: 1rem;
+  border-top: 1px solid var(--cor-contorno);
 }
 
+.user-name {
+  font-size: 0.9rem;
+  color: var(--cor-texto-principal);
+}
+
+.logout-btn {
+  background: none;
+  border: none;
+  color: var(--cor-texto-principal);
+  font-size: 1.2rem;
+  cursor: pointer;
+  transition: color 0.3s ease, transform 0.2s ease;
+}
+
+.logout-btn:hover {
+  color: var(--cor-critico); /* vermelho alerta */
+  transform: scale(1.1);
+}

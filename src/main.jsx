@@ -1,12 +1,22 @@
+// ============================================================
+//   PONTO DE ENTRADA DA APLICAÇÃO (o "liga" do React)
+// ============================================================
+
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
-
-import './main.css'
-
+import { BrowserRouter } from 'react-router-dom'
+import { AuthProvider } from './contexts/AuthContext.jsx'
 import App from './App.jsx'
+
+// CSS
+import './main.css'
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
-    <App />
-  </StrictMode>,
+    <BrowserRouter>
+      <AuthProvider>
+        <App />
+      </AuthProvider>
+    </BrowserRouter>
+  </StrictMode>
 )

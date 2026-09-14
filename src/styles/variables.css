@@ -1,19 +1,32 @@
 
-
 :root {
-  --cor-principal: #00923F;           /* Verde institucional → Ações seguras e frequentes, como salvar ou confirmar */
-  --cor-secundaria: #0077B6;          /* Azul tecnológico → Elementos de identidade visual e botões secundários  */
-  --cor-texto-principal: #000000;     /* Preto → Textos principais e títulos */
-  --cor-texto-secundario: #777777;    /* Cinza escuro → Textos alternativos e elementos neutros */
-  --cor-texto-alternativo: #FFFFFF;   /* Branco puro */
-  --cor-atencao: #F2C94C;             /* Amarelo atenção → Funcionalidades que exigem cuidado, como editar dados */
-  --cor-critico: #EE1C25;             /* Vermelho alerta → Ações críticas que requerem cautela, como excluir */
-  --cor-campo: #FFFFFF;               /* Branco puro → Fundo principal das telas e campos de entrada */
-  --cor-tela: #FAFAFA;                /* Branco acinzentado → Fundo geral das telas e áreas neutras */
-  --cor-contorno: #D1E5D4;            /* Cinza claro → Contornos e áreas secundárias */
-  --cor-button: #0077B6;                /* Azul tecnológico → Botões e elementos interativos */
-  --cor-button-hover: #005F8C;          /* Azul escuro → Botões e elementos interativos quando passam o mouse por cima */
+  /* Cores institucionais */
+  --cor-principal: #00923F;           /* Verde institucional padrão */
+  --cor-principal-escuro: #006B2E;    /* Verde mais escuro → fundo do menu lateral */
+  --cor-principal-claro: #E6F4EA;     /* Verde clarinho → hover no menu lateral */
+
+  --cor-secundaria: #0077B6;          /* Azul tecnológico → botões secundários */
+
+  /* Textos */
+  --cor-texto-principal: #000000;     /* Preto → textos principais */
+  --cor-texto-secundario: #555555;    /* Cinza escuro → textos alternativos */
+  --cor-texto-alternativo: #FFFFFF;   /* Branco → textos sobre fundo escuro */
+
+  /* Estados e alertas */
+  --cor-atencao: #F2C94C;             /* Amarelo atenção */
+  --cor-critico: #EE1C25;             /* Vermelho alerta */
+
+  /* Fundos e contornos */
+  --cor-campo: #FFFFFF;               /* Branco → campos de entrada */
+  --cor-tela: #FFFFFF;                /* Branco puro → fundo geral das telas */
+  --cor-componente: #d5d9df;          /* Cinza claro → cartões, boxes, componentes */
+  --cor-contorno: #D1E5D4;            /* Cinza claro → bordas e divisórias */
+
+  /* Botões */
+  --cor-button: #0077B6;              /* Azul tecnológico */
+  --cor-button-hover: #005F8C;        /* Azul escuro → hover */
 }
+
 
 
 /* [data-theme="dark"] {

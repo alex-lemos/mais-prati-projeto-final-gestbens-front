@@ -34,6 +34,9 @@ gestbens-front/
 │   │   ├── FormularioMovimentacao.jsx
 │   │   └── FormularioUsuario.jsx
 │   │
+│   ├── config
+│   │   └── Routes.jsx
+│   │
 │   ├── contexts/
 │   │   └── AuthContext.jsx     # contexto de autenticação (login/logout, usuário logado)
 │   │
@@ -45,35 +48,41 @@ gestbens-front/
 │   │
 │   ├── modules/                # CRUD de cada entidade
 │   │   ├── Bem/
-│   │   │   ├── BemCreate.jsx
-│   │   │   ├── BemEdit.jsx
-│   │   │   ├── BemList.jsx
-│   │   │   └── BemView.jsx
+│   │   │   ├── Create.jsx
+│   │   │   ├── Delete.jsx
+│   │   │   ├── Edit.jsx
+│   │   │   ├── Index.jsx
+│   │   │   └── Show.jsx
 │   │   ├── CategoriaBem/
-│   │   │   ├── CategoriaBemCreate.jsx
-│   │   │   ├── CategoriaBemEdit.jsx
-│   │   │   ├── CategoriaBemList.jsx
-│   │   │   └── CategoriaBemView.jsx
+│   │   │   ├── Create.jsx
+│   │   │   ├── Delete.jsx
+│   │   │   ├── Edit.jsx
+│   │   │   ├── Index.jsx
+│   │   │   └── Show.jsx
 │   │   ├── LocalidadeBem/
-│   │   │   ├── LocalidadeBemCreate.jsx
-│   │   │   ├── LocalidadeBemEdit.jsx
-│   │   │   ├── LocalidadeBemList.jsx
-│   │   │   └── LocalidadeBemView.jsx
+│   │   │   ├── Create.jsx
+│   │   │   ├── Delete.jsx
+│   │   │   ├── Edit.jsx
+│   │   │   ├── Index.jsx
+│   │   │   └── Show.jsx
 │   │   ├── ManutencaoBem/
-│   │   │   ├── ManutencaoBemCreate.jsx
-│   │   │   ├── ManutencaoBemEdit.jsx
-│   │   │   ├── ManutencaoBemList.jsx
-│   │   │   └── ManutencaoBemView.jsx
+│   │   │   ├── Create.jsx
+│   │   │   ├── Delete.jsx
+│   │   │   ├── Edit.jsx
+│   │   │   ├── Index.jsx
+│   │   │   └── Show.jsx
 │   │   ├── MovimentacaoBem/
-│   │   │   ├── MovimentacaoBemCreate.jsx
-│   │   │   ├── MovimentacaoBemEdit.jsx
-│   │   │   ├── MovimentacaoBemList.jsx
-│   │   │   └── MovimentacaoBemView.jsx
+│   │   │   ├── Create.jsx
+│   │   │   ├── Delete.jsx
+│   │   │   ├── Edit.jsx
+│   │   │   ├── Index.jsx
+│   │   │   └── Show.jsx
 │   │   └── Usuario/
-│   │       ├── UsuarioCreate.jsx
-│   │       ├── UsuarioEdit.jsx
-│   │       ├── UsuarioList.jsx
-│   │       └── UsuarioView.jsx
+│   │       ├── Create.jsx
+│   │       ├── Delete.jsx
+│   │       ├── Edit.jsx
+│   │       ├── Index.jsx
+│   │       └── Show.jsx
 │   │
 │   ├── pages/                  # páginas principais
 │   │   ├── Login.jsx           # tela de login

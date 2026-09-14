@@ -1,10 +1,5 @@
-import { AppRoutes } from "./config/routes";
+import AppRoutes from "./config/Routes";
 
 export default function App() {
-  
-  return (
-    <>
-      <AppRoutes />
-    </>
-  )
+  return <AppRoutes />;
 }

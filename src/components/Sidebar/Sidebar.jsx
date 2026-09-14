@@ -1,27 +1,30 @@
-// menu lateral fixo
-
-import { Link } from 'react-router-dom';
-import './Sidebar.css';
+import { NavLink } from "react-router-dom";
+import { useAuth } from "../../contexts/AuthContext"; // importa o contexto
+import "./Sidebar.css";
 
 export default function Sidebar() {
-  return (
-    <aside className="sidebar" aria-label="Menu Principal">
-      <div className="sidebar-menu">
-        <Link to="/">Dashboard</Link>
-        <Link to="/">Gerenciar xxxxx</Link>
-        <Link to="/">Gerenciar xxxxx</Link>
-        <Link to="/">Gerenciar xxxxx</Link>
-      </div>
+  const { usuario, logout } = useAuth();
 
-      <div className="user-info">
-        <img src="https://i.pinimg.com/originals/a8/da/22/a8da222be70a71e7858bf752065d5cc3.jpg" alt="Foto do usuário" />
-        <p className="user-name">Usuário:
-          <span> João Silva</span>
-        </p>
-        <p className="user-role">Função: 
-          <span>Administrador</span>
-        </p>
+  return (
+    <aside className="sidebar">
+      <h2>GestBens</h2>
+      <nav>
+        <ul>
+          <li><NavLink to="/" end>Início</NavLink></li>
+          <li><NavLink to="/bens">Gerenciar Bens</NavLink></li>
+          <li><NavLink to="/manutencoes">Manutenção</NavLink></li>
+          <li><NavLink to="/movimentacoes">Movimentação</NavLink></li>
+          <li><NavLink to="/locais">Locais</NavLink></li>
+          <li><NavLink to="/categorias">Categorias</NavLink></li>
+          <li><NavLink to="/usuarios">Usuários</NavLink></li>
+        </ul>
+      </nav>
+
+      {/* Rodapé com usuário e botão sair */}
+      <div className="sidebar-footer">
+        <span className="user-name">{usuario?.nome || "Usuário"}</span>
+        <button className="logout-btn" onClick={logout}>⎋</button>
       </div>
     </aside>
-  )
+  );
 }
