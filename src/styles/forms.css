@@ -1,0 +1,95 @@
+/* Container de formulário */
+.form-container {
+  background-color: var(--cor-componente);
+  border-radius: var(--radius-grande);
+  box-shadow: var(--sombra-leve);
+  padding: var(--espaco-grande);
+  margin-bottom: var(--espaco-grande);
+}
+
+/* Labels */
+label {
+  display: block;
+  font-family: var(--fonte-texto);
+  font-size: var(--texto-secundario-size);
+  font-weight: var(--peso-medio);
+  color: var(--cor-texto-principal);
+  margin-bottom: var(--espaco-pequeno);
+}
+
+/* Inputs e selects */
+input,
+select,
+textarea {
+  width: 100%;
+  padding: var(--espaco-pequeno) var(--espaco-medio);
+  border: 1px solid var(--cor-contorno);
+  border-radius: var(--radius-medio);
+  font-family: var(--fonte-texto);
+  font-size: var(--texto-principal-size);
+  color: var(--cor-texto-principal);
+  background-color: var(--cor-campo);
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+input:focus,
+select:focus,
+textarea:focus {
+  border-color: var(--cor-principal);
+  box-shadow: 0 0 0 3px var(--cor-principal-claro);
+  outline: none;
+}
+
+/* Botões de formulário */
+.form-actions {
+  margin-top: var(--espaco-grande);
+  display: flex;
+  gap: var(--espaco-medio);
+}
+
+button.primary {
+  background-color: var(--cor-button);
+  color: var(--cor-texto-alternativo);
+  border: none;
+  border-radius: var(--radius-medio);
+  padding: var(--espaco-pequeno) var(--espaco-grande);
+  font-family: var(--fonte-titulo);
+  font-size: var(--botao-size);
+  font-weight: var(--peso-medio);
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+button.primary:hover {
+  background-color: var(--cor-button-hover);
+}
+
+button.secondary {
+  background-color: var(--cor-button-secundario);
+  color: var(--cor-texto-alternativo);
+  border: none;
+  border-radius: var(--radius-medio);
+  padding: var(--espaco-pequeno) var(--espaco-grande);
+  font-family: var(--fonte-titulo);
+  font-size: var(--botao-size);
+  font-weight: var(--peso-medio);
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+button.secondary:hover {
+  background-color: var(--cor-button-secundario-hover);
+}
+
+/* Mensagens de erro e sucesso */
+.form-error {
+  color: var(--cor-critico);
+  font-size: var(--texto-secundario-size);
+  margin-top: var(--espaco-pequeno);
+}
+
+.form-success {
+  color: var(--cor-principal);
+  font-size: var(--texto-secundario-size);
+  margin-top: var(--espaco-pequeno);
+}

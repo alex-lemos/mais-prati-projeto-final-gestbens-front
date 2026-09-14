@@ -1,32 +1,63 @@
-
 :root {
-  /* Cores institucionais */
-  --cor-principal: #00923F;           /* Verde institucional padrão */
-  --cor-principal-escuro: #006B2E;    /* Verde mais escuro → fundo do menu lateral */
-  --cor-principal-claro: #E6F4EA;     /* Verde clarinho → hover no menu lateral */
+  /* Cores principais */
+  --cor-principal: #00A859;           /* Verde principal → organização e equilíbrio */
+  --cor-principal-escuro: #007A45;    /* Verde escuro → destaque em menus ativos */
+  --cor-principal-claro: #E6F4EA;     /* Verde clarinho → hover suave */
 
-  --cor-secundaria: #0077B6;          /* Azul tecnológico → botões secundários */
+  --cor-secundaria: #007BFF;          /* Azul principal → tecnologia e confiança */
+  --cor-secundaria-escuro: #0056B3;   /* Azul escuro → botões e títulos */
+  --cor-secundaria-claro: #D6E9FF;    /* Azul claro → fundos de destaque */
 
   /* Textos */
-  --cor-texto-principal: #000000;     /* Preto → textos principais */
-  --cor-texto-secundario: #555555;    /* Cinza escuro → textos alternativos */
+  --cor-texto-principal: #212529;     /* Preto suave → textos principais */
+  --cor-texto-secundario: #6C757D;    /* Cinza neutro → textos informativos */
   --cor-texto-alternativo: #FFFFFF;   /* Branco → textos sobre fundo escuro */
 
   /* Estados e alertas */
-  --cor-atencao: #F2C94C;             /* Amarelo atenção */
-  --cor-critico: #EE1C25;             /* Vermelho alerta */
+  --cor-atencao: #F2C94C;             /* Amarelo → avisos e edições */
+  --cor-critico: #EE1C25;             /* Vermelho → ações críticas */
 
-  /* Fundos e contornos */
-  --cor-campo: #FFFFFF;               /* Branco → campos de entrada */
-  --cor-tela: #FFFFFF;                /* Branco puro → fundo geral das telas */
-  --cor-componente: #d5d9df;          /* Cinza claro → cartões, boxes, componentes */
-  --cor-contorno: #D1E5D4;            /* Cinza claro → bordas e divisórias */
+  /* Fundos e componentes */
+  --cor-tela: #F8F9FA;                /* Branco-acinzentado → fundo geral */
+  --cor-componente: #FFFFFF;          /* Branco puro → cartões e boxes */
+  --cor-componente-secundario: #F1F3F5; /* Cinza muito claro → áreas neutras */
+  --cor-contorno: #DEE2E6;            /* Cinza claro → bordas e divisórias */
 
   /* Botões */
-  --cor-button: #0077B6;              /* Azul tecnológico */
-  --cor-button-hover: #005F8C;        /* Azul escuro → hover */
-}
+  --cor-button: var(--cor-principal);       /* Verde principal */
+  --cor-button-hover: var(--cor-principal-escuro); /* Verde escuro no hover */
+  --cor-button-secundario: var(--cor-secundaria);    /* Azul */
+  --cor-button-secundario-hover: var(--cor-secundaria-escuro);
 
+  /* Fontes principais */
+  --fonte-logo: 'Montserrat', sans-serif;
+  --fonte-slogan: 'Open Sans', sans-serif;
+  --fonte-texto: 'Roboto', sans-serif;
+  --fonte-titulo: 'Poppins', sans-serif;
+
+  /* Tamanhos e pesos */
+  --texto-principal-size: 1rem;       /* 16px padrão */
+  --texto-secundario-size: 0.875rem;  /* 14px para informativos */
+  --titulo-size: 1.25rem;             /* 20px para títulos */
+  --botao-size: 1rem;                 /* 16px para botões */
+
+  --peso-normal: 400;
+  --peso-medio: 500;
+  --peso-bold: 700;
+
+  /* Espaçamento e radius */
+  --espaco-pequeno: 0.5rem;
+  --espaco-medio: 1rem;
+  --espaco-grande: 2rem;
+  --radius-pequeno: 4px;
+  --radius-medio: 8px;
+  --radius-grande: 12px;
+
+  /* Sombras */
+  --sombra-leve: 0 2px 6px rgba(0,0,0,0.08);
+  --sombra-media: 0 4px 12px rgba(0,0,0,0.12);
+  --sombra-forte: 0 6px 16px rgba(0,0,0,0.16);
+}
 
 
 /* [data-theme="dark"] {
