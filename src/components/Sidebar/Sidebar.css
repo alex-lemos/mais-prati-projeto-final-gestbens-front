@@ -30,7 +30,7 @@
 .sidebar a {
   color: var(--cor-texto-principal);
   text-decoration: none;
-  padding: 0.6rem 0.8rem;
+  padding: var(--padding-padrao);
   border-radius: 6px;
   display: block;
   transition: background-color 0.3s ease, color 0.3s ease;

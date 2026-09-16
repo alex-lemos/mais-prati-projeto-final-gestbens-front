@@ -22,6 +22,7 @@
   --cor-componente: #FFFFFF;          /* Branco puro → cartões e boxes */
   --cor-componente-secundario: #F1F3F5; /* Cinza muito claro → áreas neutras */
   --cor-contorno: #DEE2E6;            /* Cinza claro → bordas e divisórias */
+  --cor-card: #F8F9FA;
 
   /* Botões */
   --cor-button: var(--cor-principal);       /* Verde */
@@ -46,6 +47,7 @@
   --peso-bold: 700;
 
   /* Espaçamento e radius */
+  --padding-padrao: 0.6rem 0.8rem;
   --espaco-pequeno: 0.5rem;
   --espaco-medio: 1rem;
   --espaco-grande: 2rem;
