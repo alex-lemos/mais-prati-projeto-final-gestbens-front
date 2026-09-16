@@ -3,6 +3,7 @@ import { useAuth } from "../../contexts/AuthContext"; // importa o contexto
 import "./Sidebar.css";
 import logo from "../../assets/img/logo-simples-gestbens.png"; // importa o logo
 import { FiLogOut } from "react-icons/fi";
+import { FaUserCircle } from "react-icons/fa";
 
 export default function Sidebar() {
   const { usuario, logout } = useAuth();
@@ -29,7 +30,14 @@ export default function Sidebar() {
 
       {/* Rodapé com usuário e botão sair */}
       <div className="sidebar-footer">
-        <span className="user-name">{usuario?.nome || "Usuário"}</span>
+        <div className="user-info">
+          {usuario?.foto ? (
+            <img src={usuario.foto} alt={usuario.nome} className="user-avatar" />
+          ) : (
+            <FaUserCircle className="user-avatar" />
+          )}
+          <span className="user-name">{usuario?.nome || "Usuário"}</span>
+        </div>
         <button className="logout-btn" onClick={logout}>
           <FiLogOut />
         </button>

@@ -68,9 +68,24 @@
   border-top: 1px solid var(--cor-contorno);
 }
 
+.user-info {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.2rem;
+}
+
+.user-avatar {
+  font-size: 2rem;
+  color: var(--cor-texto-secundario);
+  justify-content: center;
+  align-items: center;
+}
+
 .user-name {
   font-size: 0.9rem;
   color: var(--cor-texto-principal);
+  margin-top: 0.1rem;
 }
 
 .logout-btn {
@@ -80,9 +95,13 @@
   font-size: 1.2rem;
   cursor: pointer;
   transition: color 0.3s ease, transform 0.2s ease;
+  margin-top: 0.3rem;
+  padding: 0.2rem;
 }
 
 .logout-btn:hover {
   color: var(--cor-critico); /* vermelho alerta */
   transform: scale(1.1);
 }
+
+
