@@ -24,10 +24,10 @@
   --cor-contorno: #DEE2E6;            /* Cinza claro → bordas e divisórias */
 
   /* Botões */
-  --cor-button: var(--cor-principal);       /* Verde principal */
-  --cor-button-hover: var(--cor-principal-escuro); /* Verde escuro no hover */
+  --cor-button: var(--cor-principal);       /* Verde */
+  --cor-button-hover: var(--cor-principal-escuro); /* Verde escuro */
   --cor-button-secundario: var(--cor-secundaria);    /* Azul */
-  --cor-button-secundario-hover: var(--cor-secundaria-escuro);
+  --cor-button-secundario-hover: var(--cor-secundaria-escuro); /* Azul escuro */
 
   /* Fontes principais */
   --fonte-logo: 'Montserrat', sans-serif;
@@ -58,8 +58,3 @@
   --sombra-media: 0 4px 12px rgba(0,0,0,0.12);
   --sombra-forte: 0 6px 16px rgba(0,0,0,0.16);
 }
-
-
-/* [data-theme="dark"] {
-    
-} */

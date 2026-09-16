@@ -7,7 +7,7 @@ html {
 
 /* Telas pequenas (até 480px) */
 @media (max-width: 480px) {
-  html {
+  html, body {
     font-size: 0.875rem; /* ~14px */
   }
 
@@ -22,7 +22,7 @@ html {
 
 /* Tablets (481px a 768px) */
 @media (min-width: 481px) and (max-width: 768px) {
-  html {
+  html, body {
     font-size: 0.9375rem; /* ~15px */
   }
 
@@ -37,7 +37,7 @@ html {
 
 /* Laptops médios (769px a 1024px) */
 @media (min-width: 769px) and (max-width: 1024px) {
-  html {
+  html, body {
     font-size: 1rem; /* 16px */
   }
 
@@ -48,7 +48,7 @@ html {
 
 /* Telas grandes (1025px+) */
 @media (min-width: 1025px) {
-  html {
+  html, body {
     font-size: 1.0625rem; /* ~17px */
   }
 

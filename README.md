@@ -34,9 +34,6 @@ gestbens-front/
 │   │   ├── FormularioMovimentacao.jsx
 │   │   └── FormularioUsuario.jsx
 │   │
-│   ├── config
-│   │   └── Routes.jsx
-│   │
 │   ├── contexts/
 │   │   └── AuthContext.jsx     # contexto de autenticação (login/logout, usuário logado)
 │   │
@@ -85,9 +82,17 @@ gestbens-front/
 │   │       └── Show.jsx
 │   │
 │   ├── pages/                  # páginas principais
-│   │   ├── Login.jsx           # tela de login
-│   │   ├── Cadastro.jsx        # tela de cadastro de novos usuários
-│   │   └── Inicio.jsx          # dashboard com menu lateral + área principal
+│   │   ├── Cadastro
+│   │   │   └── Cadastro.jsx        # tela de cadastro de novos usuários
+│   │   ├── Inicio
+│   │   │   └── Inicio.jsx          # dashboard com menu lateral + área principal
+│   │   └── Login
+│   │       ├── Login.css
+│   │       └── Login.jsx           # tela de login
+│   │
+│   ├── routes
+│   │   ├── AdminRoute.jsx
+│   │   └── Routes.jsx
 │   │
 │   ├── services/               # integração com backend (API REST)
 │   │   ├── api.js              # configuração base (axios/fetch)
@@ -106,9 +111,11 @@ gestbens-front/
 │   │
 │   ├── App.jsx                 # componente raiz da aplicação
 │   ├── main.css                # estilos principais
-│   ├── main.jsx                # ponto de entrada do React
-│   └── routes.js               # definição das rotas do sistema
+│   └── main.jsx                # ponto de entrada do React
+│   
 │
+├── .env
+├── .env.example
 ├── .gitignore                  # arquivos ignorados pelo git
 ├── eslint.config.js            # regras de lint
 ├── index.html                  # HTML base do projeto

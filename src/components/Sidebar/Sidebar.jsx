@@ -14,9 +14,14 @@ export default function Sidebar() {
           <li><NavLink to="/bens">Gerenciar Bens</NavLink></li>
           <li><NavLink to="/manutencoes">Manutenção</NavLink></li>
           <li><NavLink to="/movimentacoes">Movimentação</NavLink></li>
-          <li><NavLink to="/locais">Locais</NavLink></li>
-          <li><NavLink to="/categorias">Categorias</NavLink></li>
-          <li><NavLink to="/usuarios">Usuários</NavLink></li>
+
+          {usuario?.is_admin && (
+            <>
+              <li><NavLink to="/locais">Locais</NavLink></li>
+              <li><NavLink to="/categorias">Categorias</NavLink></li>
+              <li><NavLink to="/usuarios">Usuários</NavLink></li>
+            </>
+          )}
         </ul>
       </nav>
 

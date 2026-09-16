@@ -4,14 +4,14 @@ export const usuarios = [
   {
     id_usuario: 1,
     nome: "Admin",
-    email: "admin@gestbens.com",
+    email: "admin@gmail.com",
     senha: "123456",
     is_admin: true,
   },
   {
     id_usuario: 2,
     nome: "João Silva",
-    email: "joao@gestbens.com",
+    email: "joao@gmail.com",
     senha: "123456",
     is_admin: false,
   },

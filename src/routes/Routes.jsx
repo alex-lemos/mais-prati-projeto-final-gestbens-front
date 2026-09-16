@@ -1,4 +1,6 @@
 import { Routes, Route, Navigate } from "react-router-dom";
+import { useAuth } from "../contexts/AuthContext";
+import AdminRoute from "./AdminRoute";
 
 import PublicLayout from "../layouts/PublicLayout/PublicLayout";
 import PrivateLayout from "../layouts/PrivateLayout/PrivateLayout";
@@ -44,8 +46,6 @@ import UsuariosEdit from "../modules/Usuario/Edit";
 import UsuariosShow from "../modules/Usuario/Show";
 import UsuariosDelete from "../modules/Usuario/Delete";
 
-import { useAuth } from "../contexts/AuthContext";
-
 const AppRoutes = () => {
   const { usuario } = useAuth();
   const isAuthenticated = !!usuario;
@@ -71,20 +71,6 @@ const AppRoutes = () => {
         <Route path="/bens/show/:id" element={<BensShow />} />
         <Route path="/bens/delete/:id" element={<BensDelete />} />
 
-        {/* CategoriaBem */}
-        <Route path="/categorias" element={<CategoriasIndex />} />
-        <Route path="/categorias/create" element={<CategoriasCreate />} />
-        <Route path="/categorias/edit/:id" element={<CategoriasEdit />} />
-        <Route path="/categorias/show/:id" element={<CategoriasShow />} />
-        <Route path="/categorias/delete/:id" element={<CategoriasDelete />} />
-
-        {/* LocalidadeBem */}
-        <Route path="/locais" element={<LocalidadesIndex />} />
-        <Route path="/locais/create" element={<LocalidadesCreate />} />
-        <Route path="/locais/edit/:id" element={<LocalidadesEdit />} />
-        <Route path="/locais/show/:id" element={<LocalidadesShow />} />
-        <Route path="/locais/delete/:id" element={<LocalidadesDelete />} />
-
         {/* ManutencaoBem */}
         <Route path="/manutencoes" element={<ManutencoesIndex />} />
         <Route path="/manutencoes/create" element={<ManutencoesCreate />} />
@@ -99,12 +85,26 @@ const AppRoutes = () => {
         <Route path="/movimentacoes/show/:id" element={<MovimentacoesShow />} />
         <Route path="/movimentacoes/delete/:id" element={<MovimentacoesDelete />} />
 
+        {/* LocalidadeBem */}
+        <Route path="/locais" element={<AdminRoute><LocalidadesIndex /></AdminRoute>} />
+        <Route path="/locais/create" element={<AdminRoute><LocalidadesCreate /></AdminRoute>} />
+        <Route path="/locais/edit/:id" element={<AdminRoute><LocalidadesEdit /></AdminRoute>} />
+        <Route path="/locais/show/:id" element={<AdminRoute><LocalidadesShow /></AdminRoute>} />
+        <Route path="/locais/delete/:id" element={<AdminRoute><LocalidadesDelete /></AdminRoute>} />
+
+        {/* CategoriaBem */}
+        <Route path="/categorias" element={<AdminRoute><CategoriasIndex /></AdminRoute>} />
+        <Route path="/categorias/create" element={<AdminRoute><CategoriasCreate /></AdminRoute>} />
+        <Route path="/categorias/edit/:id" element={<AdminRoute><CategoriasEdit /></AdminRoute>} />
+        <Route path="/categorias/show/:id" element={<AdminRoute><CategoriasShow /></AdminRoute>} />
+        <Route path="/categorias/delete/:id" element={<AdminRoute><CategoriasDelete /></AdminRoute>} />
+
         {/* Usuario */}
-        <Route path="/usuarios" element={<UsuariosIndex />} />
-        <Route path="/usuarios/create" element={<UsuariosCreate />} />
-        <Route path="/usuarios/edit/:id" element={<UsuariosEdit />} />
-        <Route path="/usuarios/show/:id" element={<UsuariosShow />} />
-        <Route path="/usuarios/delete/:id" element={<UsuariosDelete />} />
+        <Route path="/usuarios" element={<AdminRoute><UsuariosIndex /></AdminRoute>} />
+        <Route path="/usuarios/create" element={<AdminRoute><UsuariosCreate /></AdminRoute>} />
+        <Route path="/usuarios/edit/:id" element={<AdminRoute><UsuariosEdit /></AdminRoute>} />
+        <Route path="/usuarios/show/:id" element={<AdminRoute><UsuariosShow /></AdminRoute>} />
+        <Route path="/usuarios/delete/:id" element={<AdminRoute><UsuariosDelete /></AdminRoute>} />
       </Route>
 
       {/* Fallback */}

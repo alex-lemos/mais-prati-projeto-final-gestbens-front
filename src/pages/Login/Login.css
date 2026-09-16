@@ -2,7 +2,6 @@
 .login-page {
   display: flex;
   min-height: 100vh;
-  background-color: black;
 }
 
 /* Lado esquerdo - institucional com fundo */
@@ -129,4 +128,25 @@
 .login-extra a {
   color: var(--cor-secundaria);
   font-weight: var(--peso-medio);
+}
+
+/* Responsividade para telas pequenas até 700px */
+@media (max-width: 700px) {
+  .login-page {
+    flex-direction: column; /* empilha os lados */
+    background: url("../../assets/img/fundo-login.jpg") no-repeat center center;
+    background-size: cover;
+  }
+
+  .login-info-side,
+  .login-form-side {
+    flex: none;
+    width: 100%;
+    padding: var(--espaco-medio);
+    background: none; /* remove fundo individual */
+  }
+
+  .login-logo {
+    max-width: 180px; /* reduz logo */
+  }
 }
