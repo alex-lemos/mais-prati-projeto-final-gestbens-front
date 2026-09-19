@@ -1,9 +1,4 @@
 /* Mobile First - base */
-html {
-  font-size: var(--texto-principal-size); /* 16px padrão */
-  font-family: var(--fonte-texto);
-  line-height: 1.5;
-}
 
 /* Telas pequenas (até 480px) */
 @media (max-width: 480px) {
@@ -20,18 +15,36 @@ html {
   }
 }
 
-/* Tablets (481px a 768px) */
-@media (min-width: 481px) and (max-width: 768px) {
-  html, body {
-    font-size: 0.9375rem; /* ~15px */
+/* Tablets e telas menores (até 768px) */
+@media (max-width: 768px) {
+  .conteudo-wrapper {
+    flex-direction: column;   /* tudo em coluna */
+    align-items: stretch;
   }
 
-  h1, h2, h3 {
-    font-size: var(--titulo-size);
+  .conteudo {
+    flex-direction: column;   /* destaque + cards empilhados */
+    gap: var(--espaco-medio);
   }
 
-  .content {
-    padding: var(--espaco-grande);
+  .cards {
+    flex-direction: column;   /* cards em coluna */
+    gap: var(--espaco-medio);
+  }
+
+  .atalhos {
+    flex-direction: column;   /* atalhos abaixo */
+    align-items: center;
+    gap: var(--espaco-medio);
+  }
+
+  .atalhos-buttons {
+    flex-direction: column;   /* botões em coluna */
+    width: 100%;
+  }
+
+  .atalho-btn {
+    width: 100%;              /* botões ocupam toda a largura */
   }
 }
 
@@ -44,15 +57,52 @@ html {
   h1, h2, h3 {
     font-size: calc(var(--titulo-size) + 0.25rem);
   }
+
+  .conteudo {
+    gap: var(--espaco-medio);
+  }
+
 }
 
-/* Telas grandes (1025px+) */
-@media (min-width: 1025px) {  
+/* Telas grandes (1025px a 1399px) */
+@media (min-width: 1025px) and (max-width: 1399px) {
   h1, h2, h3 {
     font-size: calc(var(--titulo-size) + 0.5rem);
   }
 
-  .content {
-    padding: calc(var(--espaco-grande) * 1.5);
+  .conteudo {
+    gap: var(--espaco-medio);
+  }
+}
+
+/* Telas muito grandes (1400px+) */
+@media (min-width: 1400px) {
+  h1, h2, h3 {
+    font-size: calc(var(--titulo-size) + 0.75rem);
+  }
+
+  .conteudo-wrapper {
+    flex-direction: row; /* lado a lado */
+    align-items: flex-start;
+  }
+
+  .conteudo {
+    flex: 3;
+  }
+
+  .atalhos {
+    flex: 1;
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .atalhos-buttons {
+    flex-direction: column;
+    width: 100%;
+    align-items: stretch;
+  }
+
+  .atalho-btn {
+    width: 100%;
   }
 }

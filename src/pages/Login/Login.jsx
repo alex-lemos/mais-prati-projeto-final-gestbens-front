@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useAuth } from "../../contexts/AuthContext";
 import { useNavigate } from "react-router-dom";
 import "./Login.css";
-import logoGestBens from "../../assets/img/logo-simples-gestbens.png";
+import logoGestBens from "../../assets/img/logo-gestbens.png";
 
 export default function Login() {
   const { login } = useAuth();

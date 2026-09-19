@@ -17,19 +17,19 @@
 }
 
 .login-info-content {
-  max-width: 400px;
+  max-width: 500px;
 }
 
 .login-logo {
-  max-width: 240px;
-  margin-bottom: var(--espaco-medio);
-
-  /* Brilho branco suave */
+  width: 100%;
+  max-width: clamp(150px, 30vw, 400px); /* escala automática */
+  height: auto;
   filter: drop-shadow(0 0 15px rgba(255, 255, 255, 0.9));
 }
 
 .slogan {
-  font-size: var(--texto-principal-size);
+  font-family: var(--fonte-slogan);
+  font-size: clamp(0.9rem, 1.5vw, 1.2rem);
   margin-bottom: var(--espaco-medio);
   font-weight: var(--peso-medio);
   text-align: center;
@@ -37,8 +37,8 @@
 
 .slogan,
 .features li {
-  color: var(--cor-texto-alternativo); /* branco */
-  text-shadow: 0 1px 3px rgba(0,0,0,0.7); /* sombra leve para contraste */
+  color: var(--cor-texto-alternativo);
+  text-shadow: 0 1px 3px rgba(0,0,0,0.7);
 }
 
 .features {
@@ -48,7 +48,7 @@
 
 .features li {
   margin-bottom: var(--espaco-pequeno);
-  font-size: var(--texto-principal-size);
+  font-size: clamp(0.85rem, 1.2vw, 1rem);
 }
 
 /* Lado direito - formulário */
@@ -75,6 +75,7 @@
   margin-bottom: var(--espaco-grande);
   font-family: var(--fonte-titulo);
   font-weight: var(--peso-bold);
+  font-size: clamp(1.25rem, 2vw, 2rem); /* escala automática */
 }
 
 .login-form .form-group {
@@ -93,8 +94,9 @@
   padding: var(--espaco-pequeno);
   border: 1px solid var(--cor-contorno);
   border-radius: var(--radius-medio);
-  background-color: var(--cor-campo);
+  background-color: var(--cor-componente-secundario);
   color: var(--cor-texto-principal);
+  font-size: clamp(0.9rem, 1vw, 1rem);
 }
 
 .login-button {
@@ -106,11 +108,16 @@
   border-radius: var(--radius-medio);
   font-weight: var(--peso-bold);
   cursor: pointer;
-  transition: background-color 0.3s ease;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+  font-size: clamp(0.9rem, 1vw, 1rem);
 }
 
 .login-button:hover {
   background-color: var(--cor-button-hover);
+}
+
+.login-button:active {
+  transform: scale(0.95);
 }
 
 .error-message {
@@ -133,9 +140,13 @@
 /* Responsividade para telas pequenas até 700px */
 @media (max-width: 700px) {
   .login-page {
-    flex-direction: column; /* empilha os lados */
+    flex-direction: column;
     background: url("../../assets/img/fundo-login.jpg") no-repeat center center;
     background-size: cover;
+  }
+
+  .login-info-side {
+    margin-top: 50px;
   }
 
   .login-info-side,
@@ -143,10 +154,27 @@
     flex: none;
     width: 100%;
     padding: var(--espaco-medio);
-    background: none; /* remove fundo individual */
+    background: none;
   }
 
   .login-logo {
-    max-width: 180px; /* reduz logo */
+    max-width: 180px;
+  }
+
+  .login-container {
+    max-width: 100%;
+    padding: var(--espaco-medio);
+  }
+}
+
+/* Ajuste para tablets médios */
+@media (max-width: 1024px) {
+  .login-container {
+    max-width: 320px;
+    padding: var(--espaco-medio);
+  }
+
+  .login-title {
+    font-size: 1.5rem;
   }
 }

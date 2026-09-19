@@ -2,7 +2,7 @@ import { FaChevronLeft, FaUserCircle } from "react-icons/fa";
 import { FiLogOut } from "react-icons/fi";
 import { NavLink } from "react-router-dom";
 import { useAuth } from "../../contexts/AuthContext";
-import logo from "../../assets/img/logo-simples-gestbens.png";
+import logo from "../../assets/img/logo-gestbens.png";
 import "./Sidebar.css";
 
 export default function Sidebar({ open, onClose }) {

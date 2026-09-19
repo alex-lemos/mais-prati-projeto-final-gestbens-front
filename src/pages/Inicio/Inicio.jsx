@@ -7,7 +7,6 @@ import {
   FaWrench, // ícone de chave inglesa
   FaBolt, // ícone de raio (usado para atalhos)
 } from "react-icons/fa";
-import "./Inicio.css";
 
 export default function Inicio() {
   const bensEmManutencao = manutencoes.length;

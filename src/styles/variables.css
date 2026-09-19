@@ -1,34 +1,34 @@
 :root {
   /* Cores principais */
-  --cor-principal: #00A859;           /* Verde principal → organização e equilíbrio */
-  --cor-principal-escuro: #007A45;    /* Verde escuro → destaque em menus ativos */
-  --cor-principal-claro: #80f1a0;     /* Verde clarinho → hover suave */
+  --cor-principal: #00A859;
+  --cor-principal-escuro: #007A45;
+  --cor-principal-claro: #80f1a0;
 
-  --cor-secundaria: #007BFF;          /* Azul principal → tecnologia e confiança */
-  --cor-secundaria-escuro: #0056B3;   /* Azul escuro → botões e títulos */
-  --cor-secundaria-claro: #D6E9FF;    /* Azul claro → fundos de destaque */
+  --cor-secundaria: #007BFF;
+  --cor-secundaria-escuro: #0056B3;
+  --cor-secundaria-claro: #D6E9FF;
 
   /* Textos */
-  --cor-texto-principal: #212529;     /* Preto suave → textos principais */
-  --cor-texto-secundario: #6C757D;    /* Cinza neutro → textos informativos */
-  --cor-texto-alternativo: #FFFFFF;   /* Branco → textos sobre fundo escuro */
+  --cor-texto-principal: #212529;
+  --cor-texto-secundario: #6C757D;
+  --cor-texto-alternativo: #FFFFFF;
 
   /* Estados e alertas */
-  --cor-atencao: #F2C94C;             /* Amarelo → avisos e edições */
-  --cor-critico: #EE1C25;             /* Vermelho → ações críticas */
+  --cor-atencao: #F2C94C;
+  --cor-critico: #EE1C25;
 
   /* Fundos e componentes */
-  --cor-tela: #F8F9FA;                /* Branco-acinzentado → fundo geral */
-  --cor-componente: #FFFFFF;          /* Branco puro → cartões e boxes */
-  --cor-componente-secundario: #F1F3F5; /* Cinza muito claro → áreas neutras */
-  --cor-contorno: #DEE2E6;            /* Cinza claro → bordas e divisórias */
-  --cor-card: #F8F9FA;
+  --cor-tela: #F8F9FA;
+  --cor-componente: #FFFFFF;
+  --cor-componente-secundario: #F1F3F5;
+  --cor-contorno: #DEE2E6;
+  --cor-card: var(--cor-tela); /* igual ao fundo, destaque pela borda */
 
   /* Botões */
-  --cor-button: var(--cor-principal);       /* Verde */
-  --cor-button-hover: var(--cor-principal-escuro); /* Verde escuro */
-  --cor-button-secundario: var(--cor-secundaria);    /* Azul */
-  --cor-button-secundario-hover: var(--cor-secundaria-escuro); /* Azul escuro */
+  --cor-button: var(--cor-principal);
+  --cor-button-hover: var(--cor-principal-escuro);
+  --cor-button-secundario: var(--cor-secundaria);
+  --cor-button-secundario-hover: var(--cor-secundaria-escuro);
 
   /* Fontes principais */
   --fonte-logo: 'Montserrat', sans-serif;
@@ -37,10 +37,10 @@
   --fonte-titulo: 'Poppins', sans-serif;
 
   /* Tamanhos e pesos */
-  --texto-principal-size: 1rem;       /* 16px padrão */
-  --texto-secundario-size: 0.875rem;  /* 14px para informativos */
-  --titulo-size: 1.25rem;             /* 20px para títulos */
-  --botao-size: 1rem;                 /* 16px para botões */
+  --texto-principal-size: 0.9375rem; /* 15px */
+  --texto-secundario-size: 0.8125rem; /* 13px */
+  --titulo-size: 1.2rem;
+  --botao-size: 1rem; /* 16px */  
 
   --peso-normal: 400;
   --peso-medio: 500;
