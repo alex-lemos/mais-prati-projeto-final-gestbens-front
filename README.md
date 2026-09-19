@@ -38,8 +38,12 @@ gestbens-front/
 │   │   └── AuthContext.jsx     # contexto de autenticação (login/logout, usuário logado)
 │   │
 │   ├── layouts/                # layouts para páginas públicas e privadas
-│   │   ├── PublicLayout.jsx    # usado em Login e Cadastro
-│   │   └── PrivateLayout.jsx   # usado em Inicio e CRUDs (com Sidebar)
+│   │   ├── PrivateLayout
+│   │   │   ├──PrivateLayout.css
+│   │   │   └── PrivateLayout.jsx   # usado em Inicio e CRUDs (com Sidebar)
+│   │   └── PublicLayout
+│   │       ├──PublicLayout.css
+│   │       └── PublicLayout.jsx    # usado em Login e Cadastro
 │   │
 │   ├── mocks/                  # dados falsos para testes antes do backend
 │   │
@@ -123,4 +127,59 @@ gestbens-front/
 ├── package.json                # dependências e scripts
 ├── README.md                   # documentação do projeto
 └── vite.config.js              # configuração do Vite
+```
+
+--------------------------------------------------------------
+
+Estrutura modelo para os módulos
+```
+imports ....
+
+export default function ModuloBase({ titulo, destaque, metricas, atalhos }) {
+  return (
+    <div className="modulo-page">
+      <h1>{titulo}</h1>
+
+      {/* container principal */}
+      <div className="conteudo-wrapper">
+        {/* Conteúdo principal */}
+        <div className="conteudo">
+          {/* Card de destaque */}
+          <div className="card">
+            <div className="card-icon">{destaque.icon}</div>
+            <div>
+              <h2>{destaque.titulo}</h2>
+              <span className="valor">{destaque.valor}</span>
+            </div>
+          </div>
+
+          {/* Cards de métricas */}
+          <div className="cards">
+            {metricas.map((m, i) => (
+              <div className="card" key={i}>
+                <div className="card-icon azul">{m.icon}</div>
+                <h3>{m.titulo}</h3>
+                <span className="valor">{m.valor}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Atalhos */}
+        <div className="card atalhos">
+          <h2>
+            <FaBolt /> Atalhos:
+          </h2>
+          <div className="atalhos-buttons">
+            {atalhos.map((a, i) => (
+              <NavLink to={a.link} className="atalho-btn verde" key={i}>
+                {a.icon} {a.label}
+              </NavLink>
+            ))}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
 ```

@@ -1,15 +1,25 @@
-import { NavLink } from "react-router-dom";
-import { useAuth } from "../../contexts/AuthContext"; // importa o contexto
-import "./Sidebar.css";
-import logo from "../../assets/img/logo-simples-gestbens.png"; // importa o logo
+import { FaChevronLeft, FaUserCircle } from "react-icons/fa";
 import { FiLogOut } from "react-icons/fi";
-import { FaUserCircle } from "react-icons/fa";
+import { NavLink } from "react-router-dom";
+import { useAuth } from "../../contexts/AuthContext";
+import logo from "../../assets/img/logo-simples-gestbens.png";
+import "./Sidebar.css";
 
-export default function Sidebar() {
+export default function Sidebar({ open, onClose }) {
   const { usuario, logout } = useAuth();
 
   return (
-    <aside className="sidebar">
+    <aside className={`sidebar ${open ? "open" : ""}`}>
+      {open && (
+        <button
+          className="close-btn"
+          onClick={onClose}
+          aria-label="Fechar menu"
+        >
+          <FaChevronLeft />
+        </button>
+      )}
+
       <img src={logo} alt="Logo" className="logo" />
       <nav>
         <ul>
@@ -17,7 +27,6 @@ export default function Sidebar() {
           <li><NavLink to="/bens">Gerenciar Bens</NavLink></li>
           <li><NavLink to="/manutencoes">Manutenção</NavLink></li>
           <li><NavLink to="/movimentacoes">Movimentação</NavLink></li>
-
           {usuario?.is_admin && (
             <>
               <li><NavLink to="/locais">Locais</NavLink></li>
@@ -28,7 +37,6 @@ export default function Sidebar() {
         </ul>
       </nav>
 
-      {/* Rodapé com usuário e botão sair */}
       <div className="sidebar-footer">
         <div className="user-info">
           {usuario?.foto ? (

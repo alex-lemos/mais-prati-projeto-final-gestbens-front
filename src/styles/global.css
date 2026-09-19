@@ -31,7 +31,6 @@ h1, h2, h3, h4, h5, h6 {
   font-family: var(--fonte-titulo);
   font-weight: var(--peso-bold);
   color: var(--cor-texto-principal);
-  margin-bottom: var(--espaco-medio);
 }
 
 /* Textos secundários */
@@ -59,4 +58,167 @@ button:active {
   max-width: 1200px;
   margin: 0 auto;
   padding: var(--espaco-grande);
+}
+
+
+/* ----------- Configurações base dos módulos ----------- */
+
+.inicio-page {
+  display: flex;
+  flex-direction: column;
+  gap: var(--espaco-grande);
+}
+
+/* Conteúdo principal */
+.conteudo-wrapper{
+  display: flex;              /* garante que gap funcione */
+  flex-direction: column;     /* padrão: empilha verticalmente */
+  gap: var(--espaco-grande);  /* espaçamento entre blocos */
+}
+
+.conteudo {
+  display: flex;
+  flex-direction: column;
+  gap: var(--espaco-grande);
+}
+
+/* Card base */
+.card {
+  background-color: var(--cor-card);
+  padding: var(--espaco-medio);
+  border: 1px solid var(--cor-contorno);
+  border-radius: var(--radius-medio);
+  box-shadow: var(--sombra-leve);
+  display: flex;
+  align-items: center;
+  gap: var(--espaco-medio);
+  text-align: left;
+  /* background-color: black; */
+}
+
+.card h2,
+.card h3 {
+  margin: 0;
+  font-size: var(--texto-principal-size);
+}
+
+.valor {
+  font-size: 1.2rem;
+  font-weight: var(--peso-bold);
+  color: var(--cor-texto-principal);
+}
+
+/* Ícones dentro dos cards */
+.card-icon {
+  font-size: 2rem;
+  color: var(--cor-principal);
+}
+
+.card-icon.azul {
+  color: var(--cor-secundaria);
+}
+
+/* Cards em linha */
+.cards {
+  display: flex;
+  gap: var(--espaco-medio);
+}
+
+.cards .card {
+  flex: 1;
+  justify-content: center;
+  text-align: center;
+}
+
+/* Atalhos */
+.atalhos {
+  justify-content: space-between;
+}
+
+.atalhos h2 {
+  font-size: var(--texto-principal-size);
+  color: var(--cor-texto-principal);
+  display: flex;
+  align-items: center;
+  gap: var(--espaco-pequeno);
+}
+
+.atalhos-buttons {
+  display: flex;
+  gap: var(--espaco-medio);
+}
+
+/* Botões de atalho */
+.atalho-btn {
+  padding: var(--padding-padrao);
+  border-radius: var(--radius-medio);
+  text-align: center;
+  font-size: var(--botao-size);
+  font-weight: var(--peso-medio);
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--espaco-pequeno);
+  transition: background-color 0.3s ease, transform 0.2s ease;
+  color: var(--cor-texto-alternativo);
+}
+
+.atalho-btn {
+  background-color: var(--cor-button);
+}
+
+.atalho-btn:hover {
+  background-color: var(--cor-button-hover);
+  color: var(--cor-texto-alternativo);
+}
+
+.atalho-btn:active {
+  transform: scale(0.95);
+}
+
+/* Responsividade */
+@media (max-width: 900px) {
+  .cards,
+  .atalhos-buttons {
+    flex-direction: column;
+  }
+
+  .atalhos {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .atalho-btn {
+    width: 100%;
+  }
+}
+
+/* Layout para telas muito grandes */
+@media (min-width: 1400px) {
+  .conteudo-wrapper {
+    display: flex;
+    flex-direction: row; /* lado a lado */
+    align-items: flex-start;
+  }
+
+  .conteudo {
+    flex: 3; /* destaque + cards à esquerda */
+  }
+
+  .atalhos {
+    flex: 1; /* atalhos à direita */
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .atalhos-buttons {
+    flex-direction: column;
+    width: 100%;
+    align-items: stretch;
+  }
+
+  .atalho-btn {
+    width: 100%;
+  }
 }
