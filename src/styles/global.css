@@ -51,10 +51,3 @@ button {
 button:active {
   transform: scale(0.98);
 }
-
-/* Layout base */
-.container {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: var(--espaco-grande);
-}

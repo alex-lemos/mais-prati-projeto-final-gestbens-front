@@ -5,8 +5,11 @@ import AdminRoute from "./AdminRoute";
 import PublicLayout from "../layouts/PublicLayout/PublicLayout";
 import PrivateLayout from "../layouts/PrivateLayout/PrivateLayout";
 
+// páginas públicas
 import Login from "../pages/Login/Login";
 import Cadastro from "../pages/Cadastro/Cadastro";
+
+// páginas privadas
 import Inicio from "../pages/Inicio/Inicio";
 
 // módulos privados
@@ -59,9 +62,7 @@ const AppRoutes = () => {
       </Route>
 
       {/* Rotas privadas */}
-      <Route
-        element={isAuthenticated ? <PrivateLayout /> : <Navigate to="/login" />}
-      >
+      <Route element={isAuthenticated ? <PrivateLayout /> : <Navigate to="/login" />}>
         <Route path="/" element={<Inicio />} />
 
         {/* Bem */}

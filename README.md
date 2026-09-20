@@ -26,7 +26,6 @@ gestbens-front/
 │   │   ├── Sidebar/
 │   │   │   ├── Sidebar.css     # estilos do menu lateral
 │   │   │   └── Sidebar.jsx     # menu lateral fixo
-│   │   ├── ConfirmDialog.jsx   # popup de confirmação antes de excluir
 │   │   ├── FormularioBem.jsx   # formulário de Bem (usado em Create/Edit)
 │   │   ├── FormularioCategoria.jsx
 │   │   ├── FormularioLocalidade.jsx
@@ -42,18 +41,18 @@ gestbens-front/
 │   │   │   ├──PrivateLayout.css
 │   │   │   └── PrivateLayout.jsx   # usado em Inicio e CRUDs (com Sidebar)
 │   │   └── PublicLayout
-│   │       ├──PublicLayout.css
 │   │       └── PublicLayout.jsx    # usado em Login e Cadastro
 │   │
 │   ├── mocks/                  # dados falsos para testes antes do backend
+│   │   └── data.js
 │   │
 │   ├── modules/                # CRUD de cada entidade
 │   │   ├── Bem/
-│   │   │   ├── Create.jsx
-│   │   │   ├── Delete.jsx
-│   │   │   ├── Edit.jsx
-│   │   │   ├── Index.jsx
-│   │   │   └── Show.jsx
+│   │   │   ├── Create.jsx  # -> usa FormularioBem.jsx
+│   │   │   ├── Delete.jsx  # confirmação antes de excluir
+│   │   │   ├── Edit.jsx    # -> usa FormularioBem.jsx
+│   │   │   ├── Index.jsx   # mostra a lista de bens de forma paginada
+│   │   │   └── Show.jsx    # mostra os dados de um bem
 │   │   ├── CategoriaBem/
 │   │   │   ├── Create.jsx
 │   │   │   ├── Delete.jsx
@@ -87,6 +86,7 @@ gestbens-front/
 │   │
 │   ├── pages/                  # páginas principais
 │   │   ├── Cadastro
+│   │   │   ├── Cadastro.css
 │   │   │   └── Cadastro.jsx        # tela de cadastro de novos usuários
 │   │   ├── Inicio
 │   │   │   └── Inicio.jsx          # dashboard com menu lateral + área principal
@@ -110,13 +110,13 @@ gestbens-front/
 │   ├── styles/
 │   │   ├── forms.css           # estilos específicos de formulários
 │   │   ├── global.css          # estilos globais
+│   │   ├── modules.css         # estilos dos módulos
 │   │   ├── responsividade.css  # media queries e ajustes responsivos
 │   │   └── variables.css       # variáveis de cor, fonte, espaçamento
 │   │
 │   ├── App.jsx                 # componente raiz da aplicação
-│   ├── main.css                # estilos principais
-│   └── main.jsx                # ponto de entrada do React
-│   
+│   ├── main.css                # importa os css gerais
+│   └── main.jsx                # ponto de entrada do React   
 │
 ├── .env
 ├── .env.example
