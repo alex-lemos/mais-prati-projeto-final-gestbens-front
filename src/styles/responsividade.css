@@ -17,6 +17,14 @@
 
 /* Tablets e telas menores (até 768px) */
 @media (max-width: 768px) {
+  html, body {
+    font-size: 0.875rem; /* ~14px */
+  }
+  
+  h1, h2, h3 {
+    font-size: calc(var(--titulo-size) + 0.25rem);
+  }
+  
   .conteudo-wrapper {
     flex-direction: column;   /* tudo em coluna */
     align-items: stretch;
@@ -50,11 +58,7 @@
 
 /* Laptops médios (769px a 1024px) */
 @media (min-width: 769px) and (max-width: 1024px) {
-  html, body {
-    font-size: 1rem; /* 16px */
-  }
-
-  h1, h2, h3 {
+    h1, h2, h3 {
     font-size: calc(var(--titulo-size) + 0.25rem);
   }
 

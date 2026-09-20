@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useAuth } from "../../contexts/AuthContext";
 import { useNavigate } from "react-router-dom";
+import "../../styles/forms.css"; // estilos globais de formulários
 import "./Login.css";
 import logoGestBens from "../../assets/img/logo-gestbens.png";
 
@@ -24,7 +25,7 @@ export default function Login() {
 
   return (
     <div className="login-page">
-      {/* Lado esquerdo - institucional com fundo */}
+      {/* Lado esquerdo - institucional */}
       <div className="login-info-side">
         <div className="login-info-content">
           <img src={logoGestBens} alt="Logo GestBens" className="login-logo" />
@@ -40,36 +41,34 @@ export default function Login() {
 
       {/* Lado direito - formulário */}
       <div className="login-form-side">
-        <div className="login-container">
+        <div className="form-container">
           <h2 className="login-title">Acesse sua conta</h2>
-          <form className="login-form" onSubmit={handleSubmit}>
-            <div className="form-group">
-              <label htmlFor="email">E-mail</label>
-              <input
-                type="email"
-                id="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                placeholder="Digite seu e-mail"
-                required
-              />
+          <form onSubmit={handleSubmit}>
+            <label htmlFor="email">E-mail</label>
+            <input
+              type="email"
+              id="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder="Digite seu e-mail"
+              required
+            />
+
+            <label htmlFor="senha">Senha</label>
+            <input
+              type="password"
+              id="senha"
+              value={senha}
+              onChange={(e) => setSenha(e.target.value)}
+              placeholder="Digite sua senha"
+              required
+            />
+
+            {erro && <p className="form-error">{erro}</p>}
+
+            <div className="form-actions">
+              <button type="submit" className="primary">Entrar</button>
             </div>
-
-            <div className="form-group">
-              <label htmlFor="senha">Senha</label>
-              <input
-                type="password"
-                id="senha"
-                value={senha}
-                onChange={(e) => setSenha(e.target.value)}
-                placeholder="Digite sua senha"
-                required
-              />
-            </div>
-
-            {erro && <p className="error-message">{erro}</p>}
-
-            <button type="submit" className="login-button">Entrar</button>
           </form>
 
           <div className="login-extra">

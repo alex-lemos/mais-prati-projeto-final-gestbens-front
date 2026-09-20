@@ -23,7 +23,7 @@ export default function PrivateLayout() {
         </button>
       )}
 
-      <main className="content">
+      <main className="main">
         <Outlet />
       </main>
     </div>

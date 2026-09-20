@@ -4,17 +4,17 @@
   border-radius: var(--radius-grande);
   box-shadow: var(--sombra-leve);
   padding: var(--espaco-grande);
-  margin-bottom: var(--espaco-grande);
+  max-width: 100%;
 }
 
 /* Labels */
 label {
   display: block;
   font-family: var(--fonte-texto);
-  font-size: var(--texto-secundario-size);
+  /* font-size: var(--texto-secundario-size); */
   font-weight: var(--peso-medio);
   color: var(--cor-texto-principal);
-  margin-bottom: var(--espaco-pequeno);
+  margin-top: var(--espaco-pequeno);
 }
 
 /* Inputs e selects */
@@ -42,7 +42,7 @@ textarea:focus {
 
 /* Botões de formulário */
 .form-actions {
-  margin-top: var(--espaco-grande);
+  margin-top: var(--espaco-medio);
   display: flex;
   gap: var(--espaco-medio);
 }
@@ -58,6 +58,7 @@ button.primary {
   font-weight: var(--peso-medio);
   cursor: pointer;
   transition: background-color 0.3s ease, transform 0.2s ease;
+  width: 100%;
 }
 
 button.primary:hover {
@@ -75,6 +76,7 @@ button.secondary {
   font-weight: var(--peso-medio);
   cursor: pointer;
   transition: background-color 0.3s ease, transform 0.2s ease;
+  width: 100%;
 }
 
 button.secondary:hover {

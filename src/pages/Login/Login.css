@@ -2,6 +2,7 @@
 .login-page {
   display: flex;
   min-height: 100vh;
+  transition: all 0.6s ease-in-out; /* transição suave */
 }
 
 /* Lado esquerdo - institucional com fundo */
@@ -14,6 +15,7 @@
   align-items: center;
   padding: var(--espaco-grande);
   color: var(--cor-texto-alternativo);
+  transition: flex 0.6s ease-in-out, padding 0.6s ease-in-out, background 0.6s ease-in-out;
 }
 
 .login-info-content {
@@ -22,7 +24,7 @@
 
 .login-logo {
   width: 100%;
-  max-width: clamp(150px, 30vw, 400px); /* escala automática */
+  max-width: clamp(150px, 30vw, 400px);
   height: auto;
   filter: drop-shadow(0 0 15px rgba(255, 255, 255, 0.9));
 }
@@ -59,76 +61,35 @@
   align-items: center;
   background-color: var(--cor-tela);
   padding: var(--espaco-grande);
+  transition: flex 0.6s ease-in-out, padding 0.6s ease-in-out, background-color 0.6s ease-in-out;
 }
 
-.login-container {
+/* Container do formulário */
+.login-form-side .form-container {
   width: 100%;
-  max-width: 360px;
-  background-color: var(--cor-componente);
-  border-radius: var(--radius-grande);
-  box-shadow: var(--sombra-media);
-  padding: var(--espaco-grande);
+  max-width: 400px;
+  margin: 0 auto;
+  padding: var(--espaco-medio);
+  transition: max-width 0.6s ease-in-out;
 }
 
+/* Título do login */
 .login-title {
   text-align: center;
-  margin-bottom: var(--espaco-grande);
+  margin-bottom: var(--espaco-medio);
   font-family: var(--fonte-titulo);
   font-weight: var(--peso-bold);
-  font-size: clamp(1.25rem, 2vw, 2rem); /* escala automática */
+  font-size: clamp(1.25rem, 2vw, 2rem);
 }
 
-.login-form .form-group {
-  margin-bottom: var(--espaco-medio);
-}
-
-.login-form label {
-  display: block;
-  margin-bottom: var(--espaco-pequeno);
-  color: var(--cor-texto-principal);
-  font-weight: var(--peso-medio);
-}
-
-.login-form input {
-  width: 100%;
-  padding: var(--espaco-pequeno);
-  border: 1px solid var(--cor-contorno);
-  border-radius: var(--radius-medio);
-  background-color: var(--cor-componente-secundario);
-  color: var(--cor-texto-principal);
-  font-size: clamp(0.9rem, 1vw, 1rem);
-}
-
-.login-button {
-  width: 100%;
-  padding: var(--espaco-pequeno);
-  background-color: var(--cor-button);
-  color: var(--cor-texto-alternativo);
-  border: none;
-  border-radius: var(--radius-medio);
-  font-weight: var(--peso-bold);
-  cursor: pointer;
-  transition: background-color 0.3s ease, transform 0.2s ease;
-  font-size: clamp(0.9rem, 1vw, 1rem);
-}
-
-.login-button:hover {
-  background-color: var(--cor-button-hover);
-}
-
-.login-button:active {
-  transform: scale(0.95);
-}
-
-.error-message {
-  color: var(--cor-critico);
-  margin-bottom: var(--espaco-medio);
+/* Mensagem de erro */
+.form-error {
   text-align: center;
-  font-size: var(--texto-secundario-size);
 }
 
+/* Link extra abaixo do formulário */
 .login-extra {
-  margin-top: var(--espaco-grande);
+  margin-top: var(--espaco-medio);
   text-align: center;
 }
 
@@ -137,8 +98,8 @@
   font-weight: var(--peso-medio);
 }
 
-/* Responsividade para telas pequenas até 700px */
-@media (max-width: 700px) {
+/* Mobile até 700px */
+@media (max-width: 900px) {
   .login-page {
     flex-direction: column;
     background: url("../../assets/img/fundo-login.jpg") no-repeat center center;
@@ -161,20 +122,8 @@
     max-width: 180px;
   }
 
-  .login-container {
-    max-width: 100%;
-    padding: var(--espaco-medio);
-  }
-}
-
-/* Ajuste para tablets médios */
-@media (max-width: 1024px) {
-  .login-container {
-    max-width: 320px;
-    padding: var(--espaco-medio);
-  }
-
-  .login-title {
-    font-size: 1.5rem;
+  .login-form-side .form-container {
+    max-width: 90%;
+    max-width: 300px;
   }
 }
