@@ -11,13 +11,41 @@
   display: flex;
   flex-direction: column; /* padrão: coluna */
   gap: var(--espaco-grande);
+  width: 100%;
 }
 
+/* ===========================
+   Atalhos
+   =========================== */
+.atalhos {
+  display: flex;
+  justify-content: space-between;
+  gap: var(--espaco-medio);
+}
+
+.atalhos h2 {
+  font-size: var(--texto-principal-size);
+  color: var(--cor-texto-principal);
+  display: flex;
+  align-items: center;
+  gap: var(--espaco-pequeno);
+}
+
+.atalhos-buttons {
+  display: flex;
+  gap: var(--espaco-medio);
+}
+
+/* ===========================
+   Conteudo
+   =========================== */
 .conteudo {
   display: flex;
   flex-direction: column; /* padrão: coluna */
   gap: var(--espaco-grande);
 }
+
+/*--------------------------------------------------------*/
 
 /* ===========================
    Cards
@@ -61,61 +89,50 @@
 /* ===========================
    Ícones dentro dos cards
    =========================== */
-.card-icon {
+.icon {
   font-size: 1.8rem;
   color: var(--cor-principal);
 }
 
-.card-icon.azul {
+.icon.azul {
   color: var(--cor-secundaria);
 }
 
+/*--------------------------------------------------------*/
+
 /* ===========================
-   Atalhos
+   Filtros
    =========================== */
-.atalhos {
+.filtros {
   display: flex;
   justify-content: space-between;
   gap: var(--espaco-medio);
 }
 
-.atalhos h2 {
+.filtros h2 {
+  display: flex;
+  align-items: center;
+  gap: var(--espaco-pequeno);
   font-size: var(--texto-principal-size);
   color: var(--cor-texto-principal);
-  display: flex;
-  align-items: center;
-  gap: var(--espaco-pequeno);
 }
 
-.atalhos-buttons {
+.filtros-form {
   display: flex;
+  /* flex-wrap: wrap; */
+  justify-content: flex-end;
   gap: var(--espaco-medio);
+  /* flex: 1; */
+  background-color: var(--cor-componente);
 }
 
-/* ===========================
-   Botões de Atalho
-   =========================== */
-.atalho-btn {
+.filtros-form input,
+.filtros-form select {
+  /* min-width: 160px; */
   padding: var(--padding-padrao);
-  border-radius: var(--radius-medio);
-  text-align: center;
-  font-size: var(--botao-size);
-  font-weight: var(--peso-medio);
-  text-decoration: none;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: var(--espaco-pequeno);
-  transition: background-color 0.3s ease, transform 0.2s ease;
-  color: var(--cor-texto-alternativo);
-  background-color: var(--cor-button);
+  border: 1px solid var(--cor-contorno);
+  border-radius: var(--radius-pequeno);
+  font-size: var(--texto-principal-size);
 }
 
-.atalho-btn:hover {
-  background-color: var(--cor-button-hover);
-  color: var(--cor-texto-alternativo);
-}
-
-.atalho-btn:active {
-  transform: scale(0.95);
-}
+/*--------------------------------------------------------*/

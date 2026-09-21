@@ -68,9 +68,9 @@ const AppRoutes = () => {
         {/* Bem */}
         <Route path="/bens" element={<BensIndex />} />
         <Route path="/bens/create" element={<BensCreate />} />
-        <Route path="/bens/edit/:id" element={<BensEdit />} />
         <Route path="/bens/show/:id" element={<BensShow />} />
-        <Route path="/bens/delete/:id" element={<BensDelete />} />
+        <Route path="/bens/edit/:id" element={<AdminRoute><BensEdit /></AdminRoute>} />
+        <Route path="/bens/delete/:id" element={<AdminRoute><BensDelete /></AdminRoute>} />
 
         {/* ManutencaoBem */}
         <Route path="/manutencoes" element={<ManutencoesIndex />} />

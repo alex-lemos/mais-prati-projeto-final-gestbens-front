@@ -11,7 +11,6 @@
 label {
   display: block;
   font-family: var(--fonte-texto);
-  /* font-size: var(--texto-secundario-size); */
   font-weight: var(--peso-medio);
   color: var(--cor-texto-principal);
   margin-top: var(--espaco-pequeno);
@@ -47,40 +46,8 @@ textarea:focus {
   gap: var(--espaco-medio);
 }
 
-button.primary {
-  background-color: var(--cor-button);
-  color: var(--cor-texto-alternativo);
-  border: none;
-  border-radius: var(--radius-medio);
-  padding: var(--espaco-pequeno) var(--espaco-grande);
-  font-family: var(--fonte-titulo);
-  font-size: var(--botao-size);
-  font-weight: var(--peso-medio);
-  cursor: pointer;
-  transition: background-color 0.3s ease, transform 0.2s ease;
+.form-actions button {
   width: 100%;
-}
-
-button.primary:hover {
-  background-color: var(--cor-button-hover);
-}
-
-button.secondary {
-  background-color: var(--cor-button-secundario);
-  color: var(--cor-texto-alternativo);
-  border: none;
-  border-radius: var(--radius-medio);
-  padding: var(--espaco-pequeno) var(--espaco-grande);
-  font-family: var(--fonte-titulo);
-  font-size: var(--botao-size);
-  font-weight: var(--peso-medio);
-  cursor: pointer;
-  transition: background-color 0.3s ease, transform 0.2s ease;
-  width: 100%;
-}
-
-button.secondary:hover {
-  background-color: var(--cor-button-secundario-hover);
 }
 
 /* Mensagens de erro e sucesso */

@@ -13,6 +13,24 @@
   .content {
     padding: var(--espaco-medio);
   }
+
+  .filtros {
+    flex-direction: column;
+    align-items: stretch;
+    gap: var(--espaco-medio);
+  }
+
+  .filtros-form {
+    justify-content: flex-start; /* em mobile, campos ocupam largura total */
+    width: 100%;
+  }
+
+  .tabela th:nth-child(5),
+  .tabela td:nth-child(5),
+  .tabela th:nth-child(6),
+  .tabela td:nth-child(6) {
+    width: auto; /* libera largura em telas pequenas */
+  }
 }
 
 /* Tablets e telas menores (até 768px) */
@@ -54,7 +72,44 @@
   .atalho-btn {
     width: 100%;              /* botões ocupam toda a largura */
   }
+
+  .filtros {
+    flex-direction: column;
+    align-items: stretch;
+    gap: var(--espaco-medio);
+  }
+
+  .filtros-form {
+    flex-direction: column;
+    justify-content: flex-start;
+    width: 100%;
+  }
+
+  .tabela th,
+  .tabela td {
+    font-size: var(--texto-secundario-size);
+    padding: var(--espaco-pequeno);
+  }
+
+  .tabela th,
+  .tabela td {
+    font-size: var(--texto-secundario-size);
+    padding: var(--espaco-pequeno);
+    white-space: normal;   /* permite quebra em telas menores */
+    text-overflow: clip;   /* remove "..." */
+  }
+
+  .tabela {
+    display: block;
+    overflow-x: auto;      /* adiciona scroll horizontal */
+  }
+
+  .tabela table {
+    min-width: 600px;      /* largura mínima para não colapsar */
+  }
 }
+
+
 
 /* Laptops médios (769px a 1024px) */
 @media (min-width: 769px) and (max-width: 1024px) {
@@ -68,45 +123,18 @@
 
 }
 
-/* Telas grandes (1025px a 1399px) */
-@media (min-width: 1025px) and (max-width: 1399px) {
+/* Telas grandes (1025px ou mais) */
+@media (min-width: 1025px) {
   h1, h2, h3 {
     font-size: calc(var(--titulo-size) + 0.5rem);
   }
 
+  .conteudo-wrapper {
+    max-width: 1200px;
+    margin: auto;
+  }
+
   .conteudo {
     gap: var(--espaco-medio);
-  }
-}
-
-/* Telas muito grandes (1400px+) */
-@media (min-width: 1400px) {
-  h1, h2, h3 {
-    font-size: calc(var(--titulo-size) + 0.75rem);
-  }
-
-  .conteudo-wrapper {
-    flex-direction: row; /* lado a lado */
-    align-items: flex-start;
-  }
-
-  .conteudo {
-    flex: 3;
-  }
-
-  .atalhos {
-    flex: 1;
-    flex-direction: column;
-    align-items: flex-start;
-  }
-
-  .atalhos-buttons {
-    flex-direction: column;
-    width: 100%;
-    align-items: stretch;
-  }
-
-  .atalho-btn {
-    width: 100%;
   }
 }

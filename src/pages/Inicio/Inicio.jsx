@@ -20,53 +20,10 @@ export default function Inicio() {
 
       {/* container principal */}
       <div className="conteudo-wrapper">
-        
-        {/* Conteúdo principal */}
-        <div className="conteudo">
-          
-          {/* Destaque */}
-          <div className="card">
-            <div className="card-icon">
-              <FaTools />
-            </div>
-            <div>
-              <h2>Bens em Manutenção</h2>
-              <span className="valor">{bensEmManutencao} itens em manutenção</span>
-            </div>
-          </div>
-
-          {/* Cards de métricas */}
-          <div className="cards">
-            <div className="card">
-              <div className="card-icon azul">
-                <FaBoxOpen />
-              </div>
-              <h3>Total de Bens</h3>
-              <span className="valor">{totalBens}</span>
-            </div>
-            <div className="card">
-              <div className="card-icon azul">
-                <FaExchangeAlt />
-              </div>
-              <h3>Movimentações</h3>
-              <span className="valor">{totalMovimentacoes}</span>
-            </div>
-            <div className="card">
-              <div className="card-icon azul">
-                <FaWrench />
-              </div>
-              <h3>Manutenções</h3>
-              <span className="valor">{totalManutencoes}</span>
-            </div>
-          </div>
-          
-        </div>
 
         {/* Atalhos */}
         <div className="card atalhos">
-          <h2>
-            <FaBolt /> Atalhos:
-          </h2>
+          <h2><FaBolt /> Atalhos:</h2>
           <div className="atalhos-buttons">
             <NavLink to="/bens/create" className="atalho-btn verde">
               <FaBoxOpen /> Cadastrar Novo Bem
@@ -79,6 +36,47 @@ export default function Inicio() {
             </NavLink>
           </div>
         </div>
+        
+        {/* Conteúdo principal */}
+        <div className="conteudo">
+          
+          {/* Destaque */}
+          <div className="card">
+            <div className="icon">
+              <FaTools />
+            </div>
+            <div>
+              <h2>Bens em Manutenção</h2>
+              <span className="valor">{bensEmManutencao} itens em manutenção</span>
+            </div>
+          </div>
+
+          {/* Cards de métricas */}
+          <div className="cards">
+            <div className="card">
+              <div className="icon azul">
+                <FaBoxOpen />
+              </div>
+              <h3>Total de Bens</h3>
+              <span className="valor">{totalBens}</span>
+            </div>
+            <div className="card">
+              <div className="icon azul">
+                <FaExchangeAlt />
+              </div>
+              <h3>Movimentações</h3>
+              <span className="valor">{totalMovimentacoes}</span>
+            </div>
+            <div className="card">
+              <div className="icon azul">
+                <FaWrench />
+              </div>
+              <h3>Manutenções</h3>
+              <span className="valor">{totalManutencoes}</span>
+            </div>
+          </div>
+          
+        </div>        
 
       </div>
     

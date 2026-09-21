@@ -39,15 +39,36 @@ p, span, small {
 }
 
 /* Botões padrão */
-button {
+button,
+.atalho-btn {
+  border: none;
+  background-color: var(--cor-button);
+  color: var(--cor-texto-alternativo);
+  font-family: var(--fonte-titulo);
   font-size: var(--botao-size);
   font-weight: var(--peso-medio);
   border-radius: var(--radius-medio);
   padding: var(--espaco-pequeno) var(--espaco-medio);
   cursor: pointer;
+  text-align: center;
   transition: background-color 0.3s ease, transform 0.2s ease;
 }
 
-button:active {
+button:hover,
+.atalho-btn:hover {
+  background-color: var(--cor-button-hover);
+  color: var(--cor-texto-alternativo);
+}
+
+button:active,
+.atalho-btn:active {
   transform: scale(0.98);
+}
+
+button.secondary {
+  background-color: var(--cor-button-secundario);
+}
+
+button.secondary:hover {
+  background-color: var(--cor-button-secundario-hover);
 }

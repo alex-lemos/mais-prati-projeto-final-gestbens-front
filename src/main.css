@@ -10,5 +10,8 @@
 /* Estilos dos formulários */
 @import "./styles/forms.css";
 
+/* Estilos das tabelas */
+@import "./styles/table.css";
+
 /* Responsividade - sempre por último */
 @import "./styles/responsividade.css";
