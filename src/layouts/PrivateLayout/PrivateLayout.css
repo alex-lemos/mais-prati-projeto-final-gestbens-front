@@ -1,28 +1,13 @@
 .private-layout {
-  
-  background-color: var(--cor-tela); /* fundo branco geral */
-  
+  min-height: 100vh;
 }
 
-
-
-/* Área principal com efeito de card */
-.content {
+/* Área principal*/
+.main {
   flex: 1;
-  background-color: var(--cor-componente); /* cinza claro */
-  border-radius: 12px; /* bordas arredondadas */
+  background-color: var(--cor-componente);
+  border-radius: 12px;
   box-shadow: 0 6px 16px rgba(0,0,0,0.12); /* sombra para sobreposição */
   padding: 2rem;
-  overflow-y: auto;
-  margin: 1rem; /* espaçamento interno da tela */
-
-  /* efeito de destaque */
-  position: relative;
-  z-index: 1;
-  transition: box-shadow 0.3s ease, transform 0.2s ease;
-}
-
-.content:hover {
-  box-shadow: 0 8px 20px rgba(0,0,0,0.15);
-  transform: translateY(-2px); /* leve elevação no hover */
+  margin: 1rem;
 }

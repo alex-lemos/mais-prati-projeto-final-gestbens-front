@@ -1,0 +1,19 @@
+.cadastro-page {
+  max-width: 420px;
+  margin: 5% auto;
+}
+
+.cadastro-logo {
+  text-align: center;
+  margin-bottom: var(--espaco-medio);  
+}
+
+.cadastro-logo img {
+  max-width: 90%;
+}
+
+.login-link {
+  margin-top: var(--espaco-medio);
+  text-align: center;
+  font-size: var(--texto-secundario-size);
+}

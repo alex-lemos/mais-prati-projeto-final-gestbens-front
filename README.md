@@ -26,7 +26,6 @@ gestbens-front/
 │   │   ├── Sidebar/
 │   │   │   ├── Sidebar.css     # estilos do menu lateral
 │   │   │   └── Sidebar.jsx     # menu lateral fixo
-│   │   ├── ConfirmDialog.jsx   # popup de confirmação antes de excluir
 │   │   ├── FormularioBem.jsx   # formulário de Bem (usado em Create/Edit)
 │   │   ├── FormularioCategoria.jsx
 │   │   ├── FormularioLocalidade.jsx
@@ -38,18 +37,22 @@ gestbens-front/
 │   │   └── AuthContext.jsx     # contexto de autenticação (login/logout, usuário logado)
 │   │
 │   ├── layouts/                # layouts para páginas públicas e privadas
-│   │   ├── PublicLayout.jsx    # usado em Login e Cadastro
-│   │   └── PrivateLayout.jsx   # usado em Inicio e CRUDs (com Sidebar)
+│   │   ├── PrivateLayout
+│   │   │   ├──PrivateLayout.css
+│   │   │   └── PrivateLayout.jsx   # usado em Inicio e CRUDs (com Sidebar)
+│   │   └── PublicLayout
+│   │       └── PublicLayout.jsx    # usado em Login e Cadastro
 │   │
 │   ├── mocks/                  # dados falsos para testes antes do backend
+│   │   └── data.js
 │   │
 │   ├── modules/                # CRUD de cada entidade
 │   │   ├── Bem/
-│   │   │   ├── Create.jsx
-│   │   │   ├── Delete.jsx
-│   │   │   ├── Edit.jsx
-│   │   │   ├── Index.jsx
-│   │   │   └── Show.jsx
+│   │   │   ├── Create.jsx  # -> usa FormularioBem.jsx
+│   │   │   ├── Delete.jsx  # confirmação antes de excluir
+│   │   │   ├── Edit.jsx    # -> usa FormularioBem.jsx
+│   │   │   ├── Index.jsx   # mostra a lista de bens de forma paginada
+│   │   │   └── Show.jsx    # mostra os dados de um bem
 │   │   ├── CategoriaBem/
 │   │   │   ├── Create.jsx
 │   │   │   ├── Delete.jsx
@@ -83,6 +86,7 @@ gestbens-front/
 │   │
 │   ├── pages/                  # páginas principais
 │   │   ├── Cadastro
+│   │   │   ├── Cadastro.css
 │   │   │   └── Cadastro.jsx        # tela de cadastro de novos usuários
 │   │   ├── Inicio
 │   │   │   └── Inicio.jsx          # dashboard com menu lateral + área principal
@@ -106,13 +110,13 @@ gestbens-front/
 │   ├── styles/
 │   │   ├── forms.css           # estilos específicos de formulários
 │   │   ├── global.css          # estilos globais
+│   │   ├── modules.css         # estilos dos módulos
 │   │   ├── responsividade.css  # media queries e ajustes responsivos
 │   │   └── variables.css       # variáveis de cor, fonte, espaçamento
 │   │
 │   ├── App.jsx                 # componente raiz da aplicação
-│   ├── main.css                # estilos principais
-│   └── main.jsx                # ponto de entrada do React
-│   
+│   ├── main.css                # importa os css gerais
+│   └── main.jsx                # ponto de entrada do React   
 │
 ├── .env
 ├── .env.example
@@ -123,4 +127,59 @@ gestbens-front/
 ├── package.json                # dependências e scripts
 ├── README.md                   # documentação do projeto
 └── vite.config.js              # configuração do Vite
+```
+
+--------------------------------------------------------------
+
+Estrutura modelo para os módulos
+```
+imports ....
+
+export default function ModuloBase({ titulo, destaque, metricas, atalhos }) {
+  return (
+    <div className="modulo-page">
+      <h1>{titulo}</h1>
+
+      {/* container principal */}
+      <div className="conteudo-wrapper">
+        {/* Conteúdo principal */}
+        <div className="conteudo">
+          {/* Card de destaque */}
+          <div className="card">
+            <div className="card-icon">{destaque.icon}</div>
+            <div>
+              <h2>{destaque.titulo}</h2>
+              <span className="valor">{destaque.valor}</span>
+            </div>
+          </div>
+
+          {/* Cards de métricas */}
+          <div className="cards">
+            {metricas.map((m, i) => (
+              <div className="card" key={i}>
+                <div className="card-icon azul">{m.icon}</div>
+                <h3>{m.titulo}</h3>
+                <span className="valor">{m.valor}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Atalhos */}
+        <div className="card atalhos">
+          <h2>
+            <FaBolt /> Atalhos:
+          </h2>
+          <div className="atalhos-buttons">
+            {atalhos.map((a, i) => (
+              <NavLink to={a.link} className="atalho-btn verde" key={i}>
+                {a.icon} {a.label}
+              </NavLink>
+            ))}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
 ```

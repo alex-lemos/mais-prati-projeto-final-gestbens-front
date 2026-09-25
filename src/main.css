@@ -1,4 +1,17 @@
+/* Variáveis globais */
 @import "./styles/variables.css";
+
+/* Estilos globais */
 @import "./styles/global.css";
+
+/* Estrutura dos módulos */
+@import "./styles/modules.css";
+
+/* Estilos dos formulários */
 @import "./styles/forms.css";
-@import "./styles/responsividade.css"; /* importado por último para sobrescrever estilos se necessário */
+
+/* Estilos das tabelas */
+@import "./styles/table.css";
+
+/* Responsividade - sempre por último */
+@import "./styles/responsividade.css";

@@ -5,8 +5,11 @@ import AdminRoute from "./AdminRoute";
 import PublicLayout from "../layouts/PublicLayout/PublicLayout";
 import PrivateLayout from "../layouts/PrivateLayout/PrivateLayout";
 
+// páginas públicas
 import Login from "../pages/Login/Login";
 import Cadastro from "../pages/Cadastro/Cadastro";
+
+// páginas privadas
 import Inicio from "../pages/Inicio/Inicio";
 
 // módulos privados
@@ -59,17 +62,15 @@ const AppRoutes = () => {
       </Route>
 
       {/* Rotas privadas */}
-      <Route
-        element={isAuthenticated ? <PrivateLayout /> : <Navigate to="/login" />}
-      >
+      <Route element={isAuthenticated ? <PrivateLayout /> : <Navigate to="/login" />}>
         <Route path="/" element={<Inicio />} />
 
         {/* Bem */}
         <Route path="/bens" element={<BensIndex />} />
         <Route path="/bens/create" element={<BensCreate />} />
-        <Route path="/bens/edit/:id" element={<BensEdit />} />
         <Route path="/bens/show/:id" element={<BensShow />} />
-        <Route path="/bens/delete/:id" element={<BensDelete />} />
+        <Route path="/bens/edit/:id" element={<AdminRoute><BensEdit /></AdminRoute>} />
+        <Route path="/bens/delete/:id" element={<AdminRoute><BensDelete /></AdminRoute>} />
 
         {/* ManutencaoBem */}
         <Route path="/manutencoes" element={<ManutencoesIndex />} />

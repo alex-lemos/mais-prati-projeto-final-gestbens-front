@@ -1,0 +1,138 @@
+/* ===========================
+   Página e Estrutura
+   =========================== */
+.inicio-page {
+  display: flex;
+  flex-direction: column;
+  gap: var(--espaco-grande);
+}
+
+.conteudo-wrapper {
+  display: flex;
+  flex-direction: column; /* padrão: coluna */
+  gap: var(--espaco-grande);
+  width: 100%;
+}
+
+/* ===========================
+   Atalhos
+   =========================== */
+.atalhos {
+  display: flex;
+  justify-content: space-between;
+  gap: var(--espaco-medio);
+}
+
+.atalhos h2 {
+  font-size: var(--texto-principal-size);
+  color: var(--cor-texto-principal);
+  display: flex;
+  align-items: center;
+  gap: var(--espaco-pequeno);
+}
+
+.atalhos-buttons {
+  display: flex;
+  gap: var(--espaco-medio);
+}
+
+/* ===========================
+   Conteudo
+   =========================== */
+.conteudo {
+  display: flex;
+  flex-direction: column; /* padrão: coluna */
+  gap: var(--espaco-grande);
+}
+
+/*--------------------------------------------------------*/
+
+/* ===========================
+   Cards
+   =========================== */
+.card {
+  background-color: var(--cor-card);
+  padding: var(--espaco-medio);
+  border: 1px solid var(--cor-contorno);
+  border-radius: var(--radius-medio);
+  box-shadow: var(--sombra-leve);
+  display: flex;
+  align-items: center;
+  gap: var(--espaco-medio);
+  text-align: left;
+}
+
+.card h2,
+.card h3 {
+  margin: 0;
+  font-size: var(--texto-principal-size);
+}
+
+.valor {
+  font-size: 1.1rem;
+  font-weight: var(--peso-bold);
+  color: var(--cor-texto-principal);
+}
+
+/* Cards em linha */
+.cards {
+  display: flex;
+  gap: var(--espaco-medio);
+}
+
+.cards .card {
+  flex: 1;
+  justify-content: center;
+  text-align: center;
+}
+
+/* ===========================
+   Ícones dentro dos cards
+   =========================== */
+.icon {
+  font-size: 1.8rem;
+  color: var(--cor-principal);
+}
+
+.icon.azul {
+  color: var(--cor-secundaria);
+}
+
+/*--------------------------------------------------------*/
+
+/* ===========================
+   Filtros
+   =========================== */
+.filtros {
+  display: flex;
+  justify-content: space-between;
+  gap: var(--espaco-medio);
+}
+
+.filtros h2 {
+  display: flex;
+  align-items: center;
+  gap: var(--espaco-pequeno);
+  font-size: var(--texto-principal-size);
+  color: var(--cor-texto-principal);
+}
+
+.filtros-form {
+  display: flex;
+  /* flex-wrap: wrap; */
+  justify-content: flex-end;
+  gap: var(--espaco-medio);
+  /* flex: 1; */
+  background-color: var(--cor-componente);
+}
+
+.filtros-form input,
+.filtros-form select {
+  /* min-width: 160px; */
+  padding: var(--padding-padrao);
+  border: 1px solid var(--cor-contorno);
+  border-radius: var(--radius-pequeno);
+  font-size: var(--texto-principal-size);
+}
+
+/*--------------------------------------------------------*/
