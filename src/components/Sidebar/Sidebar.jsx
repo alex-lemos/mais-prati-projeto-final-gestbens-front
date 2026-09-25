@@ -13,16 +13,32 @@ export default function Sidebar() {
       <img src={logo} alt="Logo" className="logo" />
       <nav>
         <ul>
-          <li><NavLink to="/" end>Início</NavLink></li>
-          <li><NavLink to="/bens">Gerenciar Bens</NavLink></li>
-          <li><NavLink to="/manutencoes">Manutenção</NavLink></li>
-          <li><NavLink to="/movimentacoes">Movimentação</NavLink></li>
+          <li>
+            <NavLink to="/" end>
+              Início
+            </NavLink>
+          </li>
+          <li>
+            <NavLink to="/bens">Gerenciar Bens</NavLink>
+          </li>
+          <li>
+            <NavLink to="/manutencoes">Manutenção</NavLink>
+          </li>
+          <li>
+            <NavLink to="/movimentacoes">Movimentação</NavLink>
+          </li>
 
           {usuario?.is_admin && (
             <>
-              <li><NavLink to="/locais">Locais</NavLink></li>
-              <li><NavLink to="/categorias">Categorias</NavLink></li>
-              <li><NavLink to="/usuarios">Usuários</NavLink></li>
+              <li>
+                <NavLink to="/locais">Locais</NavLink>
+              </li>
+              <li>
+                <NavLink to="/categorias">Categorias</NavLink>
+              </li>
+              <li>
+                <NavLink to="/usuarios">Usuários</NavLink>
+              </li>
             </>
           )}
         </ul>
@@ -32,7 +48,11 @@ export default function Sidebar() {
       <div className="sidebar-footer">
         <div className="user-info">
           {usuario?.foto ? (
-            <img src={usuario.foto} alt={usuario.nome} className="user-avatar" />
+            <img
+              src={usuario.foto}
+              alt={usuario.nome}
+              className="user-avatar"
+            />
           ) : (
             <FaUserCircle className="user-avatar" />
           )}

@@ -17,7 +17,7 @@ export function AuthProvider({ children }) {
   // Login usando dados mockados
   function login(email, senha) {
     const encontrado = usuarios.find(
-      (u) => u.email === email && u.senha === senha
+      (u) => u.email === email && u.senha === senha,
     );
 
     if (encontrado) {
