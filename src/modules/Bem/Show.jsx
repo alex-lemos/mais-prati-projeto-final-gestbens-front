@@ -78,7 +78,7 @@ export default function BensShow() {
         <div className="conteudo">
           {/* Informações principais */}
           <div className="card informacoes">
-            <h2>{bem.nome}</h2>
+            <h2 className="titulo">{bem.nome}</h2>
             <div className="informacoes-detalhes">
               <div className="campo">
                 <strong>Código / ID:</strong>

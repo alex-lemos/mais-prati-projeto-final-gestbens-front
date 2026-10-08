@@ -65,7 +65,7 @@
 .card h2,
 .card h3 {
   margin: 0;
-  font-size: var(--texto-principal-size);
+  font-size: 1.1rem;
 }
 
 .valor {
@@ -143,7 +143,7 @@
 .card.informacoes {
   flex-direction: column; /* empilha título e detalhes */
   align-items: flex-start;
-  gap: var(--espaco-pequeno);
+  gap: var(--espaco-medio);
 }
 
 .informacoes-detalhes {
@@ -160,6 +160,10 @@
 
 .campo p {
   color: var(--cor-texto-principal);
+}
+
+.titulo {
+  font-size: 1.5rem !important;
 }
 
 /* ===========================
