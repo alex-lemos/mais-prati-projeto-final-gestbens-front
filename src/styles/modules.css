@@ -136,3 +136,54 @@
 }
 
 /*--------------------------------------------------------*/
+
+/* ===========================
+   Informações principais (Show)
+   =========================== */
+.card.informacoes {
+  flex-direction: column; /* empilha título e detalhes */
+  align-items: flex-start;
+  gap: var(--espaco-pequeno);
+}
+
+.informacoes-detalhes {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: var(--espaco-pequeno);
+  width: 100%;
+}
+
+.informacoes-detalhes .campo {
+  display: flex;
+  flex-direction: column;
+}
+
+.campo p {
+  color: var(--cor-texto-principal);
+}
+
+/* ===========================
+   Abas (Show)
+   =========================== */
+.abas-container {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--espaco-pequeno);
+}
+
+.abas {
+  display: flex;
+  gap: var(--espaco-pequeno);
+  margin-bottom: var(--espaco-medio);
+}
+
+.aba {
+  padding: var(--espaco-pequeno) var(--espaco-medio);
+}
+
+.aba.ativa {
+  background: var(--cor-principal-escuro);
+}
+
+/*--------------------------------------------------------*/

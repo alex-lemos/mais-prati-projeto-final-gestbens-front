@@ -6,7 +6,7 @@ import { bens as mockBens, categorias as mockCategorias, localidades as mockLoca
 import { FaBolt, FaBoxOpen, FaEye, FaEdit, FaTrash } from "react-icons/fa";
 
 export default function BensIndex() {
-  const { usuario} = useAuth();
+  const { usuario } = useAuth();
   const [bens, setBens] = useState([]);
   const [categorias, setCategorias] = useState([]);
   const [localidades, setLocalidades] = useState([]);
@@ -160,7 +160,7 @@ export default function BensIndex() {
                     <td>{bem.nome} - {bem.descricao}</td>
                     <td>{getCategoriaNome(bem.categoria_id)}</td>
                     <td>{getLocalidadeNome(bem.localidade_id)}</td>
-                    <td className={`status ${bem.status.toLowerCase()}`}>{bem.status}</td>
+                    <td><span className={`status ${bem.status.toLowerCase()}`}>{bem.status}</span></td>
                     <td className="acoes">
                       <NavLink to={`/bens/show/${bem.id}`} data-tooltip="Visualizar bem"><FaEye /></NavLink>
                       {usuario?.is_admin && (

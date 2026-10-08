@@ -24,13 +24,6 @@
     justify-content: flex-start; /* em mobile, campos ocupam largura total */
     width: 100%;
   }
-
-  .tabela th:nth-child(5),
-  .tabela td:nth-child(5),
-  .tabela th:nth-child(6),
-  .tabela td:nth-child(6) {
-    width: auto; /* libera largura em telas pequenas */
-  }
 }
 
 /* Tablets e telas menores (até 768px) */
@@ -84,32 +77,7 @@
     justify-content: flex-start;
     width: 100%;
   }
-
-  .tabela th,
-  .tabela td {
-    font-size: var(--texto-secundario-size);
-    padding: var(--espaco-pequeno);
-  }
-
-  .tabela th,
-  .tabela td {
-    font-size: var(--texto-secundario-size);
-    padding: var(--espaco-pequeno);
-    white-space: normal;   /* permite quebra em telas menores */
-    text-overflow: clip;   /* remove "..." */
-  }
-
-  .tabela {
-    display: block;
-    overflow-x: auto;      /* adiciona scroll horizontal */
-  }
-
-  .tabela table {
-    min-width: 600px;      /* largura mínima para não colapsar */
-  }
 }
-
-
 
 /* Laptops médios (769px a 1024px) */
 @media (min-width: 769px) and (max-width: 1024px) {
