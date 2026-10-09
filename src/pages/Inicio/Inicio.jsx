@@ -5,7 +5,6 @@ import {
   FaBoxOpen, // ícone de caixa aberta
   FaExchangeAlt, // ícone de setas duplas
   FaWrench, // ícone de chave inglesa
-  FaBolt, // ícone de raio (usado para atalhos)
 } from "react-icons/fa";
 
 export default function Inicio() {
@@ -23,7 +22,7 @@ export default function Inicio() {
 
         {/* Atalhos */}
         <div className="card atalhos">
-          <h2><FaBolt /> Atalhos:</h2>
+          <h2> Atalhos:</h2>
           <div className="atalhos-buttons">
             <NavLink to="/bens/create" className="atalho-btn verde">
               <FaBoxOpen /> Cadastrar Novo Bem
