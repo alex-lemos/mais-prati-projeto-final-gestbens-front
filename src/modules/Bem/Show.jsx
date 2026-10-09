@@ -2,7 +2,7 @@ import { useParams, useNavigate, NavLink } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { useAuth } from "../../contexts/AuthContext";
 import { bens as mockBens, categorias, localidades, movimentacoes, manutencoes, usuarios } from "../../mocks/data";
-import { FaBolt, FaArrowLeft, FaEdit, FaTrash } from "react-icons/fa";
+import { FaArrowLeft, FaEdit, FaTrash } from "react-icons/fa";
 
 export default function BensShow() {
   const { id } = useParams();
@@ -57,7 +57,7 @@ export default function BensShow() {
 
         {/* Atalhos */}
         <div className="card atalhos">
-          <h2><FaBolt /> Ações:</h2>
+          <h2>Ações:</h2>
           <div className="atalhos-buttons">
             <button onClick={() => navigate(-1)} className="atalho-btn">
               <FaArrowLeft /> Voltar
@@ -81,7 +81,7 @@ export default function BensShow() {
             <h2 className="titulo">{bem.nome}</h2>
             <div className="informacoes-detalhes">
               <div className="campo">
-                <strong>Código / ID:</strong>
+                <strong>Patrimônio:</strong>
                 <p>{bem.id}</p>
               </div>
               <div className="campo">

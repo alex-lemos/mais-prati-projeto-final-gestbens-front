@@ -14,6 +14,10 @@
   width: 100%;
 }
 
+.titulo {
+  font-size: 1.5rem !important;
+}
+
 /* ===========================
    Atalhos
    =========================== */
@@ -191,3 +195,26 @@
 }
 
 /*--------------------------------------------------------*/
+
+/* ===========================
+   Exclusão
+   =========================== */
+.alerta-exclusao {
+  display: flex;
+  flex-direction: column;
+  background-color: var(--cor-atencao);
+  padding: var(--espaco-grande);
+}
+
+.alerta-exclusao h2 {
+  font-size: 1.2rem; 
+}
+
+.btn-excluir {
+  background-color: var(--cor-critico);  
+  
+}
+
+.btn-excluir:hover {
+  background-color: var(--cor-critico-escuro);
+}

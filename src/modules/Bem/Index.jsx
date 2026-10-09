@@ -3,7 +3,7 @@ import { NavLink } from "react-router-dom";
 import { useAuth } from "../../contexts/AuthContext";
 // futuramente: import { bemService } from "../../services/bemService";
 import { bens as mockBens, categorias as mockCategorias, localidades as mockLocalidades } from "../../mocks/data";
-import { FaBolt, FaBoxOpen, FaEye, FaEdit, FaTrash } from "react-icons/fa";
+import { FaBoxOpen, FaEye, FaEdit, FaTrash } from "react-icons/fa";
 
 export default function BensIndex() {
   const { usuario } = useAuth();
@@ -97,7 +97,7 @@ export default function BensIndex() {
 
         {/*Atalhos */}
         <div className="card atalhos">
-          <h2><FaBolt /> Atalhos:</h2>
+          <h2> Atalhos:</h2>
           <div className="atalhos-buttons">
             <NavLink to="/bens/create" className="atalho-btn verde">
               <FaBoxOpen /> Cadastrar Novo Bem
