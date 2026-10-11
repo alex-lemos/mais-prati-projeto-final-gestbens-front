@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useAuth } from "../../contexts/AuthContext";
+import { useAuth } from "../../contexts/useAuth";
 import { useNavigate } from "react-router-dom";
 import "../../styles/forms.css"; // estilos globais de formulários
 import "./Login.css";

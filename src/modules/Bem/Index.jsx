@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import { NavLink } from "react-router-dom";
-import { useAuth } from "../../contexts/AuthContext";
+import { useAuth } from "../../contexts/useAuth";
 // futuramente: import { bemService } from "../../services/bemService";
 import { bens as mockBens, categorias as mockCategorias, localidades as mockLocalidades } from "../../mocks/data";
 import { FaBoxOpen, FaEye, FaEdit, FaTrash } from "react-icons/fa";

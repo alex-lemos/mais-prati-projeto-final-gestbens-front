@@ -1,5 +1,5 @@
 import { Routes, Route, Navigate } from "react-router-dom";
-import { useAuth } from "../contexts/AuthContext";
+import { useAuth } from "../contexts/useAuth";
 import AdminRoute from "./AdminRoute";
 
 import PublicLayout from "../layouts/PublicLayout/PublicLayout";
@@ -50,8 +50,8 @@ import UsuariosShow from "../modules/Usuario/Show";
 import UsuariosDelete from "../modules/Usuario/Delete";
 
 const AppRoutes = () => {
-  const { usuario } = useAuth();
-  const isAuthenticated = !!usuario;
+  const { usuario } = useAuth(); // Obtém o usuário autenticado do contexto de autenticação
+  const isAuthenticated = !!usuario; // Verifica se o usuário está autenticado
 
   return (
     <Routes>
@@ -109,7 +109,7 @@ const AppRoutes = () => {
       </Route>
 
       {/* Fallback */}
-      <Route path="*" element={<Navigate to="/login" />} />
+      <Route path="*" element={<Navigate to="/" />} />
     </Routes>
   );
 };

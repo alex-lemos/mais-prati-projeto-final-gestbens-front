@@ -1,6 +1,6 @@
 import { useParams, useNavigate, NavLink } from "react-router-dom";
 import { useEffect, useState } from "react";
-import { useAuth } from "../../contexts/AuthContext";
+import { useAuth } from "../../contexts/useAuth";
 import { bens as mockBens, categorias, localidades, movimentacoes, manutencoes, usuarios } from "../../mocks/data";
 import { FaArrowLeft, FaEdit, FaTrash } from "react-icons/fa";
 
@@ -64,10 +64,10 @@ export default function BensShow() {
             </button>
             {usuario?.is_admin && (
               <>
-                <NavLink to={`/bens/edit/${bem.id}`} className="atalho-btn amarelo">
+                <NavLink to={`/bens/edit/${bem.id}`} className="atalho-btn">
                   <FaEdit /> Editar Bem
                 </NavLink>
-                <NavLink to={`/bens/delete/${bem.id}`} className="atalho-btn vermelho">
+                <NavLink to={`/bens/delete/${bem.id}`} className="atalho-btn">
                   <FaTrash /> Excluir Bem
                 </NavLink>
               </>

@@ -1,7 +1,7 @@
 import { FaChevronLeft, FaUserCircle } from "react-icons/fa";
 import { FiLogOut } from "react-icons/fi";
 import { NavLink } from "react-router-dom";
-import { useAuth } from "../../contexts/AuthContext";
+import { useAuth } from "../../contexts/useAuth";
 import logo from "../../assets/img/logo-gestbens.png";
 import "./Sidebar.css";
 
