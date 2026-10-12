@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { useAuth } from "../../contexts/useAuth";
 import { useNavigate } from "react-router-dom";
-import "../../styles/forms.css"; // estilos globais de formulários
 import "./Login.css";
 import logoGestBens from "../../assets/img/logo-gestbens.png";
 

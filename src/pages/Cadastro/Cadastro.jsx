@@ -1,5 +1,4 @@
 import { useState } from "react";
-import "../../styles/forms.css"; // estilos globais de formulários
 import "./Cadastro.css";
 import logo from "../../assets/img/logo-gestbens.png";
 import { usuarioService } from "../../services/usuarioService"; // importa o serviço
