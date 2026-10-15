@@ -70,7 +70,7 @@ export const bens = [
   {
     id: 1,
     nome: "Notebook Dell",
-    descricao: "Core i7, 16GB RAM",
+    descricao: "Computador Core i7, 16GB RAM xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
     data_compra: "2024-01-15",
     valor_compra: 5500.00,
     status: "Ativo",

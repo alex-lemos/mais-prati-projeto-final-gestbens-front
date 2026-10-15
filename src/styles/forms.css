@@ -4,14 +4,16 @@
   border-radius: var(--radius-grande);
   box-shadow: var(--sombra-leve);
   padding: var(--espaco-grande);
-  max-width: 100%;
+  width: 100%;       /* ocupa toda a largura */
+  max-width: 700px; /* aumenta limite máximo */
+  margin: 0 auto;    /* centraliza */
 }
 
 /* Labels */
 label {
   display: block;
   font-family: var(--fonte-texto);
-  font-weight: var(--peso-medio);
+  font-weight: var(--peso-bold);
   color: var(--cor-texto-principal);
   margin-top: var(--espaco-pequeno);
 }

@@ -11,7 +11,7 @@ export const bemService = {
     const response = await api.get("/bens");
     return response.data;
   },
-
+  
   getById: async (id) => {
     const response = await api.get(`/bens/${id}`);
     return response.data;
@@ -26,4 +26,9 @@ export const bemService = {
     const response = await api.delete(`/bens/${id}`);
     return response.data;
   }
+
+  // getAllPaginated: async (pagina, itensPorPagina) => {
+  //   const response = await api.get(`/bens?page=${pagina}&limit=${itensPorPagina}`);
+  //   return response.data;
+  // },
 };

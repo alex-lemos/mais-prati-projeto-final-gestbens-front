@@ -1,12 +1,12 @@
 import { useState, useEffect, useRef } from "react";
 import { NavLink } from "react-router-dom";
-import { useAuth } from "../../contexts/AuthContext";
+import { useAuth } from "../../contexts/useAuth";
 // futuramente: import { bemService } from "../../services/bemService";
 import { bens as mockBens, categorias as mockCategorias, localidades as mockLocalidades } from "../../mocks/data";
-import { FaBolt, FaBoxOpen, FaEye, FaEdit, FaTrash } from "react-icons/fa";
+import { FaBoxOpen, FaEye, FaEdit, FaTrash } from "react-icons/fa";
 
 export default function BensIndex() {
-  const { usuario} = useAuth();
+  const { usuario } = useAuth();
   const [bens, setBens] = useState([]);
   const [categorias, setCategorias] = useState([]);
   const [localidades, setLocalidades] = useState([]);
@@ -97,7 +97,7 @@ export default function BensIndex() {
 
         {/*Atalhos */}
         <div className="card atalhos">
-          <h2><FaBolt /> Atalhos:</h2>
+          <h2> Atalhos:</h2>
           <div className="atalhos-buttons">
             <NavLink to="/bens/create" className="atalho-btn verde">
               <FaBoxOpen /> Cadastrar Novo Bem
@@ -146,7 +146,7 @@ export default function BensIndex() {
               <thead>
                 <tr>
                   <th>Patrimônio</th>
-                  <th>Descrição do Bem</th>
+                  <th>Nome</th>
                   <th>Categoria</th>
                   <th>Local Atual</th>
                   <th>Status</th>
@@ -157,10 +157,10 @@ export default function BensIndex() {
                 {bensPagina.map((bem) => (
                   <tr key={bem.id}>
                     <td>{bem.id}</td>
-                    <td>{bem.nome} - {bem.descricao}</td>
+                    <td>{bem.nome}</td>
                     <td>{getCategoriaNome(bem.categoria_id)}</td>
                     <td>{getLocalidadeNome(bem.localidade_id)}</td>
-                    <td className={`status ${bem.status.toLowerCase()}`}>{bem.status}</td>
+                    <td><span className={`status ${bem.status.toLowerCase()}`}>{bem.status}</span></td>
                     <td className="acoes">
                       <NavLink to={`/bens/show/${bem.id}`} data-tooltip="Visualizar bem"><FaEye /></NavLink>
                       {usuario?.is_admin && (

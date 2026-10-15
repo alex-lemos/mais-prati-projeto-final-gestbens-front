@@ -14,6 +14,10 @@
   width: 100%;
 }
 
+.titulo {
+  font-size: 1.5rem !important;
+}
+
 /* ===========================
    Atalhos
    =========================== */
@@ -65,7 +69,7 @@
 .card h2,
 .card h3 {
   margin: 0;
-  font-size: var(--texto-principal-size);
+  font-size: 1.1rem;
 }
 
 .valor {
@@ -136,3 +140,81 @@
 }
 
 /*--------------------------------------------------------*/
+
+/* ===========================
+   Informações principais (Show)
+   =========================== */
+.card.informacoes {
+  flex-direction: column; /* empilha título e detalhes */
+  align-items: flex-start;
+  gap: var(--espaco-medio);
+}
+
+.informacoes-detalhes {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: var(--espaco-pequeno);
+  width: 100%;
+}
+
+.informacoes-detalhes .campo {
+  display: flex;
+  flex-direction: column;
+}
+
+.campo p {
+  color: var(--cor-texto-principal);
+}
+
+.titulo {
+  font-size: 1.5rem !important;
+}
+
+/* ===========================
+   Abas (Show)
+   =========================== */
+.abas-container {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--espaco-pequeno);
+}
+
+.abas {
+  display: flex;
+  gap: var(--espaco-pequeno);
+  margin-bottom: var(--espaco-medio);
+}
+
+.aba {
+  padding: var(--espaco-pequeno) var(--espaco-medio);
+}
+
+.aba.ativa {
+  background: var(--cor-principal-escuro);
+}
+
+/*--------------------------------------------------------*/
+
+/* ===========================
+   Exclusão
+   =========================== */
+.alerta-exclusao {
+  display: flex;
+  flex-direction: column;
+  background-color: var(--cor-atencao);
+  padding: var(--espaco-grande);
+}
+
+.alerta-exclusao h2 {
+  font-size: 1.2rem; 
+}
+
+.btn-excluir {
+  background-color: var(--cor-critico);  
+  
+}
+
+.btn-excluir:hover {
+  background-color: var(--cor-critico-escuro);
+}
