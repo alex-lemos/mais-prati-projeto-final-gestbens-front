@@ -2,10 +2,10 @@
 import axios from "axios";
 
 const api = axios.create({
-  baseURL: "http://localhost:3000/api", // endereço base da tua API
+  baseURL: "http://localhost:8080/api", // endereço base da tua API
   headers: {
-    "Content-Type": "application/json"
-  }
+    "Content-Type": "application/json",
+  },
 });
 
 // interceptador opcional para incluir token JWT
