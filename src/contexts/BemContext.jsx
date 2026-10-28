@@ -1,22 +1,37 @@
-import { createContext, useState } from "react";
+import { createContext, useCallback, useState } from "react";
 import { bemService } from "../services/bemService";
 
-const BemContext = createContext(null);
+// eslint-disable-next-line react-refresh/only-export-components
+export const BemContext = createContext(null);
 
 export function BemProvider({ children }) {
-  const [bem, setBem] = useState(null);
+  const [bens, setBens] = useState([]);
+  const [carregando, setCarregando] = useState(false);
+  const [erro, setErro] = useState("");
 
-  const loadBem = async () => {
+  const loadBens = useCallback(async () => {
+    setCarregando(true);
+    setErro("");
+
     try {
       const data = await bemService.getAll();
-      setBem(data);
+      setBens(Array.isArray(data) ? data : []);
     } catch (error) {
       console.error("Erro ao carregar os bens:", error);
+      setErro("Não foi possível carregar os bens.");
+    } finally {
+      setCarregando(false);
     }
-  };
-
+  }, []);
   return (
-    <BemContext.Provider value={{ bem, loadBem }}>
+    <BemContext.Provider
+      value={{
+        bens,
+        loadBens,
+        carregando,
+        erro,
+      }}
+    >
       {children}
     </BemContext.Provider>
   );

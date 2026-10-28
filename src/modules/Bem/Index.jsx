@@ -1,20 +1,29 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useContext } from "react";
 import { NavLink } from "react-router-dom";
 import { useAuth } from "../../contexts/useAuth";
-// futuramente: import { bemService } from "../../services/bemService";
-import { bens as mockBens, categorias as mockCategorias, localidades as mockLocalidades } from "../../mocks/data";
+// // futuramente: import { bemService } from "../../services/bemService";
+// import {
+//   bens as mockBens,
+//   categorias as mockCategorias,
+//   localidades as mockLocalidades,
+// } from "../../mocks/data";
 import { FaBoxOpen, FaEye, FaEdit, FaTrash } from "react-icons/fa";
+import { BemContext } from "../../contexts/BemContext";
+import {
+  categorias as mockCategorias,
+  localidades as mockLocalidades,
+} from "../../mocks/data";
 
 export default function BensIndex() {
   const { usuario } = useAuth();
-  const [bens, setBens] = useState([]);
+  const { bens, loadBens, carregando, erro } = useContext(BemContext);
   const [categorias, setCategorias] = useState([]);
   const [localidades, setLocalidades] = useState([]);
   const [filtros, setFiltros] = useState({
     patrimonio: "",
     localidade: "",
     categoria: "",
-    status: ""
+    status: "",
   });
   const [pagina, setPagina] = useState(1);
   const itensPorPagina = 10;
@@ -26,35 +35,43 @@ export default function BensIndex() {
   const statusRef = useRef();
 
   useEffect(() => {
-    const carregar = async () => {
-      // ordena alfabeticamente pelo nome
+    const carregarDados = async () => {
       const categoriasOrdenadas = [...mockCategorias].sort((a, b) =>
-        a.nome.localeCompare(b.nome)
-      );
-      const localidadesOrdenadas = [...mockLocalidades].sort((a, b) =>
-        a.nome.localeCompare(b.nome)
+        a.nome.localeCompare(b.nome),
       );
 
-      setBens(mockBens);
+      const localidadesOrdenadas = [...mockLocalidades].sort((a, b) =>
+        a.nome.localeCompare(b.nome),
+      );
+
       setCategorias(categoriasOrdenadas);
       setLocalidades(localidadesOrdenadas);
-    };
-    carregar();
-  }, []);
 
+      await loadBens();
+    };
+
+    carregarDados();
+  }, [loadBens]);
 
   // aplica filtros
   const bensFiltrados = bens.filter((bem) => {
     return (
-      (filtros.patrimonio === "" || bem.id.toString().includes(filtros.patrimonio)) &&
-      (filtros.localidade === "" || bem.localidade_id.toString() === filtros.localidade) &&
-      (filtros.categoria === "" || bem.categoria_id.toString() === filtros.categoria) &&
-      (filtros.status === "" || bem.status.toLowerCase() === filtros.status.toLowerCase())
+      (filtros.patrimonio === "" ||
+        bem.id.toString().includes(filtros.patrimonio)) &&
+      (filtros.localidade === "" ||
+        bem.localidade_id.toString() === filtros.localidade) &&
+      (filtros.categoria === "" ||
+        bem.categoria_id.toString() === filtros.categoria) &&
+      (filtros.status === "" ||
+        bem.status.toLowerCase() === filtros.status.toLowerCase())
     );
   });
 
   // paginação
-  const totalPaginas = Math.ceil(bensFiltrados.length / itensPorPagina);
+  const totalPaginas = Math.max(
+    1,
+    Math.ceil(bensFiltrados.length / itensPorPagina),
+  );
   const inicio = (pagina - 1) * itensPorPagina;
   const fim = inicio + itensPorPagina;
   const bensPagina = bensFiltrados.slice(inicio, fim);
@@ -64,7 +81,7 @@ export default function BensIndex() {
       patrimonio: patrimonioRef.current.value,
       localidade: localidadeRef.current.value,
       categoria: categoriaRef.current.value,
-      status: statusRef.current.value
+      status: statusRef.current.value,
     });
     setPagina(1);
   };
@@ -94,7 +111,6 @@ export default function BensIndex() {
 
       {/* container principal */}
       <div className="conteudo-wrapper">
-
         {/*Atalhos */}
         <div className="card atalhos">
           <h2> Atalhos:</h2>
@@ -107,7 +123,6 @@ export default function BensIndex() {
 
         {/* Conteúdo principal */}
         <div className="conteudo">
-
           {/* Filtros */}
           <div className="card filtros">
             <h2>Filtros:</h2>
@@ -117,14 +132,18 @@ export default function BensIndex() {
               <select ref={localidadeRef} defaultValue="">
                 <option value="">Todas Localidades</option>
                 {localidades.map((loc) => (
-                  <option key={loc.id} value={loc.id}>{loc.nome}</option>
+                  <option key={loc.id} value={loc.id}>
+                    {loc.nome}
+                  </option>
                 ))}
               </select>
 
               <select ref={categoriaRef} defaultValue="">
                 <option value="">Todas Categorias</option>
                 {categorias.map((cat) => (
-                  <option key={cat.id} value={cat.id}>{cat.nome}</option>
+                  <option key={cat.id} value={cat.id}>
+                    {cat.nome}
+                  </option>
                 ))}
               </select>
 
@@ -135,11 +154,18 @@ export default function BensIndex() {
                 <option value="Manutenção">Em manutenção</option>
               </select>
 
-              <button onClick={aplicarFiltros} className="atalho-btn">Aplicar</button>
-              <button onClick={limparFiltros} className="atalho-btn">Limpar</button>
+              <button onClick={aplicarFiltros} className="atalho-btn">
+                Aplicar
+              </button>
+              <button onClick={limparFiltros} className="atalho-btn">
+                Limpar
+              </button>
             </div>
           </div>
 
+          {carregando && <p>Carregando bens...</p>}
+
+          {erro && <p className="form-error">{erro}</p>}
           {/* Tabela */}
           <div className="card">
             <table className="tabela">
@@ -154,34 +180,72 @@ export default function BensIndex() {
                 </tr>
               </thead>
               <tbody>
-                {bensPagina.map((bem) => (
-                  <tr key={bem.id}>
-                    <td>{bem.id}</td>
-                    <td>{bem.nome}</td>
-                    <td>{getCategoriaNome(bem.categoria_id)}</td>
-                    <td>{getLocalidadeNome(bem.localidade_id)}</td>
-                    <td><span className={`status ${bem.status.toLowerCase()}`}>{bem.status}</span></td>
-                    <td className="acoes">
-                      <NavLink to={`/bens/show/${bem.id}`} data-tooltip="Visualizar bem"><FaEye /></NavLink>
-                      {usuario?.is_admin && (
-                        <>
-                          <NavLink to={`/bens/edit/${bem.id}`} data-tooltip="Editar bem"><FaEdit /></NavLink>
-                          <NavLink to={`/bens/delete/${bem.id}`} data-tooltip="Excluir bem"><FaTrash /></NavLink>
-                        </>
-                      )}
-                    </td>
+                {bensPagina.length === 0 && !carregando ? (
+                  <tr>
+                    <td colSpan="6">Nenhum bem encontrado.</td>
                   </tr>
-                ))}
+                ) : (
+                  bensPagina.map((bem) => (
+                    <tr key={bem.id}>
+                      <td>{bem.id}</td>
+                      <td>{bem.nome}</td>
+                      <td>{getCategoriaNome(bem.categoria_id)}</td>
+                      <td>{getLocalidadeNome(bem.localidade_id)}</td>
+                      <td>
+                        <span className={`status ${bem.status.toLowerCase()}`}>
+                          {bem.status}
+                        </span>
+                      </td>
+                      <td className="acoes">
+                        <NavLink
+                          to={`/bens/show/${bem.id}`}
+                          data-tooltip="Visualizar bem"
+                        >
+                          <FaEye />
+                        </NavLink>
+
+                        {usuario?.is_admin && (
+                          <>
+                            <NavLink
+                              to={`/bens/edit/${bem.id}`}
+                              data-tooltip="Editar bem"
+                            >
+                              <FaEdit />
+                            </NavLink>
+
+                            <NavLink
+                              to={`/bens/delete/${bem.id}`}
+                              data-tooltip="Excluir bem"
+                            >
+                              <FaTrash />
+                            </NavLink>
+                          </>
+                        )}
+                      </td>
+                    </tr>
+                  ))
+                )}
               </tbody>
-            </table>            
+            </table>
           </div>
 
           <div className="paginacao">
-            <button disabled={pagina === 1} onClick={() => setPagina(pagina - 1)}>Anterior</button>
-            <span>Página {pagina} de {totalPaginas}</span>
-            <button disabled={pagina === totalPaginas} onClick={() => setPagina(pagina + 1)}>Próxima</button>
+            <button
+              disabled={pagina === 1}
+              onClick={() => setPagina(pagina - 1)}
+            >
+              Anterior
+            </button>
+            <span>
+              Página {pagina} de {totalPaginas}
+            </span>
+            <button
+              disabled={pagina === totalPaginas}
+              onClick={() => setPagina(pagina + 1)}
+            >
+              Próxima
+            </button>
           </div>
-
         </div>
       </div>
     </div>
