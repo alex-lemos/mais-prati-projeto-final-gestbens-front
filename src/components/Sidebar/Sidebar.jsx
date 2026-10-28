@@ -7,7 +7,6 @@ import "./Sidebar.css";
 
 export default function Sidebar({ open, onClose }) {
   const { usuario, logout } = useAuth();
-
   return (
     <aside className={`sidebar ${open ? "open" : ""}`}>
       {open && (
@@ -38,7 +37,7 @@ export default function Sidebar({ open, onClose }) {
             <NavLink to="/movimentacoes">Movimentação</NavLink>
           </li>
 
-          {usuario?.is_admin && (
+          {usuario.papel === "ADMIN" && (
             <>
               <li>
                 <NavLink to="/locais">Locais</NavLink>
