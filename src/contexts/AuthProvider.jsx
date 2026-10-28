@@ -18,9 +18,8 @@ export function AuthProvider({ children }) {
   async function login(email, senha) {
     try {
       const data = await authService.login(email, senha);
-
-      // O backend retorna: { token, nome, role }
-      const dadosUsuario = { nome: data.nome, role: data.role };
+      // O backend retorna: { token, nome, papel }
+      const dadosUsuario = { nome: data.nome, papel: data.papel };
 
       // Salva no localStorage
       localStorage.setItem("token", data.token);
