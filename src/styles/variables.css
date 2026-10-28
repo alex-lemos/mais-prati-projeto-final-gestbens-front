@@ -39,8 +39,8 @@
   --fonte-titulo: 'Poppins', sans-serif;
 
   /* Tamanhos e pesos */
-  --texto-principal-size: 1rem; /* 15px */
-  --texto-secundario-size: 0.9375rem; /* 13px */
+  --texto-principal-size: 0.95rem; /*1rem = 16px */
+  --texto-secundario-size: 0.9375rem; /* 15px */
   --titulo-size: 1.2rem;
   --botao-size: 1rem; /* 16px */  
 

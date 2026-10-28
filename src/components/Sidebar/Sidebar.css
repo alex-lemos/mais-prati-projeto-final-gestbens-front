@@ -13,7 +13,8 @@
 }
 
 .sidebar .logo {
-  margin-bottom: 2rem;
+  margin-bottom: 1rem;
+  margin-top: 1rem;
   width: 90%;
   align-self: center;
 }
@@ -98,7 +99,7 @@
 }
 
 .logout-btn:hover {
-  color: var(--cor-critico);
+  background-color: var(--cor-critico);
 }
 
 .logout-btn:active {

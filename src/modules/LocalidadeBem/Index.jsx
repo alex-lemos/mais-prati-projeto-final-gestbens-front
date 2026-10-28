@@ -1,11 +1,72 @@
-
-
+import { useState } from "react";
+import { NavLink } from "react-router-dom";
+import { useAuth } from "../../contexts/useAuth";
+import { localidades as mockLocalidades } from "../../mocks/data";
+// Futuramente: import { localidadeService } from "../../services/localidadeService";
+import { FaBoxOpen, FaEye, FaEdit, FaTrash } from "react-icons/fa";
 
 export default function Index() {
+  const { usuario } = useAuth();
+  const [localidades] = useState(() => [...mockLocalidades].sort((a, b) => a.nome.localeCompare(b.nome)));
+  const [filtro, setFiltro] = useState("");
+  const [pagina, setPagina] = useState(1);
+  const itensPorPagina = 10;
+
+  const localidadesFiltradas = localidades.filter((localidade) =>
+    localidade.nome.toLowerCase().includes(filtro.toLowerCase())
+  );
+  const totalPaginas = Math.max(1, Math.ceil(localidadesFiltradas.length / itensPorPagina));
+  const localidadesPagina = localidadesFiltradas.slice((pagina - 1) * itensPorPagina, pagina * itensPorPagina);
+
   return (
-    <div>
-      <h1>Localidade de Bem - Listar</h1>
-      <p>Lista de localidades de bens existentes.</p>
+    <div className="inicio-page">
+      <h1>Gerenciar Localidades</h1>
+      <div className="conteudo-wrapper">
+        {usuario?.is_admin && (
+          <div className="card atalhos">
+            <h2>Atalhos:</h2>
+            <div className="atalhos-buttons">
+              <NavLink to="/locais/create" className="atalho-btn verde"><FaBoxOpen /> Cadastrar Nova Localidade</NavLink>
+            </div>
+          </div>
+        )}
+        <div className="conteudo">
+          <div className="card filtros">
+            <h2>Filtros:</h2>
+            <div className="filtros-form">
+              <input aria-label="Filtrar por nome" value={filtro} onChange={(event) => { setFiltro(event.target.value); setPagina(1); }} placeholder="Nome da localidade" />
+              <button className="atalho-btn" onClick={() => setFiltro("")}>Limpar</button>
+            </div>
+          </div>
+          <div className="card" style={{ flexDirection: "column", alignItems: "stretch" }}>
+            <table className="tabela">
+                <thead><tr><th>ID</th><th>Nome</th><th>Descrição</th><th>Ações</th></tr></thead>
+                <tbody>
+                  {localidadesPagina.map((localidade) => (
+                    <tr key={localidade.id}>
+                      <td>{localidade.id}</td>
+                      <td>{localidade.nome}</td>
+                      <td>{localidade.descricao || "—"}</td>
+                      <td className="acoes">
+                        <NavLink to={`/locais/show/${localidade.id}`} data-tooltip="Visualizar localidade"><FaEye /></NavLink>
+                        {usuario?.is_admin && <>
+                          <NavLink to={`/locais/edit/${localidade.id}`} data-tooltip="Editar localidade"><FaEdit /></NavLink>
+                          <NavLink to={`/locais/delete/${localidade.id}`} data-tooltip="Excluir localidade"><FaTrash /></NavLink>
+                        </>}
+                      </td>
+                    </tr>
+                  ))}
+                  {!localidadesPagina.length && <tr><td colSpan="4">Nenhuma localidade encontrada.</td></tr>}
+                </tbody>
+            </table>
+          </div>
+          <div className="paginacao">
+            <button disabled={pagina === 1} onClick={() => setPagina(pagina - 1)}>Anterior</button>
+            <span>Página {pagina} de {totalPaginas}</span>
+            <button disabled={pagina >= totalPaginas} onClick={() => setPagina(pagina + 1)}>Próxima</button>
+          </div>
+        </div>
+      </div>
     </div>
   );
 }
