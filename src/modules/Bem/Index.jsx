@@ -189,8 +189,10 @@ export default function BensIndex() {
                     <tr key={bem.id}>
                       <td>{bem.id}</td>
                       <td>{bem.nome}</td>
-                      <td>{getCategoriaNome(bem.categoria_id)}</td>
-                      <td>{getLocalidadeNome(bem.localidade_id)}</td>
+                      {/* <td>{getCategoriaNome(bem.categoria_id)}</td>
+                      <td>{getLocalidadeNome(bem.localidade_id)}</td> */}
+                      <td>{bem.nomeCategoria}</td>
+                      <td>{bem.nomeLocalidade}</td>
                       <td>
                         <span className={`status ${bem.status.toLowerCase()}`}>
                           {bem.status}
