@@ -11,14 +11,20 @@ export default function Login() {
   const [email, setEmail] = useState("");
   const [senha, setSenha] = useState("");
   const [erro, setErro] = useState("");
+  const [loading, setLoading] = useState(false); // Opcional: indicador de carregamento
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
+    setErro("");
+    setLoading(true);
+
     try {
-      login(email, senha);
+      await login(email, senha); // Aguarda a chamada da API e salvamento no localStorage
       navigate("/");
     } catch (err) {
       setErro(err.message);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -66,7 +72,9 @@ export default function Login() {
             {erro && <p className="form-error">{erro}</p>}
 
             <div className="form-actions">
-              <button type="submit" className="primary">Entrar</button>
+              <button type="submit" className="primary" disabled={loading}>
+                {loading ? "Entrando..." : "Entrar"}
+              </button>
             </div>
           </form>
 
