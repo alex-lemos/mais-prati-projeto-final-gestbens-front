@@ -78,7 +78,10 @@ export default function Edit() {
             <button onClick={() => navigate(-1)} className="atalho-btn">
               <FaArrowLeft /> Voltar
             </button>
-            <button onClick={() => navigate("/")} className="atalho-btn vermelho">
+            <button
+              onClick={() => navigate("/")}
+              className="atalho-btn vermelho"
+            >
               Cancelar
             </button>
           </div>
