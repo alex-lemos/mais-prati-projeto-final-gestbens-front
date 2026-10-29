@@ -1,86 +1,104 @@
-import { useState, useEffect, useRef, useContext } from "react";
+import { useState, useEffect, useRef } from "react";
 import { NavLink } from "react-router-dom";
-import { useAuth } from "../../contexts/useAuth";
-// // futuramente: import { bemService } from "../../services/bemService";
-// import {
-//   bens as mockBens,
-//   categorias as mockCategorias,
-//   localidades as mockLocalidades,
-// } from "../../mocks/data";
+import { useAuth } from "../../contexts/Auth";
 import { FaBoxOpen, FaEye, FaEdit, FaTrash } from "react-icons/fa";
-import { BemContext } from "../../contexts/BemContext";
-import {
-  categorias as mockCategorias,
-  localidades as mockLocalidades,
-} from "../../mocks/data";
+
+// 1. Importação dos services reais conectados à sua API Java
+import { bemService } from "../../services/bemService";
+import { categoriaService } from "../../services/categoriaService";
+import { localidadeService } from "../../services/localidadeService";
 
 export default function BensIndex() {
   const { usuario } = useAuth();
-  const { bens, loadBens, carregando, erro } = useContext(BemContext);
+  
+  // 2. Estados para armazenar os dados carregados do backend
+  const [bens, setBens] = useState([]);
   const [categorias, setCategorias] = useState([]);
   const [localidades, setLocalidades] = useState([]);
+  
+  // Estados de controle de interface
+  const [carregando, setCarregando] = useState(true);
+  const [erro, setErro] = useState("");
+  
   const [filtros, setFiltros] = useState({
     patrimonio: "",
-    localidade: "",
-    categoria: "",
+    localidade: "", // Guardará o Nome da localidade selecionada
+    categoria: "",  // Guardará o Nome da categoria selecionada
     status: "",
   });
   const [pagina, setPagina] = useState(1);
   const itensPorPagina = 10;
 
-  // refs para inputs de filtro
+  // Refs para capturar os valores dos inputs de filtros
   const patrimonioRef = useRef();
   const localidadeRef = useRef();
   const categoriaRef = useRef();
   const statusRef = useRef();
 
+  // 3. Carregamento em paralelo de todas as APIs necessárias ao abrir a página
   useEffect(() => {
-    const carregarDados = async () => {
-      const categoriasOrdenadas = [...mockCategorias].sort((a, b) =>
-        a.nome.localeCompare(b.nome),
-      );
+    const carregarDadosDoBanco = async () => {
+      try {
+        setCarregando(true);
+        setErro("");
 
-      const localidadesOrdenadas = [...mockLocalidades].sort((a, b) =>
-        a.nome.localeCompare(b.nome),
-      );
+        const [dadosBens, dadosCategorias, dadosLocalidades] = await Promise.all([
+          bemService.getAll(),
+          categoriaService.getAll(),
+          localidadeService.getAll(),
+        ]);
 
-      setCategorias(categoriasOrdenadas);
-      setLocalidades(localidadesOrdenadas);
+        setBens(Array.isArray(dadosBens) ? [...dadosBens].sort((a, b) => Number(a.id) - Number(b.id)) : []);
+        
+        setCategorias(
+          Array.isArray(dadosCategorias) 
+            ? [...dadosCategorias].sort((a, b) => a.nome.localeCompare(b.nome)) 
+            : []
+        );
+        
+        setLocalidades(
+          Array.isArray(dadosLocalidades) 
+            ? [...dadosLocalidades].sort((a, b) => a.nome.localeCompare(b.nome)) 
+            : []
+        );
 
-      await loadBens();
+      } catch (error) {
+        console.error("Erro ao carregar dados do gerenciador:", error);
+        setErro("Não foi possível carregar a lista de bens ou filtros.");
+      } finally {
+        setCarregando(false);
+      }
     };
 
-    carregarDados();
-  }, [loadBens]);
+    carregarDadosDoBanco();
+  }, []);
 
-  // aplica filtros
+  // 4. Filtros adaptados para a estrutura 
   const bensFiltrados = bens.filter((bem) => {
     return (
       (filtros.patrimonio === "" ||
         bem.id.toString().includes(filtros.patrimonio)) &&
       (filtros.localidade === "" ||
-        bem.localidade_id.toString() === filtros.localidade) &&
+        bem.nomeLocalidade === filtros.localidade) && // Compara texto direto com o DTO do back
       (filtros.categoria === "" ||
-        bem.categoria_id.toString() === filtros.categoria) &&
+        bem.nomeCategoria === filtros.categoria) &&   // Compara texto direto com o DTO do back
       (filtros.status === "" ||
         bem.status.toLowerCase() === filtros.status.toLowerCase())
     );
   });
 
-  // paginação
-  const totalPaginas = Math.max(
-    1,
-    Math.ceil(bensFiltrados.length / itensPorPagina),
-  );
+  // Paginação local
+  const totalPaginas = Math.max(1, Math.ceil(bensFiltrados.length / itensPorPagina));
   const inicio = (pagina - 1) * itensPorPagina;
   const fim = inicio + itensPorPagina;
   const bensPagina = bensFiltrados.slice(inicio, fim);
 
+  // Ações de gerenciamento dos filtros
   const aplicarFiltros = () => {
     setFiltros({
       patrimonio: patrimonioRef.current.value,
-      localidade: localidadeRef.current.value,
-      categoria: categoriaRef.current.value,
+      localidade: localidadeRef.current.value, // Captura o valor string (nome)
+      categoria: categoriaRef.current.value,   // Captura o valor string (nome)
       status: statusRef.current.value,
     });
     setPagina(1);
@@ -95,23 +113,13 @@ export default function BensIndex() {
     setPagina(1);
   };
 
-  const getCategoriaNome = (id) => {
-    const cat = categorias.find((c) => c.id === id);
-    return cat ? cat.nome : id;
-  };
-
-  const getLocalidadeNome = (id) => {
-    const loc = localidades.find((l) => l.id === id);
-    return loc ? loc.nome : id;
-  };
-
   return (
     <div className="inicio-page">
       <h1>Gerenciar Bens</h1>
 
       {/* container principal */}
       <div className="conteudo-wrapper">
-        {/*Atalhos */}
+        {/* Atalhos */}
         <div className="card atalhos">
           <h2> Atalhos:</h2>
           <div className="atalhos-buttons">
@@ -129,19 +137,21 @@ export default function BensIndex() {
             <div className="filtros-form">
               <input ref={patrimonioRef} type="text" placeholder="Patrimônio" />
 
+              {/* 5. Alteramos o 'value' das options para passar o NOME em vez do ID */}
               <select ref={localidadeRef} defaultValue="">
                 <option value="">Todas Localidades</option>
                 {localidades.map((loc) => (
-                  <option key={loc.id} value={loc.id}>
+                  <option key={loc.id} value={loc.nome}>
                     {loc.nome}
                   </option>
                 ))}
               </select>
 
+              {/* 6. Alteramos o 'value' das options para passar o NOME em vez do ID */}
               <select ref={categoriaRef} defaultValue="">
                 <option value="">Todas Categorias</option>
                 {categorias.map((cat) => (
-                  <option key={cat.id} value={cat.id}>
+                  <option key={cat.id} value={cat.nome}>
                     {cat.nome}
                   </option>
                 ))}
@@ -163,9 +173,9 @@ export default function BensIndex() {
             </div>
           </div>
 
-          {carregando && <p>Carregando bens...</p>}
-
-          {erro && <p className="form-error">{erro}</p>}
+          {carregando && <p>Carregando bens do servidor...</p>}
+          {erro && <p className="form-error">⚠️ {erro}</p>}
+          
           {/* Tabela */}
           <div className="card">
             <table className="tabela">
@@ -189,13 +199,12 @@ export default function BensIndex() {
                     <tr key={bem.id}>
                       <td>{bem.id}</td>
                       <td>{bem.nome}</td>
-                      {/* <td>{getCategoriaNome(bem.categoria_id)}</td>
-                      <td>{getLocalidadeNome(bem.localidade_id)}</td> */}
-                      <td>{bem.nomeCategoria}</td>
-                      <td>{bem.nomeLocalidade}</td>
+                      {/* 7. Exibição limpa lendo os atributos reais do BemResponse do Java */}
+                      <td>{bem.nomeCategoria || "Não informada"}</td>
+                      <td>{bem.nomeLocalidade || "Não informado"}</td>
                       <td>
-                        <span className={`status ${bem.status.toLowerCase()}`}>
-                          {bem.status}
+                        <span className={`status ${bem.status ? bem.status.toLowerCase() : ""}`}>
+                          {bem.status || "N/A"}
                         </span>
                       </td>
                       <td className="acoes">
@@ -206,7 +215,8 @@ export default function BensIndex() {
                           <FaEye />
                         </NavLink>
 
-                        {usuario?.is_admin && (
+                        {/* Validação de perfil protegendo os botões gerenciais */}
+                        {usuario?.papel === "ADMIN" && (
                           <>
                             <NavLink
                               to={`/bens/edit/${bem.id}`}
@@ -231,6 +241,7 @@ export default function BensIndex() {
             </table>
           </div>
 
+          {/* Paginação */}
           <div className="paginacao">
             <button
               disabled={pagina === 1}

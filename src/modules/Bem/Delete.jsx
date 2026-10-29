@@ -1,46 +1,49 @@
-// src/modules/Bem/Delete.jsx
 import { useParams, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
-import { bens as mockBens, categorias, localidades } from "../../mocks/data";
 import { FaArrowLeft, FaTrash } from "react-icons/fa";
-// import { bemService } from "../../services/bemService";
+import { bemService } from "../../services/bemService"; // 1. Ativamos a importação do service
 
 export default function BensDelete() {
   const { id } = useParams();
   const navigate = useNavigate();
 
   const [bem, setBem] = useState(null);
+  const [carregando, setCarregando] = useState(true);
+  const [erro, setErro] = useState("");
 
+  // 2. Carrega o Bem específico vindo da API usando o ID da URL
   useEffect(() => {
-    const carregar = () => {
-      const bemEncontrado = mockBens.find((b) => b.id.toString() === id);
-      if (bemEncontrado) {
-        const categoria = categorias.find((c) => c.id === bemEncontrado.categoria_id);
-        const localidade = localidades.find((l) => l.id === bemEncontrado.localidade_id);
-
-        setBem({
-          ...bemEncontrado,
-          categoria,
-          localidade,
-        });
+    async function buscarBem() {
+      try {
+        setCarregando(true);
+        setErro("");
+        const dadosBem = await bemService.getById(id);
+        setBem(dadosBem);
+      } catch (error) {
+        console.error("Erro ao buscar detalhes do bem:", error);
+        setErro("Não foi possível encontrar as informações deste bem.");
+      } finally {
+        setCarregando(false);
       }
-    };
-    carregar();
+    }
+    
+    if (id) buscarBem();
   }, [id]);
 
+  // 3. Função que deleta o item de verdade no banco através do service
   const handleDelete = async () => {
     try {
-      // Futuramente: await bemService.remove(id);
-      console.log("Bem excluído (mock):", bem);
-
+      await bemService.remove(id);
       navigate("/bens");
     } catch (error) {
       console.error("Erro ao excluir bem:", error);
-      alert("Não foi possível excluir o bem.");
+      const msgErro = error.response?.data?.message || "Não foi possível excluir o bem. Tente novamente.";
+      alert(`❌ Erro: ${msgErro}`);
     }
   };
 
-  if (!bem) return <div className="inicio-page"><h1>Bem não encontrado</h1></div>;
+  if (carregando) return <div className="inicio-page"><h1>Carregando informações do bem...</h1></div>;
+  if (erro || !bem) return <div className="inicio-page"><h1 className="form-error">⚠️ {erro || "Bem não encontrado"}</h1></div>;
 
   return (
     <div className="inicio-page">
@@ -62,7 +65,7 @@ export default function BensDelete() {
         </div>
 
         <div className="conteudo">
-          {/* Informações principais */}
+          {/* Informações principais vindas do BemResponse da API */}
           <div className="card informacoes">
             <h2 className="titulo">{bem.nome}</h2>
             <div className="informacoes-detalhes">
@@ -72,32 +75,31 @@ export default function BensDelete() {
               </div>
               <div className="campo">
                 <strong>Categoria:</strong>
-                <p>{bem.categoria?.nome}</p>
+                {/* 4. Ajustado para ler a string resolvida pelo seu DTO Java */}
+                <p>{bem.nomeCategoria || "Não informada"}</p>
               </div>
               <div className="campo">
                 <strong>Localidade Atual:</strong>
-                <p>{bem.localidade?.nome}</p>
-              </div>
-              <div className="campo">
-                <strong>Data de Compra:</strong>
-                <p>{bem.data_compra}</p>
+                {/* 5. Ajustado para ler a string resolvida pelo seu DTO Java */}
+                <p>{bem.nomeLocalidade || "Não informada"}</p>
               </div>
               <div className="campo">
                 <strong>Valor de Compra:</strong>
-                <p>R$ {bem.valor_compra.toFixed(2)}</p>
+                {/* 6. Validação caso o valorCompra venha nulo ou indefinido do banco */}
+                <p>R$ {bem.valorCompra ? Number(bem.valorCompra).toFixed(2) : "0,00"}</p>
               </div>
               <div className="campo">
                 <strong>Status:</strong>
-                <p><span className={`status ${bem.status.toLowerCase()}`}>{bem.status}</span></p>
+                <p>
+                  <span className={`status ${bem.status ? bem.status.toLowerCase() : ""}`}>
+                    {bem.status || "N/A"}
+                  </span>
+                </p>
               </div>
-            </div>
-            <div className="campo">
-              <strong>Descrição:</strong>
-              <p>{bem.descricao}</p>
             </div>
           </div>
 
-          {/* Alerta de exclusão em vez das abas */}
+          {/* Alerta de exclusão */}
           <div className="card alerta-exclusao">
             <h2>Tem certeza que deseja excluir este bem? Essa ação não poderá ser desfeita.</h2>
             <button onClick={handleDelete} className="btn-excluir">

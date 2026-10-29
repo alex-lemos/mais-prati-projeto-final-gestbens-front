@@ -1,21 +1,18 @@
 import { useNavigate } from "react-router-dom";
 import { FaArrowLeft } from "react-icons/fa";
 import FormularioLocalidade from "../../components/FormularioLocalidade";
-import { localidades } from "../../mocks/data";
-// Futuramente: import { localidadeService } from "../../services/localidadeService";
+import { localidadeService } from "../../services/localidadeService";
 
 export default function Create() {
   const navigate = useNavigate();
 
   const handleSubmit = async (formData) => {
     try {
-      const id = Math.max(0, ...localidades.map((localidade) => Number(localidade.id))) + 1;
-      localidades.push({ id, ...formData });
-      // Futuramente: await localidadeService.create(formData);
+      await localidadeService.create(formData);
       navigate("/locais");
     } catch (error) {
       console.error("Erro ao salvar localidade:", error);
-      alert("Não foi possível salvar a localidade.");
+      alert(error.response?.data?.message || "Não foi possível salvar a localidade.");
     }
   };
 

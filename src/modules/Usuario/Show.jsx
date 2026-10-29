@@ -1,19 +1,34 @@
 import { useEffect, useState } from "react";
 import { NavLink, useNavigate, useParams } from "react-router-dom";
-import { usuarios as mockUsuarios } from "../../mocks/data";
+import { usuarioService } from "../../services/usuarioService";
 import { FaArrowLeft, FaEdit, FaTrash } from "react-icons/fa";
-// Futuramente: import { usuarioService } from "../../services/usuarioService";
 
 export default function Show() {
   const { id } = useParams();
   const navigate = useNavigate();
   const [usuario, setUsuario] = useState(null);
+  const [carregando, setCarregando] = useState(true);
+  const [erro, setErro] = useState("");
 
   useEffect(() => {
-    setUsuario(mockUsuarios.find((item) => item.id.toString() === id) || null);
+    async function carregarUsuario() {
+      try {
+        setCarregando(true);
+        setErro("");
+        setUsuario(await usuarioService.getById(id));
+      } catch (error) {
+        console.error("Erro ao carregar usuário:", error);
+        setErro("Não foi possível carregar o usuário.");
+      } finally {
+        setCarregando(false);
+      }
+    }
+
+    if (id) carregarUsuario();
   }, [id]);
 
-  if (!usuario) return <div className="inicio-page"><h1>Usuário não encontrado</h1></div>;
+  if (carregando) return <div className="inicio-page"><h1>Carregando usuário...</h1></div>;
+  if (erro || !usuario) return <div className="inicio-page"><h1 className="form-error">{erro || "Usuário não encontrado"}</h1></div>;
 
   return (
     <div className="inicio-page">

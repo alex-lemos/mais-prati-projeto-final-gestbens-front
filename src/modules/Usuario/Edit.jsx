@@ -2,32 +2,44 @@ import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { FaArrowLeft } from "react-icons/fa";
 import FormularioUsuario from "../../components/FormularioUsuario";
-import { usuarios as mockUsuarios } from "../../mocks/data";
-// Futuramente: import { usuarioService } from "../../services/usuarioService";
+import { usuarioService } from "../../services/usuarioService";
 
 export default function Edit() {
   const { id } = useParams();
   const navigate = useNavigate();
   const [usuario, setUsuario] = useState(null);
+  const [carregando, setCarregando] = useState(true);
+  const [erro, setErro] = useState("");
 
   useEffect(() => {
-    setUsuario(mockUsuarios.find((item) => item.id.toString() === id) || null);
+    async function carregarUsuario() {
+      try {
+        setCarregando(true);
+        setErro("");
+        setUsuario(await usuarioService.getById(id));
+      } catch (error) {
+        console.error("Erro ao carregar usuário:", error);
+        setErro("Não foi possível carregar o usuário.");
+      } finally {
+        setCarregando(false);
+      }
+    }
+
+    if (id) carregarUsuario();
   }, [id]);
 
   const handleSubmit = async (formData) => {
     try {
-      const indice = mockUsuarios.findIndex((item) => item.id.toString() === id);
-      if (indice < 0) throw new Error("Usuário não encontrado.");
-      mockUsuarios[indice] = { ...mockUsuarios[indice], ...formData };
-      // Futuramente: await usuarioService.update(id, formData);
+      await usuarioService.update(id, formData);
       navigate("/usuarios");
     } catch (error) {
       console.error("Erro ao atualizar usuário:", error);
-      alert("Não foi possível atualizar o usuário.");
+      alert(error.response?.data?.message || "Não foi possível atualizar o usuário.");
     }
   };
 
-  if (!usuario) return <div className="inicio-page"><h1>Usuário não encontrado</h1></div>;
+  if (carregando) return <div className="inicio-page"><h1>Carregando usuário...</h1></div>;
+  if (erro || !usuario) return <div className="inicio-page"><h1 className="form-error">{erro || "Usuário não encontrado"}</h1></div>;
 
   return (
     <div className="inicio-page">

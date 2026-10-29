@@ -1,21 +1,18 @@
 import { useNavigate } from "react-router-dom";
 import { FaArrowLeft } from "react-icons/fa";
 import FormularioUsuario from "../../components/FormularioUsuario";
-import { usuarios } from "../../mocks/data";
-// Futuramente: import { usuarioService } from "../../services/usuarioService";
+import { usuarioService } from "../../services/usuarioService";
 
 export default function Create() {
   const navigate = useNavigate();
 
   const handleSubmit = async (formData) => {
     try {
-      const id = Math.max(0, ...usuarios.map((usuario) => Number(usuario.id))) + 1;
-      usuarios.push({ id, ...formData });
-      // Futuramente: await usuarioService.create(formData);
+      await usuarioService.create(formData);
       navigate("/usuarios");
     } catch (error) {
       console.error("Erro ao salvar usuário:", error);
-      alert("Não foi possível salvar o usuário.");
+      alert(error.response?.data?.message || "Não foi possível salvar o usuário.");
     }
   };
 

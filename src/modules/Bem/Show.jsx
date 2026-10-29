@@ -1,8 +1,12 @@
 import { useParams, useNavigate, NavLink } from "react-router-dom";
 import { useEffect, useState } from "react";
-import { useAuth } from "../../contexts/useAuth";
-import { bens as mockBens, categorias, localidades, movimentacoes, manutencoes, usuarios } from "../../mocks/data";
+import { useAuth } from "../../contexts/Auth";
 import { FaArrowLeft, FaEdit, FaTrash } from "react-icons/fa";
+
+// 1. Importação de todos os services reais necessários
+import { bemService } from "../../services/bemService";
+import { movimentacaoService } from "../../services/movimentacaoService";
+import { manutencaoService } from "../../services/manutencaoService";
 
 export default function BensShow() {
   const { id } = useParams();
@@ -11,43 +15,66 @@ export default function BensShow() {
 
   const [bem, setBem] = useState(null);
   const [abaAtiva, setAbaAtiva] = useState("movimentacoes");
+  
+  const [carregando, setCarregando] = useState(true);
+  const [erro, setErro] = useState("");
 
+  // 2. Carga inicial em paralelo unindo os dados do bem e seus respectivos históricos
   useEffect(() => {
-    const carregar = () => {
-      const bemEncontrado = mockBens.find((b) => b.id.toString() === id);
-      if (bemEncontrado) {
-        const categoria = categorias.find((c) => c.id === bemEncontrado.categoria_id);
-        const localidade = localidades.find((l) => l.id === bemEncontrado.localidade_id);
+    async function carregarDadosDoBem() {
+      try {
+        setCarregando(true);
+        setErro("");
 
-        const movs = movimentacoes
-          .filter((m) => m.bem_id === bemEncontrado.id)
-          .map((m) => ({
-            ...m,
-            usuario: usuarios.find((u) => u.id === m.usuario_id),
-            origem: localidades.find((l) => l.id === m.localidade_origem_id),
-            destino: localidades.find((l) => l.id === m.localidade_destino_id),
-          }));
+        const [dadosBem, dadosMovimentacoes, dadosManutencoes] = await Promise.all([
+          bemService.getById(id),
+          movimentacaoService.getAll(),
+          manutencaoService.getAll(),
+        ]);
 
-        const mans = manutencoes
-          .filter((man) => man.bem_id === bemEncontrado.id)
-          .map((man) => ({
-            ...man,
-            usuario: usuarios.find((u) => u.id === man.usuario_id),
-          }));
+        // Filtra o histórico com base nas Records estruturadas do seu backend Java
+        const movsFiltradas = Array.isArray(dadosMovimentacoes)
+          ? dadosMovimentacoes.filter((m) => m.bem === dadosBem.nome)
+          : [];
+
+        const mansFiltradas = Array.isArray(dadosManutencoes)
+          ? dadosManutencoes.filter((man) => man.bem === dadosBem.nome)
+          : [];
 
         setBem({
-          ...bemEncontrado,
-          categoria,
-          localidade,
-          movimentacoes: movs,
-          manutencoes: mans,
+          ...dadosBem,
+          movimentacoes: movsFiltradas,
+          manutencoes: mansFiltradas,
         });
+
+      } catch (error) {
+        console.error("Erro ao carregar detalhes do bem:", error);
+        setErro("Não foi possível carregar as informações deste patrimônio.");
+      } finally {
+        setCarregando(false);
       }
-    };
-    carregar();
+    }
+
+    if (id) {
+      carregarDadosDoBem();
+    }
   }, [id]);
 
-  if (!bem) return <div className="inicio-page"><h1>Bem não encontrado</h1></div>;
+  // Formatação segura de datas vindas do Spring Boot (LocalDateTime)
+  const formatarData = (dataString) => {
+    if (!dataString) return "N/A";
+    try {
+      const data = new Date(dataString);
+      return data.toLocaleDateString("pt-BR") + " " + data.toLocaleTimeString("pt-BR", { hour: '2-digit', minute: '2-digit' });
+    } catch {
+      return dataString;
+    }
+  };
+
+  if (carregando) return <div className="inicio-page"><h1>Carregando detalhes do bem...</h1></div>;
+  if (erro || !bem) return <div className="inicio-page"><h1 className="form-error">⚠️ {erro || "Bem não encontrado"}</h1></div>;
+
+  // console.log("Bem carregado:", bem);
 
   return (
     <div className="inicio-page">
@@ -62,7 +89,8 @@ export default function BensShow() {
             <button onClick={() => navigate(-1)} className="atalho-btn">
               <FaArrowLeft /> Voltar
             </button>
-            {usuario?.is_admin && (
+            {/* 3. Atualizado para validar o papel vindo do seu back */}
+            {usuario?.papel === "ADMIN" && (
               <>
                 <NavLink to={`/bens/edit/${bem.id}`} className="atalho-btn">
                   <FaEdit /> Editar Bem
@@ -76,7 +104,7 @@ export default function BensShow() {
         </div>
 
         <div className="conteudo">
-          {/* Informações principais */}
+          {/* Informações principais mapeadas com seu BemResponse */}
           <div className="card informacoes">
             <h2 className="titulo">{bem.nome}</h2>
             <div className="informacoes-detalhes">
@@ -86,29 +114,32 @@ export default function BensShow() {
               </div>
               <div className="campo">
                 <strong>Categoria:</strong>
-                <p>{bem.categoria?.nome}</p>
+                <p>{bem.nomeCategoria || "Não informada"}</p>
               </div>
               <div className="campo">
                 <strong>Localidade Atual:</strong>
-                <p>{bem.localidade?.nome}</p>
-              </div>
-              <div className="campo">
-                <strong>Data de Compra:</strong>
-                <p>{bem.data_compra}</p>
+                <p>{bem.nomeLocalidade || "Não informada"}</p>
               </div>
               <div className="campo">
                 <strong>Valor de Compra:</strong>
-                <p>R$ {bem.valor_compra.toFixed(2)}</p>
+                <p>R$ {bem.valorCompra ? Number(bem.valorCompra).toFixed(2) : "0,00"}</p>
               </div>
               <div className="campo">
                 <strong>Status:</strong>
-                <p><span className={`status ${bem.status.toLowerCase()}`}>{bem.status}</span></p>
+                <p>
+                  <span className={`status ${bem.status ? bem.status.toLowerCase() : ""}`}>
+                    {bem.status || "N/A"}
+                  </span>
+                </p>
               </div>
             </div>
-            <div className="campo">
-              <strong>Descrição:</strong>
-              <p>{bem.descricao}</p>
-            </div>
+            {/* Se o seu BemResponse estender uma descrição mais tarde: */}
+            {bem.descricao && (
+              <div className="campo">
+                <strong>Descrição:</strong>
+                <p>{bem.descricao}</p>
+              </div>
+            )}
           </div>
 
           {/* Alternador de abas */}
@@ -139,11 +170,11 @@ export default function BensShow() {
                       <tbody>
                         {bem.movimentacoes.map((mov) => (
                           <tr key={mov.id}>
-                            <td>{mov.data_movimentacao}</td>
-                            <td>{mov.origem?.nome}</td>
-                            <td>{mov.destino?.nome}</td>
-                            <td>{mov.usuario?.nome}</td>
-                            <td>{mov.observacao}</td>
+                            <td>{formatarData(mov.dataMovimentacao)}</td>
+                            <td>{mov.localidadeOrigem || "N/A"}</td>
+                            <td>{mov.localidadeDestino}</td>
+                            <td>{mov.usuario}</td>
+                            <td>{mov.observacao || "Sem observações"}</td>
                           </tr>
                         ))}
                       </tbody>
@@ -158,7 +189,8 @@ export default function BensShow() {
                     <table className="tabela">
                       <thead>
                         <tr>
-                          <th>Data</th>
+                          <th>Data Entrada</th>
+                          <th>Data Retorno</th>
                           <th>Descrição</th>
                           <th>Custo</th>
                           <th>Responsável</th>
@@ -167,10 +199,11 @@ export default function BensShow() {
                       <tbody>
                         {bem.manutencoes.map((man) => (
                           <tr key={man.id}>
-                            <td>{man.data_manutencao}</td>
+                            <td>{formatarData(man.dataEntrada)}</td>
+                            <td>{formatarData(man.dataRetorno)}</td>
                             <td>{man.descricao}</td>
-                            <td>R$ {man.custo.toFixed(2)}</td>
-                            <td>{man.usuario?.nome}</td>
+                            <td>R$ {man.custo ? Number(man.custo).toFixed(2) : "0,00"}</td>
+                            <td>{man.usuario}</td>
                           </tr>
                         ))}
                       </tbody>

@@ -1,21 +1,36 @@
 import { useEffect, useState } from "react";
 import { NavLink, useNavigate, useParams } from "react-router-dom";
-import { useAuth } from "../../contexts/useAuth";
-import { localidades as mockLocalidades } from "../../mocks/data";
+import { useAuth } from "../../contexts/Auth";
+import { localidadeService } from "../../services/localidadeService";
 import { FaArrowLeft, FaEdit, FaTrash } from "react-icons/fa";
-// Futuramente: import { localidadeService } from "../../services/localidadeService";
 
 export default function Show() {
   const { id } = useParams();
   const navigate = useNavigate();
   const { usuario } = useAuth();
   const [localidade, setLocalidade] = useState(null);
+  const [carregando, setCarregando] = useState(true);
+  const [erro, setErro] = useState("");
 
   useEffect(() => {
-    setLocalidade(mockLocalidades.find((item) => item.id.toString() === id) || null);
+    async function carregarLocalidade() {
+      try {
+        setCarregando(true);
+        setErro("");
+        setLocalidade(await localidadeService.getById(id));
+      } catch (error) {
+        console.error("Erro ao carregar localidade:", error);
+        setErro("Não foi possível carregar a localidade.");
+      } finally {
+        setCarregando(false);
+      }
+    }
+
+    if (id) carregarLocalidade();
   }, [id]);
 
-  if (!localidade) return <div className="inicio-page"><h1>Localidade não encontrada</h1></div>;
+  if (carregando) return <div className="inicio-page"><h1>Carregando localidade...</h1></div>;
+  if (erro || !localidade) return <div className="inicio-page"><h1 className="form-error">{erro || "Localidade não encontrada"}</h1></div>;
 
   return (
     <div className="inicio-page">
@@ -25,7 +40,7 @@ export default function Show() {
           <h2>Ações:</h2>
           <div className="atalhos-buttons">
             <button onClick={() => navigate(-1)} className="atalho-btn"><FaArrowLeft /> Voltar</button>
-            {usuario?.is_admin && <>
+            {usuario?.papel === "ADMIN" && <>
               <NavLink to={`/locais/edit/${localidade.id}`} className="atalho-btn"><FaEdit /> Editar Localidade</NavLink>
               <NavLink to={`/locais/delete/${localidade.id}`} className="atalho-btn"><FaTrash /> Excluir Localidade</NavLink>
             </>}

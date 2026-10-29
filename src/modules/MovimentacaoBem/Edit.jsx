@@ -2,32 +2,73 @@ import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { FaArrowLeft } from "react-icons/fa";
 import FormularioMovimentacao from "../../components/FormularioMovimentacao";
-import { movimentacoes as mockMovimentacoes, bens, localidades, usuarios } from "../../mocks/data";
-// Futuramente: import { movimentacaoService } from "../../services/movimentacaoService";
+import { movimentacaoService } from "../../services/movimentacaoService";
+import { bemService } from "../../services/bemService";
+import { localidadeService } from "../../services/localidadeService";
+import { usuarioService } from "../../services/usuarioService";
 
 export default function Edit() {
   const { id } = useParams();
   const navigate = useNavigate();
   const [movimentacao, setMovimentacao] = useState(null);
+  const [bens, setBens] = useState([]);
+  const [localidades, setLocalidades] = useState([]);
+  const [usuarios, setUsuarios] = useState([]);
+  const [carregando, setCarregando] = useState(true);
+  const [erro, setErro] = useState("");
 
   useEffect(() => {
-    setMovimentacao(mockMovimentacoes.find((item) => item.id.toString() === id) || null);
+    async function carregarDados() {
+      try {
+        setCarregando(true);
+        setErro("");
+        const [dadosMovimentacao, dadosBens, dadosLocalidades, dadosUsuarios] = await Promise.all([
+          movimentacaoService.getById(id),
+          bemService.getAll(),
+          localidadeService.getAll(),
+          usuarioService.getAll(),
+        ]);
+        const listaBens = Array.isArray(dadosBens) ? dadosBens : [];
+        const listaLocalidades = Array.isArray(dadosLocalidades) ? dadosLocalidades : [];
+        const listaUsuarios = Array.isArray(dadosUsuarios) ? dadosUsuarios : [];
+        const resolverId = (referencia, lista) => {
+          const valor = referencia?.id ?? referencia;
+          return lista.find((item) => String(item.id) === String(valor) || item.nome === valor)?.id ?? "";
+        };
+        setMovimentacao({
+          ...dadosMovimentacao,
+          data_movimentacao: (dadosMovimentacao.data_movimentacao || dadosMovimentacao.dataMovimentacao || "").slice(0, 10),
+          bem_id: resolverId(dadosMovimentacao.bem_id ?? dadosMovimentacao.bemId ?? dadosMovimentacao.bem, listaBens),
+          usuario_id: resolverId(dadosMovimentacao.usuario_id ?? dadosMovimentacao.usuarioId ?? dadosMovimentacao.usuario, listaUsuarios),
+          localidade_origem_id: resolverId(dadosMovimentacao.localidade_origem_id ?? dadosMovimentacao.localidadeOrigemId ?? dadosMovimentacao.localidadeOrigem, listaLocalidades),
+          localidade_destino_id: resolverId(dadosMovimentacao.localidade_destino_id ?? dadosMovimentacao.localidadeDestinoId ?? dadosMovimentacao.localidadeDestino, listaLocalidades),
+        });
+        setBens(listaBens);
+        setLocalidades(listaLocalidades);
+        setUsuarios(listaUsuarios);
+      } catch (error) {
+        console.error("Erro ao carregar dados da movimentação:", error);
+        setErro("Não foi possível carregar a movimentação ou as listas auxiliares.");
+      } finally {
+        setCarregando(false);
+      }
+    }
+
+    if (id) carregarDados();
   }, [id]);
 
   const handleSubmit = async (formData) => {
     try {
-      const indice = mockMovimentacoes.findIndex((item) => item.id.toString() === id);
-      if (indice < 0) throw new Error("Movimentação não encontrada.");
-      mockMovimentacoes[indice] = { ...mockMovimentacoes[indice], ...formData };
-      // Futuramente: await movimentacaoService.update(id, formData);
+      await movimentacaoService.update(id, formData);
       navigate("/movimentacoes");
     } catch (error) {
       console.error("Erro ao atualizar movimentação:", error);
-      alert("Não foi possível atualizar a movimentação.");
+      alert(error.response?.data?.message || "Não foi possível atualizar a movimentação.");
     }
   };
 
-  if (!movimentacao) return <div className="inicio-page"><h1>Movimentação não encontrada</h1></div>;
+  if (carregando) return <div className="inicio-page"><h1>Carregando movimentação...</h1></div>;
+  if (erro || !movimentacao) return <div className="inicio-page"><h1 className="form-error">{erro || "Movimentação não encontrada"}</h1></div>;
 
   return (
     <div className="inicio-page">

@@ -6,11 +6,11 @@ export default function FormularioBem({ categorias, localidades, onSubmit, initi
   const [formData, setFormData] = useState({
     nome: "",
     descricao: "",
-    data_compra: "",
-    valor_compra: "",
-    status: "Ativo",
-    categoria_id: "",
-    localidade_id: "",
+    dataCompra: "",
+    valorCompra: "",
+    categoriaId: "",
+    localidadeId: "",
+    status: "ATIVO",
   });
 
   // Se vier initialData (caso do Edit), atualiza o estado
@@ -37,11 +37,11 @@ export default function FormularioBem({ categorias, localidades, onSubmit, initi
     setFormData(initialData || {
       nome: "",
       descricao: "",
-      data_compra: "",
-      valor_compra: "",
-      status: "Ativo",
-      categoria_id: "",
-      localidade_id: "",
+      dataCompra: "",
+      valorCompra: "",
+      categoriaId: "",
+      localidadeId: "",
+      status: "ATIVO",
     });
   };
 
@@ -51,7 +51,7 @@ export default function FormularioBem({ categorias, localidades, onSubmit, initi
       <input type="text" name="nome" value={formData.nome} onChange={handleChange} required />
 
       <label>Categoria</label>
-      <select name="categoria_id" value={formData.categoria_id} onChange={handleChange} required>
+      <select name="categoriaId" value={formData.categoriaId} onChange={handleChange} required>
         <option value="">Selecione uma categoria</option>
         {categorias.map((cat) => (
           <option key={cat.id} value={cat.id}>{cat.nome}</option>
@@ -59,7 +59,7 @@ export default function FormularioBem({ categorias, localidades, onSubmit, initi
       </select>
 
       <label>Localidade</label>
-      <select name="localidade_id" value={formData.localidade_id} onChange={handleChange} required>
+      <select name="localidadeId" value={formData.localidadeId} onChange={handleChange} required>
         <option value="">Selecione uma localidade</option>
         {localidades.map((loc) => (
           <option key={loc.id} value={loc.id}>{loc.nome}</option>
@@ -67,10 +67,10 @@ export default function FormularioBem({ categorias, localidades, onSubmit, initi
       </select>
 
       <label>Data de Compra</label>
-      <input type="date" name="data_compra" value={formData.data_compra} onChange={handleChange} required />
+      <input type="date" name="dataCompra" value={formData.dataCompra} onChange={handleChange} required />
 
       <label>Valor de Compra</label>
-      <input type="number" name="valor_compra" value={formData.valor_compra} onChange={handleChange} required />
+      <input type="number" name="valorCompra" value={formData.valorCompra} onChange={handleChange} required />
 
       <label>Status</label>
       <select name="status" value={formData.status} onChange={handleChange} required>

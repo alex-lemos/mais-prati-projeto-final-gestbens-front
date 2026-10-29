@@ -1,32 +1,44 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { localidades as mockLocalidades } from "../../mocks/data";
+import { localidadeService } from "../../services/localidadeService";
 import { FaArrowLeft, FaTrash } from "react-icons/fa";
-// Futuramente: import { localidadeService } from "../../services/localidadeService";
 
 export default function Delete() {
   const { id } = useParams();
   const navigate = useNavigate();
   const [localidade, setLocalidade] = useState(null);
+  const [carregando, setCarregando] = useState(true);
+  const [erro, setErro] = useState("");
 
   useEffect(() => {
-    setLocalidade(mockLocalidades.find((item) => item.id.toString() === id) || null);
+    async function carregarLocalidade() {
+      try {
+        setCarregando(true);
+        setErro("");
+        setLocalidade(await localidadeService.getById(id));
+      } catch (error) {
+        console.error("Erro ao carregar localidade:", error);
+        setErro("Não foi possível carregar a localidade.");
+      } finally {
+        setCarregando(false);
+      }
+    }
+
+    if (id) carregarLocalidade();
   }, [id]);
 
   const handleDelete = async () => {
     try {
-      const indice = mockLocalidades.findIndex((item) => item.id.toString() === id);
-      if (indice < 0) throw new Error("Localidade não encontrada.");
-      mockLocalidades.splice(indice, 1);
-      // Futuramente: await localidadeService.remove(id);
+      await localidadeService.remove(id);
       navigate("/locais");
     } catch (error) {
       console.error("Erro ao excluir localidade:", error);
-      alert("Não foi possível excluir a localidade.");
+      alert(error.response?.data?.message || "Não foi possível excluir a localidade.");
     }
   };
 
-  if (!localidade) return <div className="inicio-page"><h1>Localidade não encontrada</h1></div>;
+  if (carregando) return <div className="inicio-page"><h1>Carregando localidade...</h1></div>;
+  if (erro || !localidade) return <div className="inicio-page"><h1 className="form-error">{erro || "Localidade não encontrada"}</h1></div>;
 
   return (
     <div className="inicio-page">

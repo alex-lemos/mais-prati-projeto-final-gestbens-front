@@ -1,16 +1,35 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { NavLink } from "react-router-dom";
-import { useAuth } from "../../contexts/useAuth";
-import { categorias as mockCategorias } from "../../mocks/data";
-// Futuramente: import { categoriaService } from "../../services/categoriaService";
+import { useAuth } from "../../contexts/Auth";
+import { categoriaService } from "../../services/categoriaService";
 import { FaBoxOpen, FaEye, FaEdit, FaTrash } from "react-icons/fa";
 
 export default function Index() {
   const { usuario } = useAuth();
-  const [categorias] = useState(() => [...mockCategorias].sort((a, b) => a.nome.localeCompare(b.nome)));
+  const [categorias, setCategorias] = useState([]);
+  const [carregando, setCarregando] = useState(true);
+  const [erro, setErro] = useState("");
   const [filtro, setFiltro] = useState("");
   const [pagina, setPagina] = useState(1);
   const itensPorPagina = 10;
+
+  useEffect(() => {
+    async function carregarCategorias() {
+      try {
+        setCarregando(true);
+        setErro("");
+        const dados = await categoriaService.getAll();
+        setCategorias(Array.isArray(dados) ? [...dados].sort((a, b) => Number(a.id) - Number(b.id)) : []);
+      } catch (error) {
+        console.error("Erro ao carregar categorias:", error);
+        setErro("Não foi possível carregar as categorias.");
+      } finally {
+        setCarregando(false);
+      }
+    }
+
+    carregarCategorias();
+  }, []);
 
   const categoriasFiltradas = categorias.filter((categoria) =>
     categoria.nome.toLowerCase().includes(filtro.toLowerCase())
@@ -22,7 +41,7 @@ export default function Index() {
     <div className="inicio-page">
       <h1>Gerenciar Categorias</h1>
       <div className="conteudo-wrapper">
-        {usuario?.is_admin && (
+        {usuario?.papel === "ADMIN" && (
           <div className="card atalhos">
             <h2>Atalhos:</h2>
             <div className="atalhos-buttons">
@@ -38,7 +57,9 @@ export default function Index() {
               <button className="atalho-btn" onClick={() => setFiltro("")}>Limpar</button>
             </div>
           </div>
-          <div className="card" style={{ flexDirection: "column", alignItems: "stretch" }}>
+          {carregando && <p>Carregando categorias...</p>}
+          {erro && <p className="form-error">⚠️ {erro}</p>}
+          <div className="card">
             <table className="tabela">
                 <thead><tr><th>ID</th><th>Nome</th><th>Descrição</th><th>Ações</th></tr></thead>
                 <tbody>
@@ -49,14 +70,14 @@ export default function Index() {
                       <td>{categoria.descricao || "—"}</td>
                       <td className="acoes">
                         <NavLink to={`/categorias/show/${categoria.id}`} data-tooltip="Visualizar categoria"><FaEye /></NavLink>
-                        {usuario?.is_admin && <>
+                        {usuario?.papel === "ADMIN" && <>
                           <NavLink to={`/categorias/edit/${categoria.id}`} data-tooltip="Editar categoria"><FaEdit /></NavLink>
                           <NavLink to={`/categorias/delete/${categoria.id}`} data-tooltip="Excluir categoria"><FaTrash /></NavLink>
                         </>}
                       </td>
                     </tr>
                   ))}
-                  {!categoriasPagina.length && <tr><td colSpan="4">Nenhuma categoria encontrada.</td></tr>}
+                  {!categoriasPagina.length && !carregando && <tr><td colSpan="4">Nenhuma categoria encontrada.</td></tr>}
                 </tbody>
             </table>
           </div>

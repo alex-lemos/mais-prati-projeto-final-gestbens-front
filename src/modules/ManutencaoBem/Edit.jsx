@@ -2,32 +2,66 @@ import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { FaArrowLeft } from "react-icons/fa";
 import FormularioManutencao from "../../components/FormularioManutencao";
-import { manutencoes as mockManutencoes, bens, usuarios } from "../../mocks/data";
-// Futuramente: import { manutencaoService } from "../../services/manutencaoService";
+import { manutencaoService } from "../../services/manutencaoService";
+import { bemService } from "../../services/bemService";
+import { usuarioService } from "../../services/usuarioService";
 
 export default function Edit() {
   const { id } = useParams();
   const navigate = useNavigate();
   const [manutencao, setManutencao] = useState(null);
+  const [bens, setBens] = useState([]);
+  const [usuarios, setUsuarios] = useState([]);
+  const [carregando, setCarregando] = useState(true);
+  const [erro, setErro] = useState("");
 
   useEffect(() => {
-    setManutencao(mockManutencoes.find((item) => item.id.toString() === id) || null);
+    async function carregarDados() {
+      try {
+        setCarregando(true);
+        setErro("");
+        const [dadosManutencao, dadosBens, dadosUsuarios] = await Promise.all([
+          manutencaoService.getById(id),
+          bemService.getAll(),
+          usuarioService.getAll(),
+        ]);
+        const listaBens = Array.isArray(dadosBens) ? dadosBens : [];
+        const listaUsuarios = Array.isArray(dadosUsuarios) ? dadosUsuarios : [];
+        const resolverId = (referencia, lista) => {
+          const valor = referencia?.id ?? referencia;
+          return lista.find((item) => String(item.id) === String(valor) || item.nome === valor)?.id ?? "";
+        };
+        setManutencao({
+          ...dadosManutencao,
+          data_manutencao: (dadosManutencao.data_manutencao || dadosManutencao.dataManutencao || "").slice(0, 10),
+          bem_id: resolverId(dadosManutencao.bem_id ?? dadosManutencao.bemId ?? dadosManutencao.bem, listaBens),
+          usuario_id: resolverId(dadosManutencao.usuario_id ?? dadosManutencao.usuarioId ?? dadosManutencao.usuario, listaUsuarios),
+        });
+        setBens(listaBens);
+        setUsuarios(listaUsuarios);
+      } catch (error) {
+        console.error("Erro ao carregar dados da manutenção:", error);
+        setErro("Não foi possível carregar a manutenção, os bens ou responsáveis.");
+      } finally {
+        setCarregando(false);
+      }
+    }
+
+    if (id) carregarDados();
   }, [id]);
 
   const handleSubmit = async (formData) => {
     try {
-      const indice = mockManutencoes.findIndex((item) => item.id.toString() === id);
-      if (indice < 0) throw new Error("Manutenção não encontrada.");
-      mockManutencoes[indice] = { ...mockManutencoes[indice], ...formData };
-      // Futuramente: await manutencaoService.update(id, formData);
+      await manutencaoService.update(id, formData);
       navigate("/manutencoes");
     } catch (error) {
       console.error("Erro ao atualizar manutenção:", error);
-      alert("Não foi possível atualizar a manutenção.");
+      alert(error.response?.data?.message || "Não foi possível atualizar a manutenção.");
     }
   };
 
-  if (!manutencao) return <div className="inicio-page"><h1>Manutenção não encontrada</h1></div>;
+  if (carregando) return <div className="inicio-page"><h1>Carregando manutenção...</h1></div>;
+  if (erro || !manutencao) return <div className="inicio-page"><h1 className="form-error">{erro || "Manutenção não encontrada"}</h1></div>;
 
   return (
     <div className="inicio-page">

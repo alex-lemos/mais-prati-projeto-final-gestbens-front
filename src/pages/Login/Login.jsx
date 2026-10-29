@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useAuth } from "../../contexts/useAuth";
+import { useAuth } from "../../contexts/Auth";
 import { useNavigate } from "react-router-dom";
 import "./Login.css";
 import logoGestBens from "../../assets/img/logo-gestbens.png";

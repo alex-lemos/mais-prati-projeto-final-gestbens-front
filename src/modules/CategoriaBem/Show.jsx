@@ -1,8 +1,7 @@
 import { useEffect, useState } from "react";
 import { NavLink, useNavigate, useParams } from "react-router-dom";
-import { useAuth } from "../../contexts/useAuth";
-import { categorias as mockCategorias } from "../../mocks/data";
-// Futuramente: import { categoriaService } from "../../services/categoriaService";
+import { useAuth } from "../../contexts/Auth";
+import { categoriaService } from "../../services/categoriaService";
 import { FaArrowLeft, FaEdit, FaTrash } from "react-icons/fa";
 
 export default function Show() {
@@ -10,12 +9,28 @@ export default function Show() {
   const navigate = useNavigate();
   const { usuario } = useAuth();
   const [categoria, setCategoria] = useState(null);
+  const [carregando, setCarregando] = useState(true);
+  const [erro, setErro] = useState("");
 
   useEffect(() => {
-    setCategoria(mockCategorias.find((item) => item.id.toString() === id) || null);
+    async function carregarCategoria() {
+      try {
+        setCarregando(true);
+        setErro("");
+        setCategoria(await categoriaService.getById(id));
+      } catch (error) {
+        console.error("Erro ao carregar categoria:", error);
+        setErro("Não foi possível carregar a categoria.");
+      } finally {
+        setCarregando(false);
+      }
+    }
+
+    if (id) carregarCategoria();
   }, [id]);
 
-  if (!categoria) return <div className="inicio-page"><h1>Categoria não encontrada</h1></div>;
+  if (carregando) return <div className="inicio-page"><h1>Carregando categoria...</h1></div>;
+  if (erro || !categoria) return <div className="inicio-page"><h1 className="form-error">{erro || "Categoria não encontrada"}</h1></div>;
 
   return (
     <div className="inicio-page">
@@ -25,7 +40,7 @@ export default function Show() {
           <h2>Ações:</h2>
           <div className="atalhos-buttons">
             <button onClick={() => navigate(-1)} className="atalho-btn"><FaArrowLeft /> Voltar</button>
-            {usuario?.is_admin && <>
+            {usuario?.papel === "ADMIN" && <>
               <NavLink to={`/categorias/edit/${categoria.id}`} className="atalho-btn"><FaEdit /> Editar Categoria</NavLink>
               <NavLink to={`/categorias/delete/${categoria.id}`} className="atalho-btn"><FaTrash /> Excluir Categoria</NavLink>
             </>}

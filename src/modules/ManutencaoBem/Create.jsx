@@ -1,23 +1,49 @@
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { FaArrowLeft } from "react-icons/fa";
 import FormularioManutencao from "../../components/FormularioManutencao";
-import { bens, usuarios, manutencoes } from "../../mocks/data";
-// Futuramente: import { manutencaoService } from "../../services/manutencaoService";
+import { manutencaoService } from "../../services/manutencaoService";
+import { bemService } from "../../services/bemService";
+import { usuarioService } from "../../services/usuarioService";
 
 export default function Create() {
   const navigate = useNavigate();
+  const [bens, setBens] = useState([]);
+  const [usuarios, setUsuarios] = useState([]);
+  const [carregando, setCarregando] = useState(true);
+  const [erro, setErro] = useState("");
+
+  useEffect(() => {
+    async function carregarOpcoes() {
+      try {
+        setCarregando(true);
+        setErro("");
+        const [dadosBens, dadosUsuarios] = await Promise.all([bemService.getAll(), usuarioService.getAll()]);
+        setBens(Array.isArray(dadosBens) ? dadosBens : []);
+        setUsuarios(Array.isArray(dadosUsuarios) ? dadosUsuarios : []);
+      } catch (error) {
+        console.error("Erro ao carregar opções da manutenção:", error);
+        setErro("Não foi possível carregar os bens e responsáveis.");
+      } finally {
+        setCarregando(false);
+      }
+    }
+
+    carregarOpcoes();
+  }, []);
 
   const handleSubmit = async (formData) => {
     try {
-      const id = Math.max(0, ...manutencoes.map((item) => Number(item.id))) + 1;
-      manutencoes.push({ id, ...formData });
-      // Futuramente: await manutencaoService.create(formData);
+      await manutencaoService.create(formData);
       navigate("/manutencoes");
     } catch (error) {
       console.error("Erro ao salvar manutenção:", error);
-      alert("Não foi possível salvar a manutenção.");
+      alert(error.response?.data?.message || "Não foi possível salvar a manutenção.");
     }
   };
+
+  if (carregando) return <div className="inicio-page"><h1>Carregando formulário...</h1></div>;
+  if (erro) return <div className="inicio-page"><h1 className="form-error">⚠️ {erro}</h1></div>;
 
   return (
     <div className="inicio-page">

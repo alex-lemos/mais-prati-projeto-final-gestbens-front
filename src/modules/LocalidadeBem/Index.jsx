@@ -1,16 +1,35 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { NavLink } from "react-router-dom";
-import { useAuth } from "../../contexts/useAuth";
-import { localidades as mockLocalidades } from "../../mocks/data";
-// Futuramente: import { localidadeService } from "../../services/localidadeService";
+import { useAuth } from "../../contexts/Auth";
+import { localidadeService } from "../../services/localidadeService";
 import { FaBoxOpen, FaEye, FaEdit, FaTrash } from "react-icons/fa";
 
 export default function Index() {
   const { usuario } = useAuth();
-  const [localidades] = useState(() => [...mockLocalidades].sort((a, b) => a.nome.localeCompare(b.nome)));
+  const [localidades, setLocalidades] = useState([]);
+  const [carregando, setCarregando] = useState(true);
+  const [erro, setErro] = useState("");
   const [filtro, setFiltro] = useState("");
   const [pagina, setPagina] = useState(1);
   const itensPorPagina = 10;
+
+  useEffect(() => {
+    async function carregarLocalidades() {
+      try {
+        setCarregando(true);
+        setErro("");
+        const dados = await localidadeService.getAll();
+        setLocalidades(Array.isArray(dados) ? [...dados].sort((a, b) => Number(a.id) - Number(b.id)) : []);
+      } catch (error) {
+        console.error("Erro ao carregar localidades:", error);
+        setErro("Não foi possível carregar as localidades.");
+      } finally {
+        setCarregando(false);
+      }
+    }
+
+    carregarLocalidades();
+  }, []);
 
   const localidadesFiltradas = localidades.filter((localidade) =>
     localidade.nome.toLowerCase().includes(filtro.toLowerCase())
@@ -22,7 +41,7 @@ export default function Index() {
     <div className="inicio-page">
       <h1>Gerenciar Localidades</h1>
       <div className="conteudo-wrapper">
-        {usuario?.is_admin && (
+        {usuario?.papel === "ADMIN" && (
           <div className="card atalhos">
             <h2>Atalhos:</h2>
             <div className="atalhos-buttons">
@@ -38,6 +57,8 @@ export default function Index() {
               <button className="atalho-btn" onClick={() => setFiltro("")}>Limpar</button>
             </div>
           </div>
+          {carregando && <p>Carregando localidades...</p>}
+          {erro && <p className="form-error">⚠️ {erro}</p>}
           <div className="card" style={{ flexDirection: "column", alignItems: "stretch" }}>
             <table className="tabela">
                 <thead><tr><th>ID</th><th>Nome</th><th>Descrição</th><th>Ações</th></tr></thead>
@@ -49,14 +70,14 @@ export default function Index() {
                       <td>{localidade.descricao || "—"}</td>
                       <td className="acoes">
                         <NavLink to={`/locais/show/${localidade.id}`} data-tooltip="Visualizar localidade"><FaEye /></NavLink>
-                        {usuario?.is_admin && <>
+                        {usuario?.papel === "ADMIN" && <>
                           <NavLink to={`/locais/edit/${localidade.id}`} data-tooltip="Editar localidade"><FaEdit /></NavLink>
                           <NavLink to={`/locais/delete/${localidade.id}`} data-tooltip="Excluir localidade"><FaTrash /></NavLink>
                         </>}
                       </td>
                     </tr>
                   ))}
-                  {!localidadesPagina.length && <tr><td colSpan="4">Nenhuma localidade encontrada.</td></tr>}
+                  {!localidadesPagina.length && !carregando && <tr><td colSpan="4">Nenhuma localidade encontrada.</td></tr>}
                 </tbody>
             </table>
           </div>

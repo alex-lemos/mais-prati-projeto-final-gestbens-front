@@ -2,32 +2,44 @@ import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { FaArrowLeft } from "react-icons/fa";
 import FormularioLocalidade from "../../components/FormularioLocalidade";
-import { localidades as mockLocalidades } from "../../mocks/data";
-// Futuramente: import { localidadeService } from "../../services/localidadeService";
+import { localidadeService } from "../../services/localidadeService";
 
 export default function Edit() {
   const { id } = useParams();
   const navigate = useNavigate();
   const [localidade, setLocalidade] = useState(null);
+  const [carregando, setCarregando] = useState(true);
+  const [erro, setErro] = useState("");
 
   useEffect(() => {
-    setLocalidade(mockLocalidades.find((item) => item.id.toString() === id) || null);
+    async function carregarLocalidade() {
+      try {
+        setCarregando(true);
+        setErro("");
+        setLocalidade(await localidadeService.getById(id));
+      } catch (error) {
+        console.error("Erro ao carregar localidade:", error);
+        setErro("Não foi possível carregar a localidade.");
+      } finally {
+        setCarregando(false);
+      }
+    }
+
+    if (id) carregarLocalidade();
   }, [id]);
 
   const handleSubmit = async (formData) => {
     try {
-      const indice = mockLocalidades.findIndex((item) => item.id.toString() === id);
-      if (indice < 0) throw new Error("Localidade não encontrada.");
-      mockLocalidades[indice] = { ...mockLocalidades[indice], ...formData };
-      // Futuramente: await localidadeService.update(id, formData);
+      await localidadeService.update(id, formData);
       navigate("/locais");
     } catch (error) {
       console.error("Erro ao atualizar localidade:", error);
-      alert("Não foi possível atualizar a localidade.");
+      alert(error.response?.data?.message || "Não foi possível atualizar a localidade.");
     }
   };
 
-  if (!localidade) return <div className="inicio-page"><h1>Localidade não encontrada</h1></div>;
+  if (carregando) return <div className="inicio-page"><h1>Carregando localidade...</h1></div>;
+  if (erro || !localidade) return <div className="inicio-page"><h1 className="form-error">{erro || "Localidade não encontrada"}</h1></div>;
 
   return (
     <div className="inicio-page">

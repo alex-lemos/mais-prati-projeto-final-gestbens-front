@@ -26,9 +26,4 @@ export const bemService = {
     const response = await api.delete(`/bens/${id}`);
     return response.data;
   }
-
-  // getAllPaginated: async (pagina, itensPorPagina) => {
-  //   const response = await api.get(`/bens?page=${pagina}&limit=${itensPorPagina}`);
-  //   return response.data;
-  // },
 };

@@ -1,14 +1,33 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { NavLink } from "react-router-dom";
-import { usuarios as mockUsuarios } from "../../mocks/data";
+import { usuarioService } from "../../services/usuarioService";
 import { FaUserPlus, FaEye, FaEdit, FaTrash } from "react-icons/fa";
-// Futuramente: import { usuarioService } from "../../services/usuarioService";
 
 export default function Index() {
-  const [usuarios] = useState(() => [...mockUsuarios].sort((a, b) => a.nome.localeCompare(b.nome)));
+  const [usuarios, setUsuarios] = useState([]);
+  const [carregando, setCarregando] = useState(true);
+  const [erro, setErro] = useState("");
   const [filtro, setFiltro] = useState("");
   const [pagina, setPagina] = useState(1);
   const itensPorPagina = 10;
+
+  useEffect(() => {
+    async function carregarUsuarios() {
+      try {
+        setCarregando(true);
+        setErro("");
+        const dados = await usuarioService.getAll();
+        setUsuarios(Array.isArray(dados) ? [...dados].sort((a, b) => Number(a.id) - Number(b.id)) : []);
+      } catch (error) {
+        console.error("Erro ao carregar usuários:", error);
+        setErro("Não foi possível carregar os usuários.");
+      } finally {
+        setCarregando(false);
+      }
+    }
+
+    carregarUsuarios();
+  }, []);
 
   const usuariosFiltrados = usuarios.filter((usuario) =>
     `${usuario.nome} ${usuario.email}`.toLowerCase().includes(filtro.toLowerCase())
@@ -34,6 +53,8 @@ export default function Index() {
               <button className="atalho-btn" onClick={() => setFiltro("")}>Limpar</button>
             </div>
           </div>
+          {carregando && <p>Carregando usuários...</p>}
+          {erro && <p className="form-error">⚠️ {erro}</p>}
           <div className="card" style={{ flexDirection: "column", alignItems: "stretch" }}>
             <table className="tabela">
                 <thead><tr><th>ID</th><th>Nome</th><th>E-mail</th><th>Perfil</th><th>Ações</th></tr></thead>
@@ -51,7 +72,7 @@ export default function Index() {
                       </td>
                     </tr>
                   ))}
-                  {!usuariosPagina.length && <tr><td colSpan="5">Nenhum usuário encontrado.</td></tr>}
+                  {!usuariosPagina.length && !carregando && <tr><td colSpan="5">Nenhum usuário encontrado.</td></tr>}
                 </tbody>
             </table>
           </div>

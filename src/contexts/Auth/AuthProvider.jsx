@@ -1,7 +1,7 @@
 /* eslint-disable preserve-caught-error */
 import { useState } from "react";
 import { AuthContext } from "./AuthContext";
-import { authService } from "../services/authService";
+import { authService } from "../../services/authService";
 
 export function AuthProvider({ children }) {
   // Reidrata o usuário e o token salvos ao recarregar a página

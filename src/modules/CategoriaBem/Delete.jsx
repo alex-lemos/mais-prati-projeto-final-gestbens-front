@@ -1,32 +1,44 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { categorias as mockCategorias } from "../../mocks/data";
+import { categoriaService } from "../../services/categoriaService";
 import { FaArrowLeft, FaTrash } from "react-icons/fa";
-// Futuramente: import { categoriaService } from "../../services/categoriaService";
 
 export default function Delete() {
   const { id } = useParams();
   const navigate = useNavigate();
   const [categoria, setCategoria] = useState(null);
+  const [carregando, setCarregando] = useState(true);
+  const [erro, setErro] = useState("");
 
   useEffect(() => {
-    setCategoria(mockCategorias.find((item) => item.id.toString() === id) || null);
+    async function carregarCategoria() {
+      try {
+        setCarregando(true);
+        setErro("");
+        setCategoria(await categoriaService.getById(id));
+      } catch (error) {
+        console.error("Erro ao carregar categoria:", error);
+        setErro("Não foi possível carregar a categoria.");
+      } finally {
+        setCarregando(false);
+      }
+    }
+
+    if (id) carregarCategoria();
   }, [id]);
 
   const handleDelete = async () => {
     try {
-      const indice = mockCategorias.findIndex((item) => item.id.toString() === id);
-      if (indice < 0) throw new Error("Categoria não encontrada.");
-      mockCategorias.splice(indice, 1);
-      // Futuramente: await categoriaService.remove(id);
+      await categoriaService.remove(id);
       navigate("/categorias");
     } catch (error) {
       console.error("Erro ao excluir categoria:", error);
-      alert("Não foi possível excluir a categoria.");
+      alert(error.response?.data?.message || "Não foi possível excluir a categoria.");
     }
   };
 
-  if (!categoria) return <div className="inicio-page"><h1>Categoria não encontrada</h1></div>;
+  if (carregando) return <div className="inicio-page"><h1>Carregando categoria...</h1></div>;
+  if (erro || !categoria) return <div className="inicio-page"><h1 className="form-error">{erro || "Categoria não encontrada"}</h1></div>;
 
   return (
     <div className="inicio-page">

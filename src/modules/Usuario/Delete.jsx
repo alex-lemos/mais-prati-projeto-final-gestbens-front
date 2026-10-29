@@ -1,32 +1,44 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { usuarios as mockUsuarios } from "../../mocks/data";
+import { usuarioService } from "../../services/usuarioService";
 import { FaArrowLeft, FaTrash } from "react-icons/fa";
-// Futuramente: import { usuarioService } from "../../services/usuarioService";
 
 export default function Delete() {
   const { id } = useParams();
   const navigate = useNavigate();
   const [usuario, setUsuario] = useState(null);
+  const [carregando, setCarregando] = useState(true);
+  const [erro, setErro] = useState("");
 
   useEffect(() => {
-    setUsuario(mockUsuarios.find((item) => item.id.toString() === id) || null);
+    async function carregarUsuario() {
+      try {
+        setCarregando(true);
+        setErro("");
+        setUsuario(await usuarioService.getById(id));
+      } catch (error) {
+        console.error("Erro ao carregar usuário:", error);
+        setErro("Não foi possível carregar o usuário.");
+      } finally {
+        setCarregando(false);
+      }
+    }
+
+    if (id) carregarUsuario();
   }, [id]);
 
   const handleDelete = async () => {
     try {
-      const indice = mockUsuarios.findIndex((item) => item.id.toString() === id);
-      if (indice < 0) throw new Error("Usuário não encontrado.");
-      mockUsuarios.splice(indice, 1);
-      // Futuramente: await usuarioService.remove(id);
+      await usuarioService.remove(id);
       navigate("/usuarios");
     } catch (error) {
       console.error("Erro ao excluir usuário:", error);
-      alert("Não foi possível excluir o usuário.");
+      alert(error.response?.data?.message || "Não foi possível excluir o usuário.");
     }
   };
 
-  if (!usuario) return <div className="inicio-page"><h1>Usuário não encontrado</h1></div>;
+  if (carregando) return <div className="inicio-page"><h1>Carregando usuário...</h1></div>;
+  if (erro || !usuario) return <div className="inicio-page"><h1 className="form-error">{erro || "Usuário não encontrado"}</h1></div>;
 
   return (
     <div className="inicio-page">

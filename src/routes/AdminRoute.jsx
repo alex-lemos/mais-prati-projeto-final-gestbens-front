@@ -1,14 +1,13 @@
 // src/routes/AdminRoute.jsx
 import { Navigate } from "react-router-dom";
-import { useAuth } from "../contexts/useAuth";
+import { useAuth } from "../contexts/Auth/useAuth";
 
 export default function AdminRoute({ children }) {
   const { usuario } = useAuth();
 
-  if (!usuario?.is_admin) {
-    // Se não for admin, redireciona para a página inicial
-    return <Navigate to="/" replace />;
+  if (usuario && usuario.papel === "ADMIN") {
+    return children;
   }
 
-  return children;
+  return <Navigate to="/" replace />;
 }
