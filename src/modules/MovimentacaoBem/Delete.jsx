@@ -55,13 +55,31 @@ export default function Delete() {
           <div className="card informacoes">
             <h2 className="titulo">Movimentação #{movimentacao.id}</h2>
             <div className="informacoes-detalhes">
-              <div className="campo"><strong>Data:</strong><p>{(movimentacao.data_movimentacao || movimentacao.dataMovimentacao)?.slice(0, 10)}</p></div>
-              <div className="campo"><strong>Bem:</strong><p>{movimentacao.bem?.nome || movimentacao.bem || `#${movimentacao.bem_id ?? movimentacao.bemId}`}</p></div>
-              <div className="campo"><strong>Origem:</strong><p>{movimentacao.localidadeOrigem?.nome || movimentacao.localidadeOrigem || `#${movimentacao.localidade_origem_id ?? movimentacao.localidadeOrigemId}`}</p></div>
-              <div className="campo"><strong>Destino:</strong><p>{movimentacao.localidadeDestino?.nome || movimentacao.localidadeDestino || `#${movimentacao.localidade_destino_id ?? movimentacao.localidadeDestinoId}`}</p></div>
-              <div className="campo"><strong>Responsável:</strong><p>{movimentacao.usuario?.nome || movimentacao.usuario || `#${movimentacao.usuario_id ?? movimentacao.usuarioId}`}</p></div>
+              <div className="campo">
+                <strong>Data:</strong>
+                <p>{(movimentacao.data_movimentacao || movimentacao.dataMovimentacao)?.slice(0, 10)}</p>
+              </div>
+              <div className="campo">
+                <strong>Bem:</strong>
+                <p>{movimentacao.bem?.nome || movimentacao.bem || `#${movimentacao.bem_id ?? movimentacao.bemId}`}</p>
+              </div>
+              <div className="campo">
+                <strong>Origem:</strong>
+                <p>{movimentacao.localidadeOrigem?.nome || movimentacao.localidadeOrigem || `#${movimentacao.localidade_origem_id ?? movimentacao.localidadeOrigemId}`}</p>
+              </div>
+              <div className="campo">
+                <strong>Destino:</strong>
+                <p>{movimentacao.localidadeDestino?.nome || movimentacao.localidadeDestino || `#${movimentacao.localidade_destino_id ?? movimentacao.localidadeDestinoId}`}</p>
+              </div>
+              <div className="campo">
+                <strong>Responsável:</strong>
+                <p>{movimentacao.usuario?.nome || movimentacao.usuario || `#${movimentacao.usuario_id ?? movimentacao.usuarioId}`}</p>
+              </div>
             </div>
-            <div className="campo"><strong>Observação:</strong><p>{movimentacao.observacao || "Sem observação."}</p></div>
+            <div className="campo">
+              <strong>Observação:</strong>
+              <p>{movimentacao.observacao || "Sem observação."}</p>
+            </div>
           </div>
           <div className="card alerta-exclusao">
             <h2>Tem certeza que deseja excluir esta movimentação? Essa ação não poderá ser desfeita.</h2>

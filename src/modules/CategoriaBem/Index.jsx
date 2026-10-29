@@ -45,7 +45,7 @@ export default function Index() {
           <div className="card atalhos">
             <h2>Atalhos:</h2>
             <div className="atalhos-buttons">
-              <NavLink to="/categorias/create" className="atalho-btn verde"><FaBoxOpen /> Cadastrar Nova Categoria</NavLink>
+              <NavLink to="/categorias/create" className="atalho-btn verde"><FaBoxOpen />Cadastrar Nova Categoria</NavLink>
             </div>
           </div>
         )}
@@ -61,7 +61,14 @@ export default function Index() {
           {erro && <p className="form-error">⚠️ {erro}</p>}
           <div className="card">
             <table className="tabela">
-                <thead><tr><th>ID</th><th>Nome</th><th>Descrição</th><th>Ações</th></tr></thead>
+                <thead>
+                  <tr>
+                    <th>ID</th>
+                    <th>Nome</th>
+                    <th>Descrição</th>
+                    <th>Ações</th>
+                  </tr>
+                </thead>
                 <tbody>
                   {categoriasPagina.map((categoria) => (
                     <tr key={categoria.id}>

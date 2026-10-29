@@ -14,11 +14,7 @@ export default function PrivateLayout() {
 
       {/* Botão lateral só aparece fora quando fechado */}
       {!sidebarOpen && (
-        <button
-          className="sidebar-toggle"
-          onClick={() => setSidebarOpen(true)}
-          aria-label="Abrir menu"
-        >
+        <button className="sidebar-toggle" onClick={() => setSidebarOpen(true)} aria-label="Abrir menu">
           <FaChevronRight />
         </button>
       )}

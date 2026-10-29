@@ -3,27 +3,24 @@ import { NavLink } from "react-router-dom";
 import { useAuth } from "../../contexts/Auth";
 import { FaBoxOpen, FaEye, FaEdit, FaTrash } from "react-icons/fa";
 
-// 1. Importação dos services reais conectados à sua API Java
 import { bemService } from "../../services/bemService";
 import { categoriaService } from "../../services/categoriaService";
 import { localidadeService } from "../../services/localidadeService";
 
 export default function BensIndex() {
   const { usuario } = useAuth();
-  
-  // 2. Estados para armazenar os dados carregados do backend
+
   const [bens, setBens] = useState([]);
   const [categorias, setCategorias] = useState([]);
   const [localidades, setLocalidades] = useState([]);
   
-  // Estados de controle de interface
   const [carregando, setCarregando] = useState(true);
   const [erro, setErro] = useState("");
   
   const [filtros, setFiltros] = useState({
     patrimonio: "",
-    localidade: "", // Guardará o Nome da localidade selecionada
-    categoria: "",  // Guardará o Nome da categoria selecionada
+    localidade: "", 
+    categoria: "",  
     status: "",
   });
   const [pagina, setPagina] = useState(1);
@@ -35,7 +32,7 @@ export default function BensIndex() {
   const categoriaRef = useRef();
   const statusRef = useRef();
 
-  // 3. Carregamento em paralelo de todas as APIs necessárias ao abrir a página
+  // Carregar os dados
   useEffect(() => {
     const carregarDadosDoBanco = async () => {
       try {
@@ -73,17 +70,13 @@ export default function BensIndex() {
     carregarDadosDoBanco();
   }, []);
 
-  // 4. Filtros adaptados para a estrutura 
+  // Filtros 
   const bensFiltrados = bens.filter((bem) => {
     return (
-      (filtros.patrimonio === "" ||
-        bem.id.toString().includes(filtros.patrimonio)) &&
-      (filtros.localidade === "" ||
-        bem.nomeLocalidade === filtros.localidade) && // Compara texto direto com o DTO do back
-      (filtros.categoria === "" ||
-        bem.nomeCategoria === filtros.categoria) &&   // Compara texto direto com o DTO do back
-      (filtros.status === "" ||
-        bem.status.toLowerCase() === filtros.status.toLowerCase())
+      (filtros.patrimonio === "" || bem.id.toString().includes(filtros.patrimonio)) &&
+      (filtros.localidade === "" || bem.nomeLocalidade === filtros.localidade) && 
+      (filtros.categoria === "" || bem.nomeCategoria === filtros.categoria) &&   
+      (filtros.status === "" || bem.status.toLowerCase() === filtros.status.toLowerCase())
     );
   });
 
@@ -97,8 +90,8 @@ export default function BensIndex() {
   const aplicarFiltros = () => {
     setFiltros({
       patrimonio: patrimonioRef.current.value,
-      localidade: localidadeRef.current.value, // Captura o valor string (nome)
-      categoria: categoriaRef.current.value,   // Captura o valor string (nome)
+      localidade: localidadeRef.current.value,
+      categoria: categoriaRef.current.value,
       status: statusRef.current.value,
     });
     setPagina(1);
@@ -117,7 +110,6 @@ export default function BensIndex() {
     <div className="inicio-page">
       <h1>Gerenciar Bens</h1>
 
-      {/* container principal */}
       <div className="conteudo-wrapper">
         {/* Atalhos */}
         <div className="card atalhos">
@@ -129,7 +121,6 @@ export default function BensIndex() {
           </div>
         </div>
 
-        {/* Conteúdo principal */}
         <div className="conteudo">
           {/* Filtros */}
           <div className="card filtros">
@@ -137,7 +128,6 @@ export default function BensIndex() {
             <div className="filtros-form">
               <input ref={patrimonioRef} type="text" placeholder="Patrimônio" />
 
-              {/* 5. Alteramos o 'value' das options para passar o NOME em vez do ID */}
               <select ref={localidadeRef} defaultValue="">
                 <option value="">Todas Localidades</option>
                 {localidades.map((loc) => (
@@ -147,7 +137,6 @@ export default function BensIndex() {
                 ))}
               </select>
 
-              {/* 6. Alteramos o 'value' das options para passar o NOME em vez do ID */}
               <select ref={categoriaRef} defaultValue="">
                 <option value="">Todas Categorias</option>
                 {categorias.map((cat) => (
@@ -164,12 +153,8 @@ export default function BensIndex() {
                 <option value="Manutenção">Em manutenção</option>
               </select>
 
-              <button onClick={aplicarFiltros} className="atalho-btn">
-                Aplicar
-              </button>
-              <button onClick={limparFiltros} className="atalho-btn">
-                Limpar
-              </button>
+              <button onClick={aplicarFiltros} className="atalho-btn">Aplicar</button>
+              <button onClick={limparFiltros} className="atalho-btn">Limpar</button>
             </div>
           </div>
 
@@ -199,7 +184,6 @@ export default function BensIndex() {
                     <tr key={bem.id}>
                       <td>{bem.id}</td>
                       <td>{bem.nome}</td>
-                      {/* 7. Exibição limpa lendo os atributos reais do BemResponse do Java */}
                       <td>{bem.nomeCategoria || "Não informada"}</td>
                       <td>{bem.nomeLocalidade || "Não informado"}</td>
                       <td>
@@ -208,29 +192,11 @@ export default function BensIndex() {
                         </span>
                       </td>
                       <td className="acoes">
-                        <NavLink
-                          to={`/bens/show/${bem.id}`}
-                          data-tooltip="Visualizar bem"
-                        >
-                          <FaEye />
-                        </NavLink>
-
-                        {/* Validação de perfil protegendo os botões gerenciais */}
+                        <NavLink to={`/bens/show/${bem.id}`} data-tooltip="Visualizar bem"><FaEye /></NavLink>
                         {usuario?.papel === "ADMIN" && (
                           <>
-                            <NavLink
-                              to={`/bens/edit/${bem.id}`}
-                              data-tooltip="Editar bem"
-                            >
-                              <FaEdit />
-                            </NavLink>
-
-                            <NavLink
-                              to={`/bens/delete/${bem.id}`}
-                              data-tooltip="Excluir bem"
-                            >
-                              <FaTrash />
-                            </NavLink>
+                            <NavLink to={`/bens/edit/${bem.id}`} data-tooltip="Editar bem"><FaEdit /></NavLink>
+                            <NavLink to={`/bens/delete/${bem.id}`} data-tooltip="Excluir bem"><FaTrash /></NavLink>
                           </>
                         )}
                       </td>
@@ -243,21 +209,9 @@ export default function BensIndex() {
 
           {/* Paginação */}
           <div className="paginacao">
-            <button
-              disabled={pagina === 1}
-              onClick={() => setPagina(pagina - 1)}
-            >
-              Anterior
-            </button>
-            <span>
-              Página {pagina} de {totalPaginas}
-            </span>
-            <button
-              disabled={pagina === totalPaginas}
-              onClick={() => setPagina(pagina + 1)}
-            >
-              Próxima
-            </button>
+            <button disabled={pagina === 1} onClick={() => setPagina(pagina - 1)}>Anterior</button>
+            <span>Página {pagina} de {totalPaginas}</span>
+            <button disabled={pagina === totalPaginas}onClick={() => setPagina(pagina + 1)}>Próxima</button>
           </div>
         </div>
       </div>

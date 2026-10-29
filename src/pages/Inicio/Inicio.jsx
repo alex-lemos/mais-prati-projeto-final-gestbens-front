@@ -75,15 +75,9 @@ export default function Inicio() {
         <div className="card atalhos">
           <h2> Atalhos:</h2>
           <div className="atalhos-buttons">
-            <NavLink to="/bens/create" className="atalho-btn verde">
-              <FaBoxOpen /> Cadastrar Novo Bem
-            </NavLink>
-            <NavLink to="/manutencoes/create" className="atalho-btn verde">
-              <FaWrench /> Registrar Manutenção
-            </NavLink>
-            <NavLink to="/movimentacoes/create" className="atalho-btn verde">
-              <FaExchangeAlt /> Nova Movimentação
-            </NavLink>
+            <NavLink to="/bens/create" className="atalho-btn"><FaBoxOpen />Cadastrar Novo Bem</NavLink>
+            <NavLink to="/manutencoes/create" className="atalho-btn"><FaWrench />Registrar Manutenção</NavLink>
+            <NavLink to="/movimentacoes/create" className="atalho-btn"><FaExchangeAlt />Nova Movimentação</NavLink>
           </div>
         </div>
         
@@ -92,9 +86,7 @@ export default function Inicio() {
           
           {/* Destaque */}
           <div className="card">
-            <div className="icon">
-              <FaTools />
-            </div>
+            <div className="icon"><FaTools /></div>
             <div>
               <h2>Bens em Manutenção</h2>
               <span className="valor">{bensEmManutencao} itens em manutenção</span>
@@ -104,23 +96,17 @@ export default function Inicio() {
           {/* Cards de métricas */}
           <div className="cards">
             <div className="card">
-              <div className="icon azul">
-                <FaBoxOpen />
-              </div>
+              <div className="icon azul"><FaBoxOpen /></div>
               <h3>Total de Bens</h3>
               <span className="valor">{totalBens}</span>
             </div>
             <div className="card">
-              <div className="icon azul">
-                <FaExchangeAlt />
-              </div>
+              <div className="icon azul"><FaExchangeAlt /></div>
               <h3>Movimentações</h3>
               <span className="valor">{totalMovimentacoes}</span>
             </div>
             <div className="card">
-              <div className="icon azul">
-                <FaWrench />
-              </div>
+              <div className="icon azul"><FaWrench /></div>
               <h3>Manutenções</h3>
               <span className="valor">{totalManutencoes}</span>
             </div>

@@ -130,13 +130,11 @@ export default function Cadastro() {
           )}
 
           <div className="form-actions">
-            <button type="submit" className="primary">
-              Criar Minha Conta
-            </button>
+            <button type="submit" className="primary">Criar Minha Conta</button>
           </div>
         </form>
 
-        <p className="login-link">
+        <p className="login-link"> 
           Já tem uma conta? <a href="/login">Fazer login</a>
         </p>
       </div>

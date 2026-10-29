@@ -3,7 +3,6 @@ import { useEffect, useState } from "react";
 import FormularioBem from "../../components/FormularioBem";
 import { FaArrowLeft } from "react-icons/fa";
 
-// 1. Importação de todos os services reais necessários
 import { bemService } from "../../services/bemService";
 import { categoriaService } from "../../services/categoriaService";
 import { localidadeService } from "../../services/localidadeService";
@@ -19,7 +18,7 @@ export default function Edit() {
   const [carregando, setCarregando] = useState(true);
   const [erro, setErro] = useState("");
 
-  // 2. Carrega as listas de apoio e os dados atuais do bem em paralelo ao abrir a tela
+  // Carrega dados
   useEffect(() => {
     async function carregarDadosEdicao() {
       try {
@@ -48,12 +47,10 @@ export default function Edit() {
     }
   }, [id]);
 
-  // 3. Envia as alterações reais para o backend
+  // Atualiza os dados
   const handleSubmit = async (formData) => {
     try {
       await bemService.update(id, formData);
-
-      // Redireciona de volta para a lista de bens com sucesso
       navigate("/bens");
     } catch (error) {
       console.error("Erro ao atualizar bem:", error);
@@ -62,7 +59,6 @@ export default function Edit() {
     }
   };
 
-  // Retornos de feedback visual de controle
   if (carregando) return <div className="inicio-page"><h1>Carregando dados para edição...</h1></div>;
   if (erro || !bem) return <div className="inicio-page"><h1 className="form-error">⚠️ {erro || "Bem não encontrado"}</h1></div>;
 
@@ -71,23 +67,20 @@ export default function Edit() {
       <h1>Editar Bem</h1>
 
       <div className="conteudo-wrapper">
-        {/* Barra superior de ações */}
+        {/* Atalhos */}
         <div className="card atalhos">
           <h2>Ações:</h2>
           <div className="atalhos-buttons">
             <button onClick={() => navigate(-1)} className="atalho-btn">
               <FaArrowLeft /> Voltar
             </button>
-            <button
-              onClick={() => navigate("/")}
-              className="atalho-btn vermelho"
-            >
+            <button onClick={() => navigate("/")}className="atalho-btn">
               Cancelar
             </button>
           </div>
         </div>
 
-        {/* Formulário alimentado com dados dinâmicos da API */}
+        {/* Formulário */}
         <div className="card">
           <FormularioBem
             categorias={categorias}

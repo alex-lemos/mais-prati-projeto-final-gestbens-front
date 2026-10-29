@@ -11,7 +11,7 @@ export default function BensDelete() {
   const [carregando, setCarregando] = useState(true);
   const [erro, setErro] = useState("");
 
-  // 2. Carrega o Bem específico vindo da API usando o ID da URL
+  // Carrega o Bem pelo ID
   useEffect(() => {
     async function buscarBem() {
       try {
@@ -25,12 +25,11 @@ export default function BensDelete() {
       } finally {
         setCarregando(false);
       }
-    }
-    
+    }    
     if (id) buscarBem();
   }, [id]);
 
-  // 3. Função que deleta o item de verdade no banco através do service
+  // Deleta o Bem
   const handleDelete = async () => {
     try {
       await bemService.remove(id);
@@ -65,7 +64,7 @@ export default function BensDelete() {
         </div>
 
         <div className="conteudo">
-          {/* Informações principais vindas do BemResponse da API */}
+          {/* Informações do Bem*/}
           <div className="card informacoes">
             <h2 className="titulo">{bem.nome}</h2>
             <div className="informacoes-detalhes">
@@ -75,17 +74,14 @@ export default function BensDelete() {
               </div>
               <div className="campo">
                 <strong>Categoria:</strong>
-                {/* 4. Ajustado para ler a string resolvida pelo seu DTO Java */}
                 <p>{bem.nomeCategoria || "Não informada"}</p>
               </div>
               <div className="campo">
                 <strong>Localidade Atual:</strong>
-                {/* 5. Ajustado para ler a string resolvida pelo seu DTO Java */}
                 <p>{bem.nomeLocalidade || "Não informada"}</p>
               </div>
               <div className="campo">
                 <strong>Valor de Compra:</strong>
-                {/* 6. Validação caso o valorCompra venha nulo ou indefinido do banco */}
                 <p>R$ {bem.valorCompra ? Number(bem.valorCompra).toFixed(2) : "0,00"}</p>
               </div>
               <div className="campo">
@@ -102,9 +98,7 @@ export default function BensDelete() {
           {/* Alerta de exclusão */}
           <div className="card alerta-exclusao">
             <h2>Tem certeza que deseja excluir este bem? Essa ação não poderá ser desfeita.</h2>
-            <button onClick={handleDelete} className="btn-excluir">
-                <FaTrash /> Confirmar Exclusão
-            </button>
+            <button onClick={handleDelete} className="btn-excluir"><FaTrash />Confirmar Exclusão</button>
           </div>
         </div>
 

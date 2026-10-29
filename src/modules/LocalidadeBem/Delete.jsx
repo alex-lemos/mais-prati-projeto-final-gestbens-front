@@ -47,18 +47,20 @@ export default function Delete() {
         <div className="card atalhos">
           <h2>Ações:</h2>
           <div className="atalhos-buttons">
-            <button onClick={() => navigate(-1)} className="atalho-btn"><FaArrowLeft /> Voltar</button>
+            <button onClick={() => navigate(-1)} className="atalho-btn"><FaArrowLeft />Voltar</button>
             <button onClick={() => navigate("/locais")} className="atalho-btn vermelho">Cancelar</button>
           </div>
         </div>
         <div className="conteudo">
           <div className="card informacoes">
             <h2 className="titulo">{localidade.nome}</h2>
-            <div className="campo"><strong>Descrição:</strong><p>{localidade.descricao || "Sem descrição."}</p></div>
+            <div className="campo">
+              <strong>Descrição:</strong><p>{localidade.descricao || "Sem descrição."}</p>
+            </div>
           </div>
           <div className="card alerta-exclusao">
             <h2>Tem certeza que deseja excluir esta localidade? Essa ação não poderá ser desfeita.</h2>
-            <button onClick={handleDelete} className="btn-excluir"><FaTrash /> Confirmar Exclusão</button>
+            <button onClick={handleDelete} className="btn-excluir"><FaTrash />Confirmar Exclusão</button>
           </div>
         </div>
       </div>

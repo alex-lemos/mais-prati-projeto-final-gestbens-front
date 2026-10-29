@@ -79,9 +79,7 @@ export default function Login() {
           </form>
 
           <div className="login-extra">
-            <p>
-              Não tem conta? <a href="/cadastro">Cadastre-se</a>
-            </p>
+            <p>Não tem conta? <a href="/cadastro">Cadastre-se</a></p>
           </div>
         </div>
       </div>

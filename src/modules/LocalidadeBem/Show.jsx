@@ -39,20 +39,29 @@ export default function Show() {
         <div className="card atalhos">
           <h2>Ações:</h2>
           <div className="atalhos-buttons">
-            <button onClick={() => navigate(-1)} className="atalho-btn"><FaArrowLeft /> Voltar</button>
+            <button onClick={() => navigate(-1)} className="atalho-btn"><FaArrowLeft />Voltar</button>
             {usuario?.papel === "ADMIN" && <>
-              <NavLink to={`/locais/edit/${localidade.id}`} className="atalho-btn"><FaEdit /> Editar Localidade</NavLink>
-              <NavLink to={`/locais/delete/${localidade.id}`} className="atalho-btn"><FaTrash /> Excluir Localidade</NavLink>
+              <NavLink to={`/locais/edit/${localidade.id}`} className="atalho-btn"><FaEdit />Editar Localidade</NavLink>
+              <NavLink to={`/locais/delete/${localidade.id}`} className="atalho-btn"><FaTrash />Excluir Localidade</NavLink>
             </>}
           </div>
         </div>
         <div className="card informacoes">
           <h2 className="titulo">{localidade.nome}</h2>
           <div className="informacoes-detalhes">
-            <div className="campo"><strong>ID:</strong><p>{localidade.id}</p></div>
-            <div className="campo"><strong>Nome:</strong><p>{localidade.nome}</p></div>
+            <div className="campo">
+              <strong>ID:</strong>
+              <p>{localidade.id}</p>
+            </div>
+            <div className="campo">
+              <strong>Nome:</strong>
+              <p>{localidade.nome}</p>
+            </div>
           </div>
-          <div className="campo"><strong>Descrição:</strong><p>{localidade.descricao || "Sem descrição."}</p></div>
+          <div className="campo">
+            <strong>Descrição:</strong>
+            <p>{localidade.descricao || "Sem descrição."}</p>
+          </div>
         </div>
       </div>
     </div>

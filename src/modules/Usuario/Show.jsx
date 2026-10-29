@@ -45,10 +45,22 @@ export default function Show() {
         <div className="card informacoes">
           <h2 className="titulo">{usuario.nome}</h2>
           <div className="informacoes-detalhes">
-            <div className="campo"><strong>ID:</strong><p>{usuario.id}</p></div>
-            <div className="campo"><strong>Nome:</strong><p>{usuario.nome}</p></div>
-            <div className="campo"><strong>E-mail:</strong><p>{usuario.email}</p></div>
-            <div className="campo"><strong>Perfil:</strong><p>{usuario.is_admin ? "Administrador" : "Usuário"}</p></div>
+            <div className="campo">
+              <strong>ID:</strong>
+              <p>{usuario.id}</p>
+            </div>
+            <div className="campo">
+              <strong>Nome:</strong>
+              <p>{usuario.nome}</p>
+            </div>
+            <div className="campo">
+              <strong>E-mail:</strong>
+              <p>{usuario.email}</p>
+            </div>
+            <div className="campo">
+              <strong>Perfil:</strong>
+              <p>{usuario.is_admin ? "Administrador" : "Usuário"}</p>
+            </div>
           </div>
         </div>
       </div>

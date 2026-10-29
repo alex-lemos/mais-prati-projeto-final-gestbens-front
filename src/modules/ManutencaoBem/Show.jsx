@@ -62,12 +62,27 @@ export default function Show() {
         <div className="card informacoes">
           <h2 className="titulo">Manutenção #{dados.id}</h2>
           <div className="informacoes-detalhes">
-            <div className="campo"><strong>Data:</strong><p>{(dados.data_manutencao || dados.dataManutencao)?.slice(0, 10)}</p></div>
-            <div className="campo"><strong>Bem:</strong><p>{dados.bem?.nome || dados.bem || `#${dados.bem_id ?? dados.bemId}`}</p></div>
-            <div className="campo"><strong>Responsável:</strong><p>{dados.usuario?.nome || dados.usuario || `#${dados.usuario_id ?? dados.usuarioId}`}</p></div>
-            <div className="campo"><strong>Custo:</strong><p>{dados.custo == null ? "Não informado" : `R$ ${Number(dados.custo).toFixed(2)}`}</p></div>
+            <div className="campo">
+              <strong>Data:</strong>
+              <p>{(dados.data_manutencao || dados.dataManutencao)?.slice(0, 10)}</p>
+            </div>
+            <div className="campo">
+              <strong>Bem:</strong>
+              <p>{dados.bem?.nome || dados.bem || `#${dados.bem_id ?? dados.bemId}`}</p>
+            </div>
+            <div className="campo">
+              <strong>Responsável:</strong>
+              <p>{dados.usuario?.nome || dados.usuario || `#${dados.usuario_id ?? dados.usuarioId}`}</p>
+            </div>
+            <div className="campo">
+              <strong>Custo:</strong>
+              <p>{dados.custo == null ? "Não informado" : `R$ ${Number(dados.custo).toFixed(2)}`}</p>
+            </div>
           </div>
-          <div className="campo"><strong>Descrição:</strong><p>{dados.descricao || "Sem descrição."}</p></div>
+          <div className="campo">
+            <strong>Descrição:</strong>
+            <p>{dados.descricao || "Sem descrição."}</p>
+          </div>
         </div>
       </div>
     </div>

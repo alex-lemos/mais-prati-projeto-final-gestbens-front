@@ -47,7 +47,7 @@ export default function Delete() {
         <div className="card atalhos">
           <h2>Ações:</h2>
           <div className="atalhos-buttons">
-            <button onClick={() => navigate(-1)} className="atalho-btn"><FaArrowLeft /> Voltar</button>
+            <button onClick={() => navigate(-1)} className="atalho-btn"><FaArrowLeft />Voltar</button>
             <button onClick={() => navigate("/manutencoes")} className="atalho-btn vermelho">Cancelar</button>
           </div>
         </div>
@@ -55,9 +55,18 @@ export default function Delete() {
           <div className="card informacoes">
             <h2 className="titulo">Manutenção #{manutencao.id}</h2>
             <div className="informacoes-detalhes">
-              <div className="campo"><strong>Data:</strong><p>{(manutencao.data_manutencao || manutencao.dataManutencao)?.slice(0, 10)}</p></div>
-              <div className="campo"><strong>Bem:</strong><p>{manutencao.bem?.nome || manutencao.bem || `#${manutencao.bem_id ?? manutencao.bemId}`}</p></div>
-              <div className="campo"><strong>Responsável:</strong><p>{manutencao.usuario?.nome || manutencao.usuario || `#${manutencao.usuario_id ?? manutencao.usuarioId}`}</p></div>
+              <div className="campo">
+                <strong>Data:</strong>
+                <p>{(manutencao.data_manutencao || manutencao.dataManutencao)?.slice(0, 10)}</p>
+              </div>
+              <div className="campo">
+                <strong>Bem:</strong>
+                <p>{manutencao.bem?.nome || manutencao.bem || `#${manutencao.bem_id ?? manutencao.bemId}`}</p>
+              </div>
+              <div className="campo">
+                <strong>Responsável:</strong>
+                <p>{manutencao.usuario?.nome || manutencao.usuario || `#${manutencao.usuario_id ?? manutencao.usuarioId}`}</p>
+              </div>
             </div>
             <div className="campo"><strong>Descrição:</strong><p>{manutencao.descricao || "Sem descrição."}</p></div>
           </div>

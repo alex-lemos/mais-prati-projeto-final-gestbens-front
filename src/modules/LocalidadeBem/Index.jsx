@@ -45,7 +45,7 @@ export default function Index() {
           <div className="card atalhos">
             <h2>Atalhos:</h2>
             <div className="atalhos-buttons">
-              <NavLink to="/locais/create" className="atalho-btn verde"><FaBoxOpen /> Cadastrar Nova Localidade</NavLink>
+              <NavLink to="/locais/create" className="atalho-btn verde"><FaBoxOpen />Cadastrar Nova Localidade</NavLink>
             </div>
           </div>
         )}

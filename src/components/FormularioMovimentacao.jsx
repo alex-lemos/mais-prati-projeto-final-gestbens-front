@@ -67,8 +67,8 @@ export default function FormularioMovimentacao({
       <textarea id="observacao" name="observacao" value={formData.observacao || ""} onChange={handleChange} />
 
       <div className="form-actions">
-        <button type="submit" className="atalho-btn verde"><FaSave /> Salvar</button>
-        <button type="button" className="atalho-btn vermelho" onClick={handleReset}>
+        <button type="submit" className="atalho-btn"><FaSave /> Salvar</button>
+        <button type="button" className="atalho-btn" onClick={handleReset}>
           <FaTrash /> {modo === "edit" ? "Desfazer alterações" : "Limpar formulário"}
         </button>
       </div>

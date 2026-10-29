@@ -3,7 +3,6 @@ import { useEffect, useState } from "react";
 import { useAuth } from "../../contexts/Auth";
 import { FaArrowLeft, FaEdit, FaTrash } from "react-icons/fa";
 
-// 1. Importação de todos os services reais necessários
 import { bemService } from "../../services/bemService";
 import { movimentacaoService } from "../../services/movimentacaoService";
 import { manutencaoService } from "../../services/manutencaoService";
@@ -15,38 +14,37 @@ export default function BensShow() {
 
   const [bem, setBem] = useState(null);
   const [abaAtiva, setAbaAtiva] = useState("movimentacoes");
-  
+
   const [carregando, setCarregando] = useState(true);
   const [erro, setErro] = useState("");
 
-  // 2. Carga inicial em paralelo unindo os dados do bem e seus respectivos históricos
+  // Carga Dados
   useEffect(() => {
     async function carregarDadosDoBem() {
       try {
         setCarregando(true);
         setErro("");
 
-        const [dadosBem, dadosMovimentacoes, dadosManutencoes] = await Promise.all([
-          bemService.getById(id),
-          movimentacaoService.getAll(),
-          manutencaoService.getAll(),
-        ]);
+        const [dadosBem, dadosMovimentacoes, dadosManutencoes] =
+          await Promise.all([
+            bemService.getById(id),
+            movimentacaoService.getAll(),
+            manutencaoService.getAll(),
+          ]);
 
-        // Filtra o histórico com base nas Records estruturadas do seu backend Java
+        // Filtra o histórico de movimentações
         const movsFiltradas = Array.isArray(dadosMovimentacoes)
-          ? dadosMovimentacoes.filter((m) => m.bem === dadosBem.nome)
-          : [];
+          ? dadosMovimentacoes.filter((m) => m.bem === dadosBem.nome) : [];
 
+        // Filtra o histórico de manutenções
         const mansFiltradas = Array.isArray(dadosManutencoes)
-          ? dadosManutencoes.filter((man) => man.bem === dadosBem.nome)
-          : [];
+          ? dadosManutencoes.filter((man) => man.bem === dadosBem.nome) : [];
 
         setBem({
-          ...dadosBem,
+          ...dadosBem, 
           movimentacoes: movsFiltradas,
           manutencoes: mansFiltradas,
         });
-
       } catch (error) {
         console.error("Erro ao carregar detalhes do bem:", error);
         setErro("Não foi possível carregar as informações deste patrimônio.");
@@ -60,51 +58,53 @@ export default function BensShow() {
     }
   }, [id]);
 
-  // Formatação segura de datas vindas do Spring Boot (LocalDateTime)
+  // Formatação de datas
   const formatarData = (dataString) => {
     if (!dataString) return "N/A";
     try {
       const data = new Date(dataString);
-      return data.toLocaleDateString("pt-BR") + " " + data.toLocaleTimeString("pt-BR", { hour: '2-digit', minute: '2-digit' });
+      return (
+        data.toLocaleDateString("pt-BR") + " " + data.toLocaleTimeString("pt-BR", { hour: "2-digit", minute: "2-digit" })
+      );
     } catch {
       return dataString;
     }
   };
 
-  if (carregando) return <div className="inicio-page"><h1>Carregando detalhes do bem...</h1></div>;
-  if (erro || !bem) return <div className="inicio-page"><h1 className="form-error">⚠️ {erro || "Bem não encontrado"}</h1></div>;
-
-  // console.log("Bem carregado:", bem);
+  if (carregando)
+    return (
+      <div className="inicio-page">
+        <h1>Carregando detalhes do bem...</h1>
+      </div>
+    );
+  if (erro || !bem)
+    return (
+      <div className="inicio-page">
+        <h1 className="form-error">⚠️ {erro || "Bem não encontrado"}</h1>
+      </div>
+    );
 
   return (
     <div className="inicio-page">
       <h1>Detalhes do Bem #{bem.id}</h1>
 
       <div className="conteudo-wrapper">
-
         {/* Atalhos */}
         <div className="card atalhos">
           <h2>Ações:</h2>
           <div className="atalhos-buttons">
-            <button onClick={() => navigate(-1)} className="atalho-btn">
-              <FaArrowLeft /> Voltar
-            </button>
-            {/* 3. Atualizado para validar o papel vindo do seu back */}
+            <button onClick={() => navigate(-1)} className="atalho-btn"><FaArrowLeft />Voltar</button>
             {usuario?.papel === "ADMIN" && (
               <>
-                <NavLink to={`/bens/edit/${bem.id}`} className="atalho-btn">
-                  <FaEdit /> Editar Bem
-                </NavLink>
-                <NavLink to={`/bens/delete/${bem.id}`} className="atalho-btn">
-                  <FaTrash /> Excluir Bem
-                </NavLink>
+                <NavLink to={`/bens/edit/${bem.id}`} className="atalho-btn"><FaEdit />Editar Bem</NavLink>
+                <NavLink to={`/bens/delete/${bem.id}`} className="atalho-btn"><FaTrash /> Excluir Bem</NavLink>
               </>
             )}
           </div>
         </div>
 
         <div className="conteudo">
-          {/* Informações principais mapeadas com seu BemResponse */}
+          {/* Informações */}
           <div className="card informacoes">
             <h2 className="titulo">{bem.nome}</h2>
             <div className="informacoes-detalhes">
@@ -122,7 +122,7 @@ export default function BensShow() {
               </div>
               <div className="campo">
                 <strong>Valor de Compra:</strong>
-                <p>R$ {bem.valorCompra ? Number(bem.valorCompra).toFixed(2) : "0,00"}</p>
+                <p>R${" "} {bem.valorCompra ? Number(bem.valorCompra).toFixed(2) : "0,00"}</p>
               </div>
               <div className="campo">
                 <strong>Status:</strong>
@@ -133,7 +133,6 @@ export default function BensShow() {
                 </p>
               </div>
             </div>
-            {/* Se o seu BemResponse estender uma descrição mais tarde: */}
             {bem.descricao && (
               <div className="campo">
                 <strong>Descrição:</strong>
@@ -179,7 +178,9 @@ export default function BensShow() {
                         ))}
                       </tbody>
                     </table>
-                  ) : <p>Nenhuma movimentação registrada.</p>}
+                  ) : (
+                    <p>Nenhuma movimentação registrada.</p>
+                  )}
                 </div>
               )}
 
@@ -202,19 +203,20 @@ export default function BensShow() {
                             <td>{formatarData(man.dataEntrada)}</td>
                             <td>{formatarData(man.dataRetorno)}</td>
                             <td>{man.descricao}</td>
-                            <td>R$ {man.custo ? Number(man.custo).toFixed(2) : "0,00"}</td>
+                            <td>R${" "} {man.custo ? Number(man.custo).toFixed(2) : "0,00"}</td>
                             <td>{man.usuario}</td>
                           </tr>
                         ))}
                       </tbody>
                     </table>
-                  ) : <p>Nenhuma manutenção registrada.</p>}
+                  ) : (
+                    <p>Nenhuma manutenção registrada.</p>
+                  )}
                 </div>
               )}
             </div>
           </div>
         </div>
-
       </div>
     </div>
   );

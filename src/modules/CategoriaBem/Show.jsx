@@ -39,20 +39,29 @@ export default function Show() {
         <div className="card atalhos">
           <h2>Ações:</h2>
           <div className="atalhos-buttons">
-            <button onClick={() => navigate(-1)} className="atalho-btn"><FaArrowLeft /> Voltar</button>
+            <button onClick={() => navigate(-1)} className="atalho-btn"><FaArrowLeft />Voltar</button>
             {usuario?.papel === "ADMIN" && <>
-              <NavLink to={`/categorias/edit/${categoria.id}`} className="atalho-btn"><FaEdit /> Editar Categoria</NavLink>
-              <NavLink to={`/categorias/delete/${categoria.id}`} className="atalho-btn"><FaTrash /> Excluir Categoria</NavLink>
+              <NavLink to={`/categorias/edit/${categoria.id}`} className="atalho-btn"><FaEdit />Editar Categoria</NavLink>
+              <NavLink to={`/categorias/delete/${categoria.id}`} className="atalho-btn"><FaTrash />Excluir Categoria</NavLink>
             </>}
           </div>
         </div>
         <div className="card informacoes">
           <h2 className="titulo">{categoria.nome}</h2>
           <div className="informacoes-detalhes">
-            <div className="campo"><strong>ID:</strong><p>{categoria.id}</p></div>
-            <div className="campo"><strong>Nome:</strong><p>{categoria.nome}</p></div>
+            <div className="campo">
+              <strong>ID:</strong>
+              <p>{categoria.id}</p>
+            </div>
+            <div className="campo">
+              <strong>Nome:</strong>
+              <p>{categoria.nome}</p>
+            </div>
           </div>
-          <div className="campo"><strong>Descrição:</strong><p>{categoria.descricao || "Sem descrição."}</p></div>
+          <div className="campo">
+            <strong>Descrição:</strong>
+            <p>{categoria.descricao || "Sem descrição."}</p>
+          </div>
         </div>
       </div>
     </div>

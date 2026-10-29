@@ -48,7 +48,7 @@ export default function Edit() {
         <div className="card atalhos">
           <h2>Ações:</h2>
           <div className="atalhos-buttons">
-            <button onClick={() => navigate(-1)} className="atalho-btn"><FaArrowLeft /> Voltar</button>
+            <button onClick={() => navigate(-1)} className="atalho-btn"><FaArrowLeft />Voltar</button>
             <button onClick={() => navigate("/locais")} className="atalho-btn vermelho">Cancelar</button>
           </div>
         </div>

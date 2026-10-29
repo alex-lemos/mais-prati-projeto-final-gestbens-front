@@ -55,23 +55,41 @@ export default function Show() {
         <div className="card atalhos">
           <h2>Ações:</h2>
           <div className="atalhos-buttons">
-            <button onClick={() => navigate(-1)} className="atalho-btn"><FaArrowLeft /> Voltar</button>
+            <button onClick={() => navigate(-1)} className="atalho-btn"><FaArrowLeft />Voltar</button>
             {usuario?.papel === "ADMIN" && <>
-              <NavLink to={`/movimentacoes/edit/${dados.id}`} className="atalho-btn"><FaEdit /> Editar Movimentação</NavLink>
-              <NavLink to={`/movimentacoes/delete/${dados.id}`} className="atalho-btn"><FaTrash /> Excluir Movimentação</NavLink>
+              <NavLink to={`/movimentacoes/edit/${dados.id}`} className="atalho-btn"><FaEdit />Editar Movimentação</NavLink>
+              <NavLink to={`/movimentacoes/delete/${dados.id}`} className="atalho-btn"><FaTrash />Excluir Movimentação</NavLink>
             </>}
           </div>
         </div>
         <div className="card informacoes">
           <h2 className="titulo">Movimentação #{dados.id}</h2>
           <div className="informacoes-detalhes">
-            <div className="campo"><strong>Data:</strong><p>{(dados.data_movimentacao || dados.dataMovimentacao)?.slice(0, 10)}</p></div>
-            <div className="campo"><strong>Bem:</strong><p>{dados.bemNome}</p></div>
-            <div className="campo"><strong>Origem:</strong><p>{dados.origemNome}</p></div>
-            <div className="campo"><strong>Destino:</strong><p>{dados.destinoNome}</p></div>
-            <div className="campo"><strong>Responsável:</strong><p>{dados.usuarioNome}</p></div>
+            <div className="campo">
+              <strong>Data:</strong>
+              <p>{(dados.data_movimentacao || dados.dataMovimentacao)?.slice(0, 10)}</p>
+            </div>
+            <div className="campo">
+              <strong>Bem:</strong>
+              <p>{dados.bemNome}</p>
+            </div>
+            <div className="campo">
+              <strong>Origem:</strong>
+              <p>{dados.origemNome}</p>
+              </div>
+            <div className="campo">
+              <strong>Destino:</strong>
+              <p>{dados.destinoNome}</p>
+            </div>
+            <div className="campo">
+              <strong>Responsável:</strong>
+              <p>{dados.usuarioNome}</p>
+              </div>
           </div>
-          <div className="campo"><strong>Observação:</strong><p>{dados.observacao || "Sem observação."}</p></div>
+          <div className="campo">
+            <strong>Observação:</strong>
+            <p>{dados.observacao || "Sem observação."}</p>
+          </div>
         </div>
       </div>
     </div>

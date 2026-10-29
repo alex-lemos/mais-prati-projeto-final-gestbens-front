@@ -10,11 +10,7 @@ export default function Sidebar({ open, onClose }) {
   return (
     <aside className={`sidebar ${open ? "open" : ""}`}>
       {open && (
-        <button
-          className="close-btn"
-          onClick={onClose}
-          aria-label="Fechar menu"
-        >
+        <button className="close-btn" onClick={onClose} aria-label="Fechar menu">
           <FaChevronLeft />
         </button>
       )}
@@ -22,32 +18,16 @@ export default function Sidebar({ open, onClose }) {
       <img src={logo} alt="Logo" className="logo" />
       <nav>
         <ul>
-          <li>
-            <NavLink to="/" end>
-              Início
-            </NavLink>
-          </li>
-          <li>
-            <NavLink to="/bens">Gerenciar Bens</NavLink>
-          </li>
-          <li>
-            <NavLink to="/manutencoes">Manutenção</NavLink>
-          </li>
-          <li>
-            <NavLink to="/movimentacoes">Movimentação</NavLink>
-          </li>
+          <li><NavLink to="/" end>Início</NavLink></li>
+          <li><NavLink to="/bens">Gerenciar Bens</NavLink></li>
+          <li><NavLink to="/manutencoes">Manutenção</NavLink></li>
+          <li><NavLink to="/movimentacoes">Movimentação</NavLink></li>
 
           {usuario.papel === "ADMIN" && (
             <>
-              <li>
-                <NavLink to="/locais">Locais</NavLink>
-              </li>
-              <li>
-                <NavLink to="/categorias">Categorias</NavLink>
-              </li>
-              <li>
-                <NavLink to="/usuarios">Usuários</NavLink>
-              </li>
+              <li><NavLink to="/locais">Locais</NavLink></li>
+              <li><NavLink to="/categorias">Categorias</NavLink></li>
+              <li><NavLink to="/usuarios">Usuários</NavLink></li>
             </>
           )}
         </ul>
@@ -56,11 +36,7 @@ export default function Sidebar({ open, onClose }) {
       <div className="sidebar-footer">
         <div className="user-info">
           {usuario?.foto ? (
-            <img
-              src={usuario.foto}
-              alt={usuario.nome}
-              className="user-avatar"
-            />
+            <img src={usuario.foto} alt={usuario.nome} className="user-avatar" />
           ) : (
             <FaUserCircle className="user-avatar" />
           )}
