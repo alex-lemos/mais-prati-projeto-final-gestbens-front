@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { bens as mockBens, categorias, localidades } from "../../mocks/data";
 import FormularioBem from "../../components/FormularioBem";
 import { FaArrowLeft } from "react-icons/fa";
+import { bemService } from "../../services/bemService";
 
 export default function Edit() {
   const { id } = useParams();
@@ -13,7 +14,7 @@ export default function Edit() {
   useEffect(() => {
     const carregar = () => {
       // Busca o bem nos mocks (simulando o getById do service)
-      const bemEncontrado = mockBens.find((b) => b.id.toString() === id);
+      const bemEncontrado = bemService.getById(id);
       if (bemEncontrado) {
         setBem(bemEncontrado);
       }
@@ -48,7 +49,10 @@ export default function Edit() {
             <button onClick={() => navigate(-1)} className="atalho-btn">
               <FaArrowLeft /> Voltar
             </button>
-            <button onClick={() => navigate("/")} className="atalho-btn vermelho">
+            <button
+              onClick={() => navigate("/")}
+              className="atalho-btn vermelho"
+            >
               Cancelar
             </button>
           </div>

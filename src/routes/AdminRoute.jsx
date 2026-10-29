@@ -5,7 +5,7 @@ import { useAuth } from "../contexts/useAuth";
 export default function AdminRoute({ children }) {
   const { usuario } = useAuth();
 
-  if (!usuario?.is_admin) {
+  if (!usuario || usuario.papel !== "ADMIN") {
     // Se não for admin, redireciona para a página inicial
     return <Navigate to="/" replace />;
   }

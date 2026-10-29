@@ -206,7 +206,7 @@ export default function BensIndex() {
                           <FaEye />
                         </NavLink>
 
-                        {usuario?.is_admin && (
+                        {usuario.papel === "ADMIN" && (
                           <>
                             <NavLink
                               to={`/bens/edit/${bem.id}`}
