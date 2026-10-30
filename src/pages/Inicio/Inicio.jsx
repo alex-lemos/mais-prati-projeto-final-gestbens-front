@@ -7,13 +7,11 @@ import {
   FaWrench,
 } from "react-icons/fa";
 
-// 1. Importe os seus services reais aqui (ajuste as rotas de importação se necessário)
 import { bemService } from "../../services/bemService";
 import { manutencaoService } from "../../services/manutencaoService";
 import { movimentacaoService } from "../../services/movimentacaoService";
 
 export default function Inicio() {
-  // 2. Criação dos estados locais para guardar as contagens do backend
   const [totalBens, setTotalBens] = useState(0);
   const [totalMovimentacoes, setTotalMovimentacoes] = useState(0);
   const [totalManutencoes, setTotalManutencoes] = useState(0);
@@ -23,26 +21,24 @@ export default function Inicio() {
   const [carregando, setCarregando] = useState(true);
   const [erro, setErro] = useState("");
 
-  // 3. Efeito executado ao abrir a tela para buscar as informações do banco
+  // Carrega dados
   useEffect(() => {
     async function carregarDadosDashboard() {
       try {
         setCarregando(true);
         setErro("");
 
-        // Dispara todas as requisições em paralelo para o backend ser mais rápido
         const [dadosBens, dadosMovimentacoes, dadosManutencoes] = await Promise.all([
           bemService.getAll(),
           movimentacaoService.getAll(),
           manutencaoService.getAll(),
         ]);
 
-        // Define as contagens baseado nos arrays reais retornados pela API
         setTotalBens(Array.isArray(dadosBens) ? dadosBens.length : 0);
         setTotalMovimentacoes(Array.isArray(dadosMovimentacoes) ? dadosMovimentacoes.length : 0);
         setTotalManutencoes(Array.isArray(dadosManutencoes) ? dadosManutencoes.length : 0);
 
-        // FILTRO CORRETO: Se tem data de entrada mas não tem data de retorno, está em andamento!
+        // FILTRA bens em manutenção!
         const emManutencaoAtiva = Array.isArray(dadosManutencoes) 
           ? dadosManutencoes.filter(m => m.dataEntrada && !m.dataRetorno).length 
           : 0;
@@ -60,7 +56,7 @@ export default function Inicio() {
     carregarDadosDashboard();
   }, []);
 
-  // Telas de feedback visual para o usuário
+  // Feedback visual para o usuário
   if (carregando) return <div className="inicio-page"><h1>Carregando painel...</h1></div>;
   if (erro) return <div className="inicio-page"><h1>{erro}</h1></div>;
 

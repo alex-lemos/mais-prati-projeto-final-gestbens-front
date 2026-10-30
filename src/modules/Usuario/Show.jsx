@@ -30,6 +30,8 @@ export default function Show() {
   if (carregando) return <div className="inicio-page"><h1>Carregando usuário...</h1></div>;
   if (erro || !usuario) return <div className="inicio-page"><h1 className="form-error">{erro || "Usuário não encontrado"}</h1></div>;
 
+  console.log(usuario)
+
   return (
     <div className="inicio-page">
       <h1>Detalhes do Usuário #{usuario.id}</h1>
@@ -59,7 +61,7 @@ export default function Show() {
             </div>
             <div className="campo">
               <strong>Perfil:</strong>
-              <p>{usuario.is_admin ? "Administrador" : "Usuário"}</p>
+              <p>{usuario.admin ? "Administrador" : "Usuário"}</p>
             </div>
           </div>
         </div>

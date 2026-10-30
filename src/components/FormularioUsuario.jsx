@@ -71,9 +71,9 @@ export default function FormularioUsuario({ onSubmit, initialData, modo }) {
 
       <label>
         <input
-          name="is_admin"
+          name="admin"
           type="checkbox"
-          checked={Boolean(formData.is_admin)}
+          checked={Boolean(formData.admin)}
           onChange={handleChange}
           style={{ width: "auto" }}
         />

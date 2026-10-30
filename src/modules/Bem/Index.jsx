@@ -106,6 +106,8 @@ export default function BensIndex() {
     setPagina(1);
   };
 
+  console.log(usuario)
+
   return (
     <div className="inicio-page">
       <h1>Gerenciar Bens</h1>

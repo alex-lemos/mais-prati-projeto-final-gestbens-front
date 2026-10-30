@@ -71,7 +71,7 @@ export default function Index() {
             <div className="filtros-form">
               <select value={filtros.bem} onChange={(event) => { setFiltros((prev) => ({ ...prev, bem: event.target.value })); setPagina(1); }}>
                 <option value="">Todos os bens</option>
-                {bens.map((bem) => <option key={bem.id} value={bem.id}>{bem.nome}</option>)}
+                {bens.map((bem) => <option key={bem.id} value={bem.id}>{bem.id} - {bem.nome}</option>)}
               </select>
               <select value={filtros.usuario} onChange={(event) => { setFiltros((prev) => ({ ...prev, usuario: event.target.value })); setPagina(1); }}>
                 <option value="">Todos os responsáveis</option>

@@ -35,6 +35,8 @@ export default function Index() {
   const totalPaginas = Math.max(1, Math.ceil(usuariosFiltrados.length / itensPorPagina));
   const usuariosPagina = usuariosFiltrados.slice((pagina - 1) * itensPorPagina, pagina * itensPorPagina);
 
+  console.log(usuarios)
+
   return (
     <div className="inicio-page">
       <h1>Gerenciar Usuários</h1>
@@ -64,7 +66,7 @@ export default function Index() {
                       <td>{usuario.id}</td>
                       <td>{usuario.nome}</td>
                       <td>{usuario.email}</td>
-                      <td>{usuario.is_admin ? "Administrador" : "Usuário"}</td>
+                      <td>{usuario.admin ? "Administrador" : "Usuário"}</td>
                       <td className="acoes">
                         <NavLink to={`/usuarios/show/${usuario.id}`} data-tooltip="Visualizar usuário"><FaEye /></NavLink>
                         <NavLink to={`/usuarios/edit/${usuario.id}`} data-tooltip="Editar usuário"><FaEdit /></NavLink>
