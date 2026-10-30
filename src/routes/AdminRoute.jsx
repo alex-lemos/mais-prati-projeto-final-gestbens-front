@@ -1,6 +1,6 @@
 // src/routes/AdminRoute.jsx
 import { Navigate } from "react-router-dom";
-import { useAuth } from "../contexts/Auth/useAuth";
+import { useAuth } from "../contexts/Auth";
 
 export default function AdminRoute({ children }) {
   const { usuario } = useAuth();
