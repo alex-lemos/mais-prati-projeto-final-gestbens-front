@@ -33,7 +33,7 @@ export default function Delete() {
       navigate("/locais");
     } catch (error) {
       console.error("Erro ao excluir localidade:", error);
-      alert(error.response?.data?.message || "Não foi possível excluir a localidade.");
+      alert(error.response?.data?.mensagem || error.response?.data?.message || "Não foi possível excluir a localidade.");
     }
   };
 

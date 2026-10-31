@@ -2,9 +2,14 @@ import { useEffect, useState } from "react";
 import { NavLink, useNavigate, useParams } from "react-router-dom";
 import { useAuth } from "../../contexts/Auth";
 import { manutencaoService } from "../../services/manutencaoService";
-import { bemService } from "../../services/bemService";
-import { usuarioService } from "../../services/usuarioService";
-import { FaArrowLeft, FaEdit, FaTrash } from "react-icons/fa";
+import { FaArrowLeft, FaEdit } from "react-icons/fa";
+
+function formatarData(data) {
+  if (!data) return "—";
+
+  const [ano, mes, dia] = String(data).split("T")[0].split("-");
+  return ano && mes && dia ? `${dia}/${mes}/${ano}` : "Data inválida";
+}
 
 export default function Show() {
   const { id } = useParams();
@@ -19,26 +24,18 @@ export default function Show() {
       try {
         setCarregando(true);
         setErro("");
-        const [manutencao, dadosBens, dadosUsuarios] = await Promise.all([
-          manutencaoService.getById(id),
-          bemService.getAll(),
-          usuarioService.getAll(),
-        ]);
-        const listaBens = Array.isArray(dadosBens) ? dadosBens : [];
-        const listaUsuarios = Array.isArray(dadosUsuarios) ? dadosUsuarios : [];
-        setDados({
-          ...manutencao,
-          bem: listaBens.find((item) => String(item.id) === String(manutencao.bem_id ?? manutencao.bemId ?? manutencao.bem?.id)) || manutencao.bem,
-          usuario: listaUsuarios.find((item) => String(item.id) === String(manutencao.usuario_id ?? manutencao.usuarioId ?? manutencao.usuario?.id)) || manutencao.usuario,
-        });
+        setDados(await manutencaoService.getById(id));
       } catch (error) {
         console.error("Erro ao carregar dados da manutenção:", error);
-        setErro("Não foi possível carregar os dados da manutenção.");
+        setErro(
+          error.response?.data?.mensagem ||
+          error.response?.data?.message ||
+          `Não foi possível carregar os dados da manutenção${error.response?.status ? ` (HTTP ${error.response.status})` : ""}.`
+        );
       } finally {
         setCarregando(false);
       }
     }
-
     if (id) carregarDados();
   }, [id]);
 
@@ -47,32 +44,31 @@ export default function Show() {
 
   return (
     <div className="inicio-page">
-      <h1>Detalhes da Manutenção #{dados.id}</h1>
+      <h1>Detalhes da Manutenção</h1>
       <div className="conteudo-wrapper">
         <div className="card atalhos">
           <h2>Ações:</h2>
           <div className="atalhos-buttons">
             <button onClick={() => navigate(-1)} className="atalho-btn"><FaArrowLeft /> Voltar</button>
-            {usuario?.papel === "ADMIN" && <>
+            {usuario?.papel === "ADMIN" && (
               <NavLink to={`/manutencoes/edit/${dados.id}`} className="atalho-btn"><FaEdit /> Editar Manutenção</NavLink>
-              <NavLink to={`/manutencoes/delete/${dados.id}`} className="atalho-btn"><FaTrash /> Excluir Manutenção</NavLink>
-            </>}
+            )}
           </div>
         </div>
         <div className="card informacoes">
-          <h2 className="titulo">Manutenção #{dados.id}</h2>
+          <h2 className="titulo">Manutenção</h2>
           <div className="informacoes-detalhes">
             <div className="campo">
-              <strong>Data:</strong>
-              <p>{(dados.data_manutencao || dados.dataManutencao)?.slice(0, 10)}</p>
+              <strong>Data: (Saída/Retorno)</strong>
+              <p>{formatarData(dados.dataEntrada)} / {formatarData(dados.dataRetorno)}</p>
             </div>
             <div className="campo">
               <strong>Bem:</strong>
-              <p>{dados.bem?.nome || dados.bem || `#${dados.bem_id ?? dados.bemId}`}</p>
+              <p>{dados.bem || "—"}</p>
             </div>
             <div className="campo">
               <strong>Responsável:</strong>
-              <p>{dados.usuario?.nome || dados.usuario || `#${dados.usuario_id ?? dados.usuarioId}`}</p>
+              <p>{dados.usuario || "—"}</p>
             </div>
             <div className="campo">
               <strong>Custo:</strong>

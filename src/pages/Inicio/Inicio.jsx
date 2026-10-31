@@ -17,19 +17,18 @@ export default function Inicio() {
   const [totalManutencoes, setTotalManutencoes] = useState(0);
   const [bensEmManutencao, setBensEmManutencao] = useState(0);
   
-  // Estados auxiliares de controle da tela
   const [carregando, setCarregando] = useState(true);
   const [erro, setErro] = useState("");
 
-  // Carrega dados
   useEffect(() => {
     async function carregarDadosDashboard() {
       try {
         setCarregando(true);
         setErro("");
 
-        const [dadosBens, dadosMovimentacoes, dadosManutencoes] = await Promise.all([
+        const [dadosBens, dadosBensEmManutencao, dadosMovimentacoes, dadosManutencoes] = await Promise.all([
           bemService.getAll(),
+          bemService.getByStatus("EM_MANUTENCAO"),
           movimentacaoService.getAll(),
           manutencaoService.getAll(),
         ]);
@@ -38,12 +37,9 @@ export default function Inicio() {
         setTotalMovimentacoes(Array.isArray(dadosMovimentacoes) ? dadosMovimentacoes.length : 0);
         setTotalManutencoes(Array.isArray(dadosManutencoes) ? dadosManutencoes.length : 0);
 
-        // FILTRA bens em manutenção!
-        const emManutencaoAtiva = Array.isArray(dadosManutencoes) 
-          ? dadosManutencoes.filter(m => m.dataEntrada && !m.dataRetorno).length 
-          : 0;
-          
-        setBensEmManutencao(emManutencaoAtiva);
+        setBensEmManutencao(
+          Array.isArray(dadosBensEmManutencao) ? dadosBensEmManutencao.length : 0,
+        );
 
       } catch (error) {
         console.error("Erro ao carregar dados do dashboard:", error);
@@ -56,7 +52,6 @@ export default function Inicio() {
     carregarDadosDashboard();
   }, []);
 
-  // Feedback visual para o usuário
   if (carregando) return <div className="inicio-page"><h1>Carregando painel...</h1></div>;
   if (erro) return <div className="inicio-page"><h1>{erro}</h1></div>;
 
@@ -71,9 +66,9 @@ export default function Inicio() {
         <div className="card atalhos">
           <h2> Atalhos:</h2>
           <div className="atalhos-buttons">
-            <NavLink to="/bens/create" className="atalho-btn"><FaBoxOpen />Cadastrar Novo Bem</NavLink>
-            <NavLink to="/manutencoes/create" className="atalho-btn"><FaWrench />Registrar Manutenção</NavLink>
-            <NavLink to="/movimentacoes/create" className="atalho-btn"><FaExchangeAlt />Nova Movimentação</NavLink>
+            <NavLink to="/bens/create" className="atalho-btn"><FaBoxOpen /> Cadastrar Novo Bem</NavLink>
+            <NavLink to="/manutencoes/create" className="atalho-btn"><FaWrench /> Registrar Manutenção</NavLink>
+            <NavLink to="/movimentacoes/create" className="atalho-btn"><FaExchangeAlt /> Nova Movimentação</NavLink>
           </div>
         </div>
         

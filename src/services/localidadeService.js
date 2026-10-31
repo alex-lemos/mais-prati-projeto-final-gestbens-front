@@ -26,4 +26,5 @@ export const localidadeService = {
     const response = await api.delete(`/localidades/${id}`);
     return response.data;
   }
+  
 };

@@ -4,12 +4,10 @@ import { FaArrowLeft } from "react-icons/fa";
 import FormularioManutencao from "../../components/FormularioManutencao";
 import { manutencaoService } from "../../services/manutencaoService";
 import { bemService } from "../../services/bemService";
-import { usuarioService } from "../../services/usuarioService";
 
 export default function Create() {
   const navigate = useNavigate();
   const [bens, setBens] = useState([]);
-  const [usuarios, setUsuarios] = useState([]);
   const [carregando, setCarregando] = useState(true);
   const [erro, setErro] = useState("");
 
@@ -18,12 +16,11 @@ export default function Create() {
       try {
         setCarregando(true);
         setErro("");
-        const [dadosBens, dadosUsuarios] = await Promise.all([bemService.getAll(), usuarioService.getAll()]);
+        const dadosBens = await bemService.getAll();
         setBens(Array.isArray(dadosBens) ? dadosBens : []);
-        setUsuarios(Array.isArray(dadosUsuarios) ? dadosUsuarios : []);
       } catch (error) {
         console.error("Erro ao carregar opções da manutenção:", error);
-        setErro("Não foi possível carregar os bens e responsáveis.");
+        setErro("Não foi possível carregar os bens.");
       } finally {
         setCarregando(false);
       }
@@ -38,7 +35,7 @@ export default function Create() {
       navigate("/manutencoes");
     } catch (error) {
       console.error("Erro ao salvar manutenção:", error);
-      alert(error.response?.data?.message || "Não foi possível salvar a manutenção.");
+      alert(error.response?.data?.mensagem || error.response?.data?.message || "Não foi possível salvar a manutenção.");
     }
   };
 
@@ -57,7 +54,7 @@ export default function Create() {
           </div>
         </div>
         <div className="card">
-          <FormularioManutencao bens={bens} usuarios={usuarios} onSubmit={handleSubmit} />
+          <FormularioManutencao bens={bens} onSubmit={handleSubmit} />
         </div>
       </div>
     </div>

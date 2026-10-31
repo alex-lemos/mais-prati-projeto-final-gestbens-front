@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { NavLink } from "react-router-dom";
 import { useAuth } from "../../contexts/Auth";
 import { localidadeService } from "../../services/localidadeService";
-import { FaBoxOpen, FaEye, FaEdit, FaTrash } from "react-icons/fa";
+import { FaBoxOpen, FaEdit, FaTrash } from "react-icons/fa";
 
 export default function Index() {
   const { usuario } = useAuth();
@@ -31,15 +31,19 @@ export default function Index() {
     carregarLocalidades();
   }, []);
 
-  const localidadesFiltradas = localidades.filter((localidade) =>
-    localidade.nome.toLowerCase().includes(filtro.toLowerCase())
-  );
+  const localidadesFiltradas = localidades
+    .filter((localidade) =>
+      localidade.nome.toLowerCase().includes(filtro.toLowerCase())
+    )
+    .sort((a, b) => a.nome.localeCompare(b.nome, "pt-BR", { sensitivity: "base" }));
   const totalPaginas = Math.max(1, Math.ceil(localidadesFiltradas.length / itensPorPagina));
   const localidadesPagina = localidadesFiltradas.slice((pagina - 1) * itensPorPagina, pagina * itensPorPagina);
 
+  console.log(localidades)
+
   return (
     <div className="inicio-page">
-      <h1>Gerenciar Localidades</h1>
+      <h1>Gerenciar Locais</h1>
       <div className="conteudo-wrapper">
         {usuario?.papel === "ADMIN" && (
           <div className="card atalhos">
@@ -53,26 +57,24 @@ export default function Index() {
           <div className="card filtros">
             <h2>Filtros:</h2>
             <div className="filtros-form">
-              <input aria-label="Filtrar por nome" value={filtro} onChange={(event) => { setFiltro(event.target.value); setPagina(1); }} placeholder="Nome da localidade" />
-              <button className="atalho-btn" onClick={() => setFiltro("")}>Limpar</button>
+              <input aria-label="Filtrar por nome" value={filtro} onChange={(event) => { setFiltro(event.target.value); setPagina(1); }} placeholder="Nome do local" />
+              <button className="atalho-btn" onClick={() => { setFiltro(""); setPagina(1); }}>Limpar</button>
             </div>
           </div>
           {carregando && <p>Carregando localidades...</p>}
           {erro && <p className="form-error">⚠️ {erro}</p>}
           <div className="card" style={{ flexDirection: "column", alignItems: "stretch" }}>
             <table className="tabela">
-                <thead><tr><th>ID</th><th>Nome</th><th>Descrição</th><th>Ações</th></tr></thead>
+                <thead><tr><th>Nome</th><th>Descrição</th><th>Ações</th></tr></thead>
                 <tbody>
                   {localidadesPagina.map((localidade) => (
                     <tr key={localidade.id}>
-                      <td>{localidade.id}</td>
                       <td>{localidade.nome}</td>
                       <td>{localidade.descricao || "—"}</td>
                       <td className="acoes">
-                        <NavLink to={`/locais/show/${localidade.id}`} data-tooltip="Visualizar localidade"><FaEye /></NavLink>
                         {usuario?.papel === "ADMIN" && <>
                           <NavLink to={`/locais/edit/${localidade.id}`} data-tooltip="Editar localidade"><FaEdit /></NavLink>
-                          <NavLink to={`/locais/delete/${localidade.id}`} data-tooltip="Excluir localidade"><FaTrash /></NavLink>
+                          <NavLink className="excluir" to={`/locais/delete/${localidade.id}`} data-tooltip="Excluir localidade"><FaTrash /></NavLink>
                         </>}
                       </td>
                     </tr>

@@ -64,8 +64,8 @@ export default function Create() {
         <div className="card atalhos">
           <h2>Ações:</h2>
           <div className="atalhos-buttons">
-            <button onClick={() => navigate(-1)}><FaArrowLeft />Voltar</button>
-            <button onClick={() => navigate("/")}>Cancelar</button>
+            <button onClick={() => navigate(-1)}><FaArrowLeft /> Voltar</button>
+            <button onClick={() => navigate("/bens")}>Cancelar</button>
           </div>
         </div>
 

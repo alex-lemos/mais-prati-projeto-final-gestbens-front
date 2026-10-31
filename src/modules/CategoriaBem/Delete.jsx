@@ -33,7 +33,7 @@ export default function Delete() {
       navigate("/categorias");
     } catch (error) {
       console.error("Erro ao excluir categoria:", error);
-      alert(error.response?.data?.message || "Não foi possível excluir a categoria.");
+      alert(error.response?.data?.mensagem || error.response?.data?.message || "Não foi possível excluir a categoria.");
     }
   };
 
@@ -42,7 +42,7 @@ export default function Delete() {
 
   return (
     <div className="inicio-page">
-      <h1>Excluir Categoria #{categoria.id}</h1>
+      <h1>Excluir Categoria</h1>
       <div className="conteudo-wrapper">
         <div className="card atalhos">
           <h2>Ações:</h2>

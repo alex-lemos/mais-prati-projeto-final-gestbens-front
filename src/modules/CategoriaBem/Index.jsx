@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { NavLink } from "react-router-dom";
 import { useAuth } from "../../contexts/Auth";
 import { categoriaService } from "../../services/categoriaService";
-import { FaBoxOpen, FaEye, FaEdit, FaTrash } from "react-icons/fa";
+import { FaBoxOpen, FaEdit, FaTrash } from "react-icons/fa";
 
 export default function Index() {
   const { usuario } = useAuth();
@@ -31,9 +31,11 @@ export default function Index() {
     carregarCategorias();
   }, []);
 
-  const categoriasFiltradas = categorias.filter((categoria) =>
-    categoria.nome.toLowerCase().includes(filtro.toLowerCase())
-  );
+  const categoriasFiltradas = categorias
+    .filter((categoria) =>
+      categoria.nome.toLowerCase().includes(filtro.toLowerCase())
+    )
+    .sort((a, b) => a.nome.localeCompare(b.nome, "pt-BR", { sensitivity: "base" }));
   const totalPaginas = Math.max(1, Math.ceil(categoriasFiltradas.length / itensPorPagina));
   const categoriasPagina = categoriasFiltradas.slice((pagina - 1) * itensPorPagina, pagina * itensPorPagina);
 
@@ -54,7 +56,7 @@ export default function Index() {
             <h2>Filtros:</h2>
             <div className="filtros-form">
               <input aria-label="Filtrar por nome" value={filtro} onChange={(event) => { setFiltro(event.target.value); setPagina(1); }} placeholder="Nome da categoria" />
-              <button className="atalho-btn" onClick={() => setFiltro("")}>Limpar</button>
+              <button className="atalho-btn" onClick={() => { setFiltro(""); setPagina(1); }}>Limpar</button>
             </div>
           </div>
           {carregando && <p>Carregando categorias...</p>}
@@ -63,7 +65,6 @@ export default function Index() {
             <table className="tabela">
                 <thead>
                   <tr>
-                    <th>ID</th>
                     <th>Nome</th>
                     <th>Descrição</th>
                     <th>Ações</th>
@@ -72,14 +73,12 @@ export default function Index() {
                 <tbody>
                   {categoriasPagina.map((categoria) => (
                     <tr key={categoria.id}>
-                      <td>{categoria.id}</td>
                       <td>{categoria.nome}</td>
                       <td>{categoria.descricao || "—"}</td>
                       <td className="acoes">
-                        <NavLink to={`/categorias/show/${categoria.id}`} data-tooltip="Visualizar categoria"><FaEye /></NavLink>
                         {usuario?.papel === "ADMIN" && <>
                           <NavLink to={`/categorias/edit/${categoria.id}`} data-tooltip="Editar categoria"><FaEdit /></NavLink>
-                          <NavLink to={`/categorias/delete/${categoria.id}`} data-tooltip="Excluir categoria"><FaTrash /></NavLink>
+                          <NavLink className="excluir" to={`/categorias/delete/${categoria.id}`} data-tooltip="Excluir categoria"><FaTrash /></NavLink>
                         </>}
                       </td>
                     </tr>

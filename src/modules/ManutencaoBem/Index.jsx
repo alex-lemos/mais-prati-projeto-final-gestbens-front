@@ -1,19 +1,22 @@
 import { useEffect, useState } from "react";
 import { NavLink } from "react-router-dom";
-import { useAuth } from "../../contexts/Auth";
 import { manutencaoService } from "../../services/manutencaoService";
-import { bemService } from "../../services/bemService";
-import { usuarioService } from "../../services/usuarioService";
-import { FaWrench, FaEye, FaEdit, FaTrash } from "react-icons/fa";
+import { FaWrench, FaEye, FaEdit } from "react-icons/fa";
+
+function formatarData(data) {
+  if (!data) return "—";
+
+  const dataFormatada = new Date(data);
+  if (Number.isNaN(dataFormatada.getTime())) return "Data inválida";
+
+  return dataFormatada.toLocaleDateString("pt-BR");
+}
 
 export default function Index() {
-  const { usuario } = useAuth();
   const [manutencoes, setManutencoes] = useState([]);
-  const [bens, setBens] = useState([]);
-  const [usuarios, setUsuarios] = useState([]);
   const [carregando, setCarregando] = useState(true);
   const [erro, setErro] = useState("");
-  const [filtros, setFiltros] = useState({ bem: "", usuario: "" });
+  const [filtros, setFiltros] = useState({ bem: "", usuario: "", situacao: "" });
   const [pagina, setPagina] = useState(1);
   const itensPorPagina = 10;
 
@@ -22,37 +25,41 @@ export default function Index() {
       try {
         setCarregando(true);
         setErro("");
-        const [dadosManutencoes, dadosBens, dadosUsuarios] = await Promise.all([
-          manutencaoService.getAll(),
-          bemService.getAll(),
-          usuarioService.getAll(),
-        ]);
-        setManutencoes(Array.isArray(dadosManutencoes) ? [...dadosManutencoes].sort((a, b) => Number(a.id) - Number(b.id)) : []);
-        setBens(Array.isArray(dadosBens) ? dadosBens : []);
-        setUsuarios(Array.isArray(dadosUsuarios) ? dadosUsuarios : []);
+        const dadosManutencoes = await manutencaoService.getAll();
+        setManutencoes(Array.isArray(dadosManutencoes) ? dadosManutencoes : []);
       } catch (error) {
         console.error("Erro ao carregar manutenções:", error);
-        setErro("Não foi possível carregar as manutenções.");
+        setErro(
+          error.response?.data?.mensagem ||
+          error.response?.data?.message ||
+          `Não foi possível carregar as manutenções${error.response?.status ? ` (HTTP ${error.response.status})` : ""}.`
+        );
       } finally {
         setCarregando(false);
       }
     }
-
     carregarDados();
   }, []);
 
-  const manutencoesFiltradas = manutencoes.filter((manutencao) =>
-    (!filtros.bem || String(manutencao.bem_id ?? manutencao.bemId ?? manutencao.bem?.id) === filtros.bem) &&
-    (!filtros.usuario || String(manutencao.usuario_id ?? manutencao.usuarioId ?? manutencao.usuario?.id) === filtros.usuario)
-  );
+  const manutencoesFiltradas = manutencoes
+    .filter((manutencao) =>
+      (!filtros.bem || String(manutencao.bemId) === filtros.bem) &&
+      (!filtros.usuario || (manutencao.usuario || "").toLowerCase().includes(filtros.usuario.toLowerCase())) &&
+      (!filtros.situacao ||
+        (filtros.situacao === "em-andamento"
+          ? !manutencao.dataRetorno
+          : Boolean(manutencao.dataRetorno)))
+    )
+    .sort((a, b) => {
+      const dataA = Date.parse(a.dataEntrada || "");
+      const dataB = Date.parse(b.dataEntrada || "");
+
+      if (Number.isNaN(dataA)) return Number.isNaN(dataB) ? 0 : 1;
+      if (Number.isNaN(dataB)) return -1;
+      return dataB - dataA;
+    });
   const totalPaginas = Math.max(1, Math.ceil(manutencoesFiltradas.length / itensPorPagina));
   const manutencoesPagina = manutencoesFiltradas.slice((pagina - 1) * itensPorPagina, pagina * itensPorPagina);
-  const nomeBem = (manutencao) => manutencao.bem?.nome || manutencao.bem ||
-    bens.find((bem) => String(bem.id) === String(manutencao.bem_id ?? manutencao.bemId))?.nome ||
-    `#${manutencao.bem_id ?? manutencao.bemId}`;
-  const nomeUsuario = (manutencao) => manutencao.usuario?.nome || manutencao.usuario ||
-    usuarios.find((item) => String(item.id) === String(manutencao.usuario_id ?? manutencao.usuarioId))?.nome ||
-    `#${manutencao.usuario_id ?? manutencao.usuarioId}`;
 
   return (
     <div className="inicio-page">
@@ -68,40 +75,76 @@ export default function Index() {
           <div className="card filtros">
             <h2>Filtros:</h2>
             <div className="filtros-form">
-              <select value={filtros.bem} onChange={(event) => { setFiltros((prev) => ({ ...prev, bem: event.target.value })); setPagina(1); }}>
-                <option value="">Todos os bens</option>
-                {bens.map((bem) => <option key={bem.id} value={bem.id}>{bem.nome}</option>)}
+              <input
+                type="text"
+                inputMode="numeric"
+                pattern="[0-9]*"
+                aria-label="Filtrar por patrimônio do bem"
+                placeholder="Patrimônio"
+                value={filtros.bem}
+                onChange={(event) => {
+                  const bemId = event.target.value.replace(/\D/g, "");
+                  setFiltros((prev) => ({ ...prev, bem: bemId }));
+                  setPagina(1);
+                }}
+              />
+              <input
+                type="text"
+                aria-label="Filtrar por responsável"
+                placeholder="Responsável"
+                value={filtros.usuario}
+                onChange={(event) => {
+                  setFiltros((prev) => ({ ...prev, usuario: event.target.value }));
+                  setPagina(1);
+                }}
+              />
+              <select
+                aria-label="Filtrar por situação da manutenção"
+                value={filtros.situacao}
+                onChange={(event) => {
+                  setFiltros((prev) => ({ ...prev, situacao: event.target.value }));
+                  setPagina(1);
+                }}
+              >
+                <option value="">Todas as manutenções</option>
+                <option value="em-andamento">Em andamento</option>
+                <option value="concluida">Concluídas</option>
               </select>
-              <select value={filtros.usuario} onChange={(event) => { setFiltros((prev) => ({ ...prev, usuario: event.target.value })); setPagina(1); }}>
-                <option value="">Todos os responsáveis</option>
-                {usuarios.map((item) => <option key={item.id} value={item.id}>{item.nome}</option>)}
-              </select>
-              <button className="atalho-btn" onClick={() => { setFiltros({ bem: "", usuario: "" }); setPagina(1); }}>Limpar</button>
+              <button className="atalho-btn" onClick={() => {
+                setFiltros({ bem: "", usuario: "", situacao: "" });
+                setPagina(1);
+              }}>Limpar</button>
             </div>
           </div>
           {carregando && <p>Carregando manutenções...</p>}
           {erro && <p className="form-error">⚠️ {erro}</p>}
           <div className="card" style={{ flexDirection: "column", alignItems: "stretch" }}>
             <table className="tabela">
-                <thead><tr><th>ID</th><th>Data</th><th>Bem</th><th>Responsável</th><th>Custo</th><th>Ações</th></tr></thead>
+                <thead>
+                  <tr>
+                    <th>Retorno</th>
+                    <th>Bem</th>
+                    <th>Responsável</th>
+                    <th>Custo</th>
+                    <th>Ações</th>
+                  </tr>
+                </thead>
                 <tbody>
                   {manutencoesPagina.map((manutencao) => (
                     <tr key={manutencao.id}>
-                      <td>{manutencao.id}</td>
-                      <td>{(manutencao.data_manutencao || manutencao.dataManutencao)?.slice(0, 10)}</td>
-                      <td>{nomeBem(manutencao)}</td>
-                      <td>{nomeUsuario(manutencao)}</td>
+                      <td>
+                        {formatarData(manutencao.dataRetorno)}
+                      </td>
+                      <td>{manutencao.bem || "—"}</td>
+                      <td>{manutencao.usuario || "—"}</td>
                       <td>{manutencao.custo == null ? "—" : `R$ ${Number(manutencao.custo).toFixed(2)}`}</td>
                       <td className="acoes">
                         <NavLink to={`/manutencoes/show/${manutencao.id}`} data-tooltip="Visualizar manutenção"><FaEye /></NavLink>
-                        {usuario?.papel === "ADMIN" && <>
-                          <NavLink to={`/manutencoes/edit/${manutencao.id}`} data-tooltip="Editar manutenção"><FaEdit /></NavLink>
-                          <NavLink to={`/manutencoes/delete/${manutencao.id}`} data-tooltip="Excluir manutenção"><FaTrash /></NavLink>
-                        </>}
+                        <NavLink to={`/manutencoes/edit/${manutencao.id}`} data-tooltip="Editar manutenção"><FaEdit /></NavLink>
                       </td>
                     </tr>
                   ))}
-                  {!manutencoesPagina.length && !carregando && <tr><td colSpan="6">Nenhuma manutenção encontrada.</td></tr>}
+                  {!manutencoesPagina.length && !carregando && <tr><td colSpan="5">Nenhuma manutenção encontrada.</td></tr>}
                 </tbody>
             </table>
           </div>

@@ -2,16 +2,15 @@ import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { FaArrowLeft } from "react-icons/fa";
 import FormularioManutencao from "../../components/FormularioManutencao";
+
 import { manutencaoService } from "../../services/manutencaoService";
 import { bemService } from "../../services/bemService";
-import { usuarioService } from "../../services/usuarioService";
 
 export default function Edit() {
   const { id } = useParams();
   const navigate = useNavigate();
   const [manutencao, setManutencao] = useState(null);
   const [bens, setBens] = useState([]);
-  const [usuarios, setUsuarios] = useState([]);
   const [carregando, setCarregando] = useState(true);
   const [erro, setErro] = useState("");
 
@@ -20,28 +19,15 @@ export default function Edit() {
       try {
         setCarregando(true);
         setErro("");
-        const [dadosManutencao, dadosBens, dadosUsuarios] = await Promise.all([
+        const [dadosManutencao, dadosBens] = await Promise.all([
           manutencaoService.getById(id),
           bemService.getAll(),
-          usuarioService.getAll(),
         ]);
-        const listaBens = Array.isArray(dadosBens) ? dadosBens : [];
-        const listaUsuarios = Array.isArray(dadosUsuarios) ? dadosUsuarios : [];
-        const resolverId = (referencia, lista) => {
-          const valor = referencia?.id ?? referencia;
-          return lista.find((item) => String(item.id) === String(valor) || item.nome === valor)?.id ?? "";
-        };
-        setManutencao({
-          ...dadosManutencao,
-          data_manutencao: (dadosManutencao.data_manutencao || dadosManutencao.dataManutencao || "").slice(0, 10),
-          bem_id: resolverId(dadosManutencao.bem_id ?? dadosManutencao.bemId ?? dadosManutencao.bem, listaBens),
-          usuario_id: resolverId(dadosManutencao.usuario_id ?? dadosManutencao.usuarioId ?? dadosManutencao.usuario, listaUsuarios),
-        });
-        setBens(listaBens);
-        setUsuarios(listaUsuarios);
+        setManutencao(dadosManutencao);
+        setBens(Array.isArray(dadosBens) ? dadosBens : []);
       } catch (error) {
         console.error("Erro ao carregar dados da manutenção:", error);
-        setErro("Não foi possível carregar a manutenção, os bens ou responsáveis.");
+        setErro("Não foi possível carregar a manutenção e os bens.");
       } finally {
         setCarregando(false);
       }
@@ -51,13 +37,32 @@ export default function Edit() {
   }, [id]);
 
   const handleSubmit = async (formData) => {
+    const retornoJaRegistrado = Boolean(manutencao.dataRetorno ?? manutencao.data_retorno);
+
     try {
-      await manutencaoService.update(id, formData);
-      navigate("/manutencoes");
+      const dadosAtualizacao = { descricao: formData.descricao };
+      if (retornoJaRegistrado && formData.custo != null) {
+        dadosAtualizacao.custo = formData.custo;
+      }
+      await manutencaoService.update(id, dadosAtualizacao);
     } catch (error) {
-      console.error("Erro ao atualizar manutenção:", error);
-      alert(error.response?.data?.message || "Não foi possível atualizar a manutenção.");
+      console.error("Erro ao atualizar dados da manutenção:", error);
+      alert(error.response?.data?.mensagem || error.response?.data?.message || "Não foi possível atualizar a manutenção.");
+      return;
     }
+
+    if (!retornoJaRegistrado && formData.custo != null) {
+      try {
+        await manutencaoService.retorno(id, { custo: formData.custo });
+      } catch (error) {
+        console.error("Erro ao registrar retorno da manutenção:", error);
+        const mensagem = error.response?.data?.mensagem || error.response?.data?.message;
+        alert(`A descrição foi atualizada, mas não foi possível registrar o retorno.${mensagem ? ` ${mensagem}` : ""}`);
+        return;
+      }
+    }
+
+    navigate("/manutencoes");
   };
 
   if (carregando) return <div className="inicio-page"><h1>Carregando manutenção...</h1></div>;
@@ -65,7 +70,7 @@ export default function Edit() {
 
   return (
     <div className="inicio-page">
-      <h1>Editar Manutenção #{manutencao.id}</h1>
+      <h1>Editar Manutenção</h1>
       <div className="conteudo-wrapper">
         <div className="card atalhos">
           <h2>Ações:</h2>
@@ -75,7 +80,7 @@ export default function Edit() {
           </div>
         </div>
         <div className="card">
-          <FormularioManutencao key={id} bens={bens} usuarios={usuarios} onSubmit={handleSubmit} initialData={manutencao} modo="edit" />
+          <FormularioManutencao key={id} bens={bens} onSubmit={handleSubmit} initialData={manutencao} modo="edit" />
         </div>
       </div>
     </div>

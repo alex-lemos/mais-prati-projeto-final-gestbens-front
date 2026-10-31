@@ -26,9 +26,24 @@ export const usuarioService = {
     return response.data;
   },
 
-  // Remover usuário
-  remove: async (id) => {
-    const response = await api.delete(`/usuarios/${id}`);
+  desativar: async (id) => {
+    const response = await api.patch(`/usuarios/${id}/desativar`);
     return response.data;
-  }
+  },
+
+  reativar: async (id) => {
+    const response = await api.patch(`/usuarios/${id}/reativar`);
+    return response.data;
+  },
+
+  promover: async (id) => {
+    const response = await api.patch(`/usuarios/${id}/promover`);
+    return response.data;
+  },
+
+  rebaixar: async (id) => {
+    const response = await api.patch(`/usuarios/${id}/rebaixar`);
+    return response.data;
+  },
+  
 };

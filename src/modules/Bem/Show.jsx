@@ -1,11 +1,17 @@
 import { useParams, useNavigate, NavLink } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { useAuth } from "../../contexts/Auth";
-import { FaArrowLeft, FaEdit, FaTrash } from "react-icons/fa";
+import { FaArrowLeft, FaEdit, FaBan, FaEye } from "react-icons/fa";
 
 import { bemService } from "../../services/bemService";
 import { movimentacaoService } from "../../services/movimentacaoService";
 import { manutencaoService } from "../../services/manutencaoService";
+
+const statusInfo = {
+  ATIVO: { label: "Ativo", classe: "ativo" },
+  INATIVO: { label: "Inativo", classe: "inativo" },
+  EM_MANUTENCAO: { label: "Em manutenção", classe: "em-manutencao" },
+};
 
 export default function BensShow() {
   const { id } = useParams();
@@ -13,12 +19,12 @@ export default function BensShow() {
   const { usuario } = useAuth();
 
   const [bem, setBem] = useState(null);
-  const [abaAtiva, setAbaAtiva] = useState("movimentacoes");
+  const [abaAtiva, setAbaAtiva] = useState("manutencoes");
 
   const [carregando, setCarregando] = useState(true);
   const [erro, setErro] = useState("");
 
-  // Carga Dados
+  // Carrega Dados
   useEffect(() => {
     async function carregarDadosDoBem() {
       try {
@@ -28,22 +34,18 @@ export default function BensShow() {
         const [dadosBem, dadosMovimentacoes, dadosManutencoes] =
           await Promise.all([
             bemService.getById(id),
-            movimentacaoService.getAll(),
-            manutencaoService.getAll(),
+            movimentacaoService.getByBemId(id),
+            manutencaoService.getByBemId(id),
           ]);
 
-        // Filtra o histórico de movimentações
-        const movsFiltradas = Array.isArray(dadosMovimentacoes)
-          ? dadosMovimentacoes.filter((m) => m.bem === dadosBem.nome) : [];
-
-        // Filtra o histórico de manutenções
-        const mansFiltradas = Array.isArray(dadosManutencoes)
-          ? dadosManutencoes.filter((man) => man.bem === dadosBem.nome) : [];
-
         setBem({
-          ...dadosBem, 
-          movimentacoes: movsFiltradas,
-          manutencoes: mansFiltradas,
+          ...dadosBem,
+          movimentacoes: Array.isArray(dadosMovimentacoes)
+            ? dadosMovimentacoes
+            : [],
+          manutencoes: Array.isArray(dadosManutencoes)
+            ? dadosManutencoes
+            : [],
         });
       } catch (error) {
         console.error("Erro ao carregar detalhes do bem:", error);
@@ -60,15 +62,15 @@ export default function BensShow() {
 
   // Formatação de datas
   const formatarData = (dataString) => {
-    if (!dataString) return "N/A";
-    try {
-      const data = new Date(dataString);
-      return (
-        data.toLocaleDateString("pt-BR") + " " + data.toLocaleTimeString("pt-BR", { hour: "2-digit", minute: "2-digit" })
-      );
-    } catch {
-      return dataString;
-    }
+    if (!dataString) return "—";
+
+    const [ano, mes, dia] = String(dataString).split("T")[0].split("-");
+    if (ano && mes && dia) return `${dia}/${mes}/${ano}`;
+
+    const data = new Date(dataString);
+    return Number.isNaN(data.getTime())
+      ? "Data inválida"
+      : data.toLocaleDateString("pt-BR");
   };
 
   if (carregando)
@@ -86,18 +88,18 @@ export default function BensShow() {
 
   return (
     <div className="inicio-page">
-      <h1>Detalhes do Bem #{bem.id}</h1>
+      <h1>Detalhes do Bem</h1>
 
       <div className="conteudo-wrapper">
         {/* Atalhos */}
         <div className="card atalhos">
           <h2>Ações:</h2>
           <div className="atalhos-buttons">
-            <button onClick={() => navigate(-1)} className="atalho-btn"><FaArrowLeft />Voltar</button>
+            <button onClick={() => navigate(-1)} className="atalho-btn"><FaArrowLeft /> Voltar</button>
             {usuario?.papel === "ADMIN" && (
               <>
-                <NavLink to={`/bens/edit/${bem.id}`} className="atalho-btn"><FaEdit />Editar Bem</NavLink>
-                <NavLink to={`/bens/delete/${bem.id}`} className="atalho-btn"><FaTrash /> Excluir Bem</NavLink>
+                <NavLink to={`/bens/edit/${bem.id}`} className="atalho-btn"><FaEdit /> Editar Bem</NavLink>
+                <NavLink to={`/bens/status/${bem.id}`} className="atalho-btn"><FaBan /> Desativar/Reativar Bem</NavLink>
               </>
             )}
           </div>
@@ -121,14 +123,18 @@ export default function BensShow() {
                 <p>{bem.nomeLocalidade || "Não informada"}</p>
               </div>
               <div className="campo">
+                <strong>Data da Compra:</strong>
+                <p>{formatarData(bem.dataCompra)}</p>
+              </div>
+              <div className="campo">
                 <strong>Valor de Compra:</strong>
                 <p>R${" "} {bem.valorCompra ? Number(bem.valorCompra).toFixed(2) : "0,00"}</p>
               </div>
               <div className="campo">
                 <strong>Status:</strong>
                 <p>
-                  <span className={`status ${bem.status ? bem.status.toLowerCase() : ""}`}>
-                    {bem.status || "N/A"}
+                  <span className={`status ${statusInfo[bem.status?.toUpperCase()]?.classe || ""}`}>
+                    {statusInfo[bem.status?.toUpperCase()]?.label || bem.status || "N/A"}
                   </span>
                 </p>
               </div>
@@ -144,11 +150,11 @@ export default function BensShow() {
           {/* Alternador de abas */}
           <div className="card abas-container">
             <div className="abas">
-              <button className={abaAtiva === "movimentacoes" ? "aba ativa" : "aba"} onClick={() => setAbaAtiva("movimentacoes")}>
-                Movimentações
-              </button>
               <button className={abaAtiva === "manutencoes" ? "aba ativa" : "aba"} onClick={() => setAbaAtiva("manutencoes")}>
                 Manutenções
+              </button>
+              <button className={abaAtiva === "movimentacoes" ? "aba ativa" : "aba"} onClick={() => setAbaAtiva("movimentacoes")}>
+                Movimentações
               </button>
             </div>
 
@@ -163,17 +169,19 @@ export default function BensShow() {
                           <th>Origem</th>
                           <th>Destino</th>
                           <th>Responsável</th>
-                          <th>Observação</th>
+                          <th>Ações</th>
                         </tr>
                       </thead>
                       <tbody>
                         {bem.movimentacoes.map((mov) => (
                           <tr key={mov.id}>
-                            <td>{formatarData(mov.dataMovimentacao)}</td>
-                            <td>{mov.localidadeOrigem || "N/A"}</td>
-                            <td>{mov.localidadeDestino}</td>
-                            <td>{mov.usuario}</td>
-                            <td>{mov.observacao || "Sem observações"}</td>
+                            <td>{formatarData(mov.data_movimentacao ?? mov.dataMovimentacao)}</td>
+                            <td>{mov.localidadeOrigem?.nome || mov.localidadeOrigem || "—"}</td>
+                            <td>{mov.localidadeDestino?.nome || mov.localidadeDestino || "—"}</td>
+                            <td>{mov.usuario?.nome || mov.usuario || "—"}</td>
+                            <td className="acoes">
+                              <NavLink to={`/movimentacoes/show/${mov.id}`} data-tooltip="Visualizar movimentação"><FaEye /></NavLink>
+                            </td>
                           </tr>
                         ))}
                       </tbody>
@@ -190,21 +198,22 @@ export default function BensShow() {
                     <table className="tabela">
                       <thead>
                         <tr>
-                          <th>Data Entrada</th>
-                          <th>Data Retorno</th>
-                          <th>Descrição</th>
-                          <th>Custo</th>
+                          <th>Retorno</th>
                           <th>Responsável</th>
+                          <th>Custo</th>
+                          <th>Ações</th>
                         </tr>
                       </thead>
                       <tbody>
                         {bem.manutencoes.map((man) => (
                           <tr key={man.id}>
-                            <td>{formatarData(man.dataEntrada)}</td>
-                            <td>{formatarData(man.dataRetorno)}</td>
-                            <td>{man.descricao}</td>
-                            <td>R${" "} {man.custo ? Number(man.custo).toFixed(2) : "0,00"}</td>
-                            <td>{man.usuario}</td>
+                            <td>{formatarData(man.dataRetorno ?? man.data_retorno)}</td>
+                            <td>{man.usuario?.nome || man.usuario || "—"}</td>
+                            <td>{man.custo == null ? "—" : `R$ ${Number(man.custo).toFixed(2)}`}</td>
+                            <td className="acoes">
+                              <NavLink to={`/manutencoes/show/${man.id}`} data-tooltip="Visualizar manutenção"><FaEye /></NavLink>
+                              <NavLink to={`/manutencoes/edit/${man.id}`} data-tooltip="Editar manutenção"><FaEdit /></NavLink>
+                            </td>
                           </tr>
                         ))}
                       </tbody>

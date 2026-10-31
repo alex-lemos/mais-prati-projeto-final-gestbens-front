@@ -26,4 +26,5 @@ export const categoriaService = {
     const response = await api.delete(`/categorias/${id}`);
     return response.data;
   }
+  
 };

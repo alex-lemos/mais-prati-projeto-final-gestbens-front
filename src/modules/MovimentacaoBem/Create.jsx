@@ -5,13 +5,11 @@ import FormularioMovimentacao from "../../components/FormularioMovimentacao";
 import { movimentacaoService } from "../../services/movimentacaoService";
 import { bemService } from "../../services/bemService";
 import { localidadeService } from "../../services/localidadeService";
-import { usuarioService } from "../../services/usuarioService";
 
 export default function Create() {
   const navigate = useNavigate();
   const [bens, setBens] = useState([]);
   const [localidades, setLocalidades] = useState([]);
-  const [usuarios, setUsuarios] = useState([]);
   const [carregando, setCarregando] = useState(true);
   const [erro, setErro] = useState("");
 
@@ -20,22 +18,19 @@ export default function Create() {
       try {
         setCarregando(true);
         setErro("");
-        const [dadosBens, dadosLocalidades, dadosUsuarios] = await Promise.all([
+        const [dadosBens, dadosLocalidades] = await Promise.all([
           bemService.getAll(),
           localidadeService.getAll(),
-          usuarioService.getAll(),
         ]);
         setBens(Array.isArray(dadosBens) ? dadosBens : []);
         setLocalidades(Array.isArray(dadosLocalidades) ? dadosLocalidades : []);
-        setUsuarios(Array.isArray(dadosUsuarios) ? dadosUsuarios : []);
       } catch (error) {
         console.error("Erro ao carregar opções da movimentação:", error);
-        setErro("Não foi possível carregar os bens, localidades e responsáveis.");
+        setErro("Não foi possível carregar os bens e localidades.");
       } finally {
         setCarregando(false);
       }
     }
-
     carregarOpcoes();
   }, []);
 
@@ -45,7 +40,7 @@ export default function Create() {
       navigate("/movimentacoes");
     } catch (error) {
       console.error("Erro ao salvar movimentação:", error);
-      alert(error.response?.data?.message || "Não foi possível salvar a movimentação.");
+      alert(error.response?.data?.mensagem || error.response?.data?.message || "Não foi possível salvar a movimentação.");
     }
   };
 
@@ -64,7 +59,7 @@ export default function Create() {
           </div>
         </div>
         <div className="card">
-          <FormularioMovimentacao bens={bens} localidades={localidades} usuarios={usuarios} onSubmit={handleSubmit} />
+          <FormularioMovimentacao bens={bens} localidades={localidades} onSubmit={handleSubmit} />
         </div>
       </div>
     </div>

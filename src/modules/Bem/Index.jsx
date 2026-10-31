@@ -1,11 +1,17 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 import { NavLink } from "react-router-dom";
 import { useAuth } from "../../contexts/Auth";
-import { FaBoxOpen, FaEye, FaEdit, FaTrash } from "react-icons/fa";
+import { FaBoxOpen, FaEye, FaEdit, FaBan } from "react-icons/fa";
 
 import { bemService } from "../../services/bemService";
 import { categoriaService } from "../../services/categoriaService";
 import { localidadeService } from "../../services/localidadeService";
+
+const statusInfo = {
+  ATIVO: { label: "Ativo", classe: "ativo" },
+  INATIVO: { label: "Inativo", classe: "inativo" },
+  EM_MANUTENCAO: { label: "Em manutenção", classe: "em-manutencao" },
+};
 
 export default function BensIndex() {
   const { usuario } = useAuth();
@@ -16,6 +22,12 @@ export default function BensIndex() {
   
   const [carregando, setCarregando] = useState(true);
   const [erro, setErro] = useState("");
+  const [resultadoBuscaPatrimonio, setResultadoBuscaPatrimonio] = useState({
+    patrimonio: "",
+    bem: null,
+    buscando: false,
+    erro: "",
+  });
   
   const [filtros, setFiltros] = useState({
     patrimonio: "",
@@ -25,12 +37,6 @@ export default function BensIndex() {
   });
   const [pagina, setPagina] = useState(1);
   const itensPorPagina = 10;
-
-  // Refs para capturar os valores dos inputs de filtros
-  const patrimonioRef = useRef();
-  const localidadeRef = useRef();
-  const categoriaRef = useRef();
-  const statusRef = useRef();
 
   // Carregar os dados
   useEffect(() => {
@@ -45,7 +51,7 @@ export default function BensIndex() {
           localidadeService.getAll(),
         ]);
 
-        setBens(Array.isArray(dadosBens) ? [...dadosBens].sort((a, b) => Number(a.id) - Number(b.id)) : []);
+        setBens(Array.isArray(dadosBens) ? [...dadosBens].sort((a, b) => Number(b.id) - Number(a.id)) : []);
         
         setCategorias(
           Array.isArray(dadosCategorias) 
@@ -70,13 +76,66 @@ export default function BensIndex() {
     carregarDadosDoBanco();
   }, []);
 
+  useEffect(() => {
+    if (!filtros.patrimonio) return undefined;
+
+    let ativo = true;
+
+    const timeout = setTimeout(async () => {
+      setResultadoBuscaPatrimonio({
+        patrimonio: filtros.patrimonio,
+        bem: null,
+        buscando: true,
+        erro: "",
+      });
+
+      try {
+        const resultado = await bemService.getById(filtros.patrimonio);
+        if (ativo) {
+          setResultadoBuscaPatrimonio({
+            patrimonio: filtros.patrimonio,
+            bem: resultado,
+            buscando: false,
+            erro: "",
+          });
+        }
+      } catch (error) {
+        if (!ativo) return;
+
+        const naoEncontrado = error.response?.status === 404;
+        if (!naoEncontrado) {
+          console.error("Erro ao buscar patrimônio:", error);
+        }
+        setResultadoBuscaPatrimonio({
+          patrimonio: filtros.patrimonio,
+          bem: null,
+          buscando: false,
+          erro: naoEncontrado ? "" : "Não foi possível buscar o patrimônio.",
+        });
+      }
+    }, 350);
+
+    return () => {
+      ativo = false;
+      clearTimeout(timeout);
+    };
+  }, [filtros.patrimonio]);
+
   // Filtros 
-  const bensFiltrados = bens.filter((bem) => {
+  const bemEncontrado = resultadoBuscaPatrimonio.patrimonio === filtros.patrimonio &&
+    String(resultadoBuscaPatrimonio.bem?.id) === filtros.patrimonio
+    ? resultadoBuscaPatrimonio.bem
+    : null;
+  const buscandoPatrimonio = resultadoBuscaPatrimonio.patrimonio === filtros.patrimonio &&
+    resultadoBuscaPatrimonio.buscando;
+  const erroBuscaPatrimonio = resultadoBuscaPatrimonio.patrimonio === filtros.patrimonio
+    ? resultadoBuscaPatrimonio.erro
+    : "";
+  const bensFiltrados = (filtros.patrimonio ? (bemEncontrado ? [bemEncontrado] : []) : bens).filter((bem) => {
     return (
-      (filtros.patrimonio === "" || bem.id.toString().includes(filtros.patrimonio)) &&
       (filtros.localidade === "" || bem.nomeLocalidade === filtros.localidade) && 
       (filtros.categoria === "" || bem.nomeCategoria === filtros.categoria) &&   
-      (filtros.status === "" || bem.status.toLowerCase() === filtros.status.toLowerCase())
+      (filtros.status === "" || bem.status?.toUpperCase() === filtros.status)
     );
   });
 
@@ -86,27 +145,10 @@ export default function BensIndex() {
   const fim = inicio + itensPorPagina;
   const bensPagina = bensFiltrados.slice(inicio, fim);
 
-  // Ações de gerenciamento dos filtros
-  const aplicarFiltros = () => {
-    setFiltros({
-      patrimonio: patrimonioRef.current.value,
-      localidade: localidadeRef.current.value,
-      categoria: categoriaRef.current.value,
-      status: statusRef.current.value,
-    });
-    setPagina(1);
-  };
-
   const limparFiltros = () => {
-    patrimonioRef.current.value = "";
-    localidadeRef.current.value = "";
-    categoriaRef.current.value = "";
-    statusRef.current.value = "";
     setFiltros({ patrimonio: "", localidade: "", categoria: "", status: "" });
     setPagina(1);
   };
-
-  console.log(usuario)
 
   return (
     <div className="inicio-page">
@@ -128,9 +170,25 @@ export default function BensIndex() {
           <div className="card filtros">
             <h2>Filtros:</h2>
             <div className="filtros-form">
-              <input ref={patrimonioRef} type="text" placeholder="Patrimônio" />
+              <input
+                type="text"
+                inputMode="numeric"
+                pattern="[0-9]*"
+                placeholder="Patrimônio"
+                value={filtros.patrimonio}
+                onChange={(event) => {
+                  setFiltros((prev) => ({ ...prev, patrimonio: event.target.value.replace(/\D/g, "") }));
+                  setPagina(1);
+                }}
+              />
 
-              <select ref={localidadeRef} defaultValue="">
+              <select
+                value={filtros.localidade}
+                onChange={(event) => {
+                  setFiltros((prev) => ({ ...prev, localidade: event.target.value }));
+                  setPagina(1);
+                }}
+              >
                 <option value="">Todas Localidades</option>
                 {localidades.map((loc) => (
                   <option key={loc.id} value={loc.nome}>
@@ -139,7 +197,13 @@ export default function BensIndex() {
                 ))}
               </select>
 
-              <select ref={categoriaRef} defaultValue="">
+              <select
+                value={filtros.categoria}
+                onChange={(event) => {
+                  setFiltros((prev) => ({ ...prev, categoria: event.target.value }));
+                  setPagina(1);
+                }}
+              >
                 <option value="">Todas Categorias</option>
                 {categorias.map((cat) => (
                   <option key={cat.id} value={cat.nome}>
@@ -148,20 +212,27 @@ export default function BensIndex() {
                 ))}
               </select>
 
-              <select ref={statusRef} defaultValue="">
+              <select
+                value={filtros.status}
+                onChange={(event) => {
+                  setFiltros((prev) => ({ ...prev, status: event.target.value }));
+                  setPagina(1);
+                }}
+              >
                 <option value="">Todos Status</option>
-                <option value="Ativo">Ativo</option>
-                <option value="Inativo">Inativo</option>
-                <option value="Manutenção">Em manutenção</option>
+                <option value="ATIVO">Ativo</option>
+                <option value="INATIVO">Inativo</option>
+                <option value="EM_MANUTENCAO">Em manutenção</option>
               </select>
 
-              <button onClick={aplicarFiltros} className="atalho-btn">Aplicar</button>
               <button onClick={limparFiltros} className="atalho-btn">Limpar</button>
             </div>
           </div>
 
           {carregando && <p>Carregando bens do servidor...</p>}
           {erro && <p className="form-error">⚠️ {erro}</p>}
+          {buscandoPatrimonio && <p>Buscando patrimônio...</p>}
+          {erroBuscaPatrimonio && <p className="form-error">⚠️ {erroBuscaPatrimonio}</p>}
           
           {/* Tabela */}
           <div className="card">
@@ -169,7 +240,7 @@ export default function BensIndex() {
               <thead>
                 <tr>
                   <th>Patrimônio</th>
-                  <th>Nome</th>
+                  <th>Bem</th>
                   <th>Categoria</th>
                   <th>Local Atual</th>
                   <th>Status</th>
@@ -177,7 +248,7 @@ export default function BensIndex() {
                 </tr>
               </thead>
               <tbody>
-                {bensPagina.length === 0 && !carregando ? (
+                {bensPagina.length === 0 && !carregando && !buscandoPatrimonio ? (
                   <tr>
                     <td colSpan="6">Nenhum bem encontrado.</td>
                   </tr>
@@ -189,16 +260,16 @@ export default function BensIndex() {
                       <td>{bem.nomeCategoria || "Não informada"}</td>
                       <td>{bem.nomeLocalidade || "Não informado"}</td>
                       <td>
-                        <span className={`status ${bem.status ? bem.status.toLowerCase() : ""}`}>
-                          {bem.status || "N/A"}
+                        <span className={`status ${statusInfo[bem.status?.toUpperCase()]?.classe || ""}`}>
+                          {statusInfo[bem.status?.toUpperCase()]?.label || bem.status || "N/A"}
                         </span>
                       </td>
                       <td className="acoes">
-                        <NavLink to={`/bens/show/${bem.id}`} data-tooltip="Visualizar bem"><FaEye /></NavLink>
+                        <NavLink to={`/bens/show/${bem.id}`} data-tooltip="Visualizar Bem"><FaEye /></NavLink>
                         {usuario?.papel === "ADMIN" && (
                           <>
-                            <NavLink to={`/bens/edit/${bem.id}`} data-tooltip="Editar bem"><FaEdit /></NavLink>
-                            <NavLink to={`/bens/delete/${bem.id}`} data-tooltip="Excluir bem"><FaTrash /></NavLink>
+                            <NavLink to={`/bens/edit/${bem.id}`} data-tooltip="Editar Bem"><FaEdit /></NavLink>
+                            <NavLink to={`/bens/status/${bem.id}`} data-tooltip="Desativar/Reativar Bem"><FaBan /></NavLink>
                           </>
                         )}
                       </td>

@@ -11,7 +11,7 @@ export default function Login() {
   const [email, setEmail] = useState("");
   const [senha, setSenha] = useState("");
   const [erro, setErro] = useState("");
-  const [loading, setLoading] = useState(false); // Opcional: indicador de carregamento
+  const [loading, setLoading] = useState(false);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -19,7 +19,7 @@ export default function Login() {
     setLoading(true);
 
     try {
-      await login(email, senha); // Aguarda a chamada da API e salvamento no localStorage
+      await login(email, senha);
       navigate("/");
     } catch (err) {
       setErro(err.message);

@@ -1,7 +1,7 @@
 import { useState } from "react";
 import "./Cadastro.css";
 import logo from "../../assets/img/logo-gestbens.png";
-import { usuarioService } from "../../services/usuarioService"; // importa o serviço
+import { usuarioService } from "../../services/usuarioService";
 
 export default function Cadastro() {
   const [form, setForm] = useState({
@@ -12,7 +12,7 @@ export default function Cadastro() {
     confirmarSenha: ""
   });
 
-  const [mensagem, setMensagem] = useState(""); // mensagem de feedback
+  const [mensagem, setMensagem] = useState("");
 
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -46,7 +46,7 @@ export default function Cadastro() {
         confirmarEmail: "",
         senha: "",
         confirmarSenha: ""
-      }); // limpa o formulário
+      });
     } catch (err) {
       setMensagem("❌ Erro ao cadastrar usuário: " + (err.message || "Tente novamente"));
     }
@@ -55,7 +55,7 @@ export default function Cadastro() {
   return (
     <div className="cadastro-page">
       <div className="form-container">
-        {/* Logo */}
+
         <div className="cadastro-logo">
           <img src={logo} alt="GestBens Logo" />
         </div>

@@ -5,7 +5,6 @@ import { FaArrowLeft } from "react-icons/fa";
 
 import { bemService } from "../../services/bemService";
 import { categoriaService } from "../../services/categoriaService";
-import { localidadeService } from "../../services/localidadeService";
 
 export default function Edit() {
   const { id } = useParams();
@@ -13,7 +12,6 @@ export default function Edit() {
   
   const [bem, setBem] = useState(null);
   const [categorias, setCategorias] = useState([]);
-  const [localidades, setLocalidades] = useState([]);
   
   const [carregando, setCarregando] = useState(true);
   const [erro, setErro] = useState("");
@@ -25,14 +23,12 @@ export default function Edit() {
         setCarregando(true);
         setErro("");
 
-        const [dadosCategorias, dadosLocalidades, dadosBem] = await Promise.all([
+        const [dadosCategorias, dadosBem] = await Promise.all([
           categoriaService.getAll(),
-          localidadeService.getAll(),
           bemService.getById(id)
         ]);
 
         setCategorias(Array.isArray(dadosCategorias) ? dadosCategorias : []);
-        setLocalidades(Array.isArray(dadosLocalidades) ? dadosLocalidades : []);
         setBem(dadosBem);
       } catch (error) {
         console.error("Erro ao carregar dados da edição:", error);
@@ -74,7 +70,7 @@ export default function Edit() {
             <button onClick={() => navigate(-1)} className="atalho-btn">
               <FaArrowLeft /> Voltar
             </button>
-            <button onClick={() => navigate("/")}className="atalho-btn">
+            <button onClick={() => navigate("/bens")}className="atalho-btn">
               Cancelar
             </button>
           </div>
@@ -84,7 +80,6 @@ export default function Edit() {
         <div className="card">
           <FormularioBem
             categorias={categorias}
-            localidades={localidades}
             onSubmit={handleSubmit}
             initialData={bem}
             modo="edit"

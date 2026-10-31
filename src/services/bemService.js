@@ -17,13 +17,24 @@ export const bemService = {
     return response.data;
   },
 
+  getByStatus: async (status) => {
+    const response = await api.get(`/bens/status/${status}`);
+    return response.data;
+  },
+
   update: async (id, dados) => {
     const response = await api.put(`/bens/${id}`, dados);
     return response.data;
   },
 
-  remove: async (id) => {
-    const response = await api.delete(`/bens/${id}`);
+  baixa: async (id) => {
+    const response = await api.patch(`/bens/${id}/baixa`);
     return response.data;
-  }
+  },
+
+  reativar: async (id) => {
+    const response = await api.patch(`/bens/${id}/reativar`);
+    return response.data;
+  },
+  
 };

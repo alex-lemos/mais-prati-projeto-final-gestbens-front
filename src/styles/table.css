@@ -47,7 +47,7 @@
   color: var(--cor-texto-principal);
 }
 
-.status.manutenção {
+.status.em-manutencao {
   background: var(--cor-atencao);
   color: var(--cor-texto-principal);
 }
@@ -73,21 +73,24 @@
 }
 
 /* cores distintas */
+/* Ver */
 .acoes a:nth-child(1) {
   color: var(--cor-principal);
 }
 
-/* Ver */
+/* Editar */
 .acoes a:nth-child(2) {
   color: var(--cor-atencao);
 }
 
-/* Editar */
+/* Excluir */
 .acoes a:nth-child(3) {
   color: var(--cor-critico);
 }
 
-/* Excluir */
+.acoes a.excluir {
+  color: var(--cor-critico);
+}
 
 .acoes a {
   position: relative;

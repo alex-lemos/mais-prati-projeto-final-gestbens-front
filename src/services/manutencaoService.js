@@ -15,6 +15,11 @@ export const manutencaoService = {
   getById: async (id) => {
     const response = await api.get(`/manutencoes/${id}`);
     return response.data;
+  },  
+
+  getByBemId: async (bemId) => {
+    const response = await api.get(`/manutencoes/bem/${bemId}`);
+    return response.data;
   },
 
   update: async (id, dados) => {
@@ -22,8 +27,9 @@ export const manutencaoService = {
     return response.data;
   },
 
-  remove: async (id) => {
-    const response = await api.delete(`/manutencoes/${id}`);
+  retorno: async (id, dados) => {
+    const response = await api.patch(`/manutencoes/${id}/retorno`, dados);
     return response.data;
-  }
+  },
+  
 };

@@ -17,13 +17,9 @@ export const movimentacaoService = {
     return response.data;
   },
 
-  update: async (id, dados) => {
-    const response = await api.put(`/movimentacoes/${id}`, dados);
+  getByBemId: async (bemId) => {
+    const response = await api.get(`/movimentacoes/bem/${bemId}`);
     return response.data;
   },
-
-  remove: async (id) => {
-    const response = await api.delete(`/movimentacoes/${id}`);
-    return response.data;
-  }
+  
 };

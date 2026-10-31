@@ -2,25 +2,48 @@ import { useState } from "react";
 import { FaSave, FaTrash } from "react-icons/fa";
 
 const dadosVazios = {
-  data_movimentacao: "",
   observacao: "",
-  usuario_id: "",
-  bem_id: "",
-  localidade_origem_id: "",
-  localidade_destino_id: "",
+  bemId: "",
+  localidadeDestinoId: "",
 };
+
+function obterDadosFormulario(dados = {}) {
+  const bem = dados.bemId ?? dados.bem_id ?? dados.bem?.id ?? "";
+  const localidadeDestino =
+    dados.localidadeDestinoId ??
+    dados.localidade_destino_id ??
+    dados.localidadeDestino?.id ??
+    dados.localidadeDestino ??
+    "";
+
+  return {
+    bemId: String(bem),
+    localidadeDestinoId: String(localidadeDestino),
+    observacao: dados.observacao ?? "",
+  };
+}
 
 export default function FormularioMovimentacao({
   bens = [],
   localidades = [],
-  usuarios = [],
   onSubmit,
   initialData,
   modo,
 }) {
   const [formData, setFormData] = useState(() =>
-    initialData ? { ...dadosVazios, ...initialData } : { ...dadosVazios }
+    initialData ? obterDadosFormulario(initialData) : { ...dadosVazios }
   );
+  const bensOrdenados = [...bens].sort((a, b) =>
+    String(a.nome ?? "").localeCompare(String(b.nome ?? ""), "pt-BR", { sensitivity: "base" })
+  );
+  const localidadesOrdenadas = [...localidades].sort((a, b) =>
+    String(a.nome ?? "").localeCompare(String(b.nome ?? ""), "pt-BR", { sensitivity: "base" })
+  );
+  const patrimonioNaLista = bensOrdenados.some((bem) => String(bem.id) === formData.bemId);
+  const bemAtual = bensOrdenados.find((bem) => String(bem.id) === formData.bemId);
+  const nomeBemAtual = bemAtual?.nome ||
+    (typeof initialData?.bem === "object" ? initialData.bem?.nome : initialData?.bem) ||
+    "Bem";
 
   const handleChange = (event) => {
     const { name, value } = event.target;
@@ -28,39 +51,54 @@ export default function FormularioMovimentacao({
   };
 
   const handleReset = () => {
-    setFormData(initialData ? { ...dadosVazios, ...initialData } : dadosVazios);
+    setFormData(initialData ? obterDadosFormulario(initialData) : { ...dadosVazios });
   };
 
   return (
     <form className="form-container" onSubmit={(event) => {
       event.preventDefault();
-      onSubmit(formData);
+      onSubmit({
+        bemId: Number(formData.bemId),
+        localidadeDestinoId: Number(formData.localidadeDestinoId),
+        observacao: formData.observacao,
+      });
     }}>
-      <label htmlFor="data_movimentacao">Data da Movimentação</label>
-      <input id="data_movimentacao" name="data_movimentacao" type="date" value={formData.data_movimentacao} onChange={handleChange} required />
+      <label htmlFor="bemId">Digite o patrimônio</label>
+      <input
+        id="bemId"
+        name="bemId"
+        type="text"
+        inputMode="numeric"
+        pattern="[0-9]*"
+        placeholder="Digite o patrimônio"
+        value={formData.bemId}
+        onChange={(event) => {
+          setFormData((prev) => ({ ...prev, bemId: event.target.value.replace(/\D/g, "") }));
+        }}
+        required
+      />
 
-      <label htmlFor="bem_id">Bem</label>
-      <select id="bem_id" name="bem_id" value={formData.bem_id} onChange={handleChange} required>
+      <label htmlFor="bemLista">Ou selecione na lista</label>
+      <select
+        id="bemLista"
+        value={patrimonioNaLista ? formData.bemId : ""}
+        onChange={(event) => {
+          setFormData((prev) => ({ ...prev, bemId: event.target.value }));
+        }}
+      >
         <option value="">Selecione um bem</option>
-        {bens.map((bem) => <option key={bem.id} value={bem.id}>{bem.nome} (#{bem.id})</option>)}
+        {!patrimonioNaLista && formData.bemId && (
+          <option value={formData.bemId}>{`${nomeBemAtual} - (Patrimônio: ${formData.bemId})`}</option>
+        )}
+        {bensOrdenados.map((bem) => (
+          <option key={bem.id} value={bem.id}>{`${bem.nome} - (Patrimônio: ${bem.id})`}</option>
+        ))}
       </select>
 
-      <label htmlFor="usuario_id">Responsável</label>
-      <select id="usuario_id" name="usuario_id" value={formData.usuario_id} onChange={handleChange} required>
-        <option value="">Selecione um responsável</option>
-        {usuarios.map((usuario) => <option key={usuario.id} value={usuario.id}>{usuario.nome}</option>)}
-      </select>
-
-      <label htmlFor="localidade_origem_id">Localidade de Origem</label>
-      <select id="localidade_origem_id" name="localidade_origem_id" value={formData.localidade_origem_id} onChange={handleChange} required>
-        <option value="">Selecione a origem</option>
-        {localidades.map((localidade) => <option key={localidade.id} value={localidade.id}>{localidade.nome}</option>)}
-      </select>
-
-      <label htmlFor="localidade_destino_id">Localidade de Destino</label>
-      <select id="localidade_destino_id" name="localidade_destino_id" value={formData.localidade_destino_id} onChange={handleChange} required>
+      <label htmlFor="localidadeDestinoId">Localidade de Destino</label>
+      <select id="localidadeDestinoId" name="localidadeDestinoId" value={formData.localidadeDestinoId} onChange={handleChange} required>
         <option value="">Selecione o destino</option>
-        {localidades.map((localidade) => <option key={localidade.id} value={localidade.id}>{localidade.nome}</option>)}
+        {localidadesOrdenadas.map((localidade) => <option key={localidade.id} value={localidade.id}>{localidade.nome}</option>)}
       </select>
 
       <label htmlFor="observacao">Observação</label>

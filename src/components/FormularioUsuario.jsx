@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { FaSave, FaTrash } from "react-icons/fa";
 
-const dadosVazios = { nome: "", email: "", senha: "", is_admin: false };
+const dadosVazios = { nome: "", email: "", senha: ""};
 
 export default function FormularioUsuario({ onSubmit, initialData, modo }) {
   const [formData, setFormData] = useState(() =>
@@ -68,17 +68,6 @@ export default function FormularioUsuario({ onSubmit, initialData, modo }) {
         required={modo !== "edit"}
         autoComplete="new-password"
       />
-
-      <label>
-        <input
-          name="admin"
-          type="checkbox"
-          checked={Boolean(formData.admin)}
-          onChange={handleChange}
-          style={{ width: "auto" }}
-        />
-        Administrador
-      </label>
 
       <div className="form-actions">
         <button type="submit" className="atalho-btn"><FaSave />Salvar</button>

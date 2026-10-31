@@ -1,9 +1,9 @@
 import { useParams, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
-import { FaArrowLeft, FaTrash } from "react-icons/fa";
-import { bemService } from "../../services/bemService"; // 1. Ativamos a importação do service
+import { FaArrowLeft } from "react-icons/fa";
+import { bemService } from "../../services/bemService";
 
-export default function BensDelete() {
+export default function BensStatus() {
   const { id } = useParams();
   const navigate = useNavigate();
 
@@ -29,14 +29,21 @@ export default function BensDelete() {
     if (id) buscarBem();
   }, [id]);
 
-  // Deleta o Bem
-  const handleDelete = async () => {
+  // Altera entre ativo e inativo
+  const handleStatusChange = async () => {
+    const statusAtual = String(bem.status).toUpperCase();
+    const novoStatus = statusAtual === "ATIVO" ? "INATIVO" : "ATIVO";
+
     try {
-      await bemService.remove(id);
-      navigate("/bens");
+      if (novoStatus === "INATIVO") {
+        await bemService.baixa(id);
+      } else {
+        await bemService.reativar(id);
+      }
+      setBem((bemAtual) => ({ ...bemAtual, status: novoStatus }));
     } catch (error) {
-      console.error("Erro ao excluir bem:", error);
-      const msgErro = error.response?.data?.message || "Não foi possível excluir o bem. Tente novamente.";
+      console.error("Erro ao alterar status do bem:", error);
+      const msgErro = error.response?.data?.message || "Não foi possível alterar o status do bem. Tente novamente.";
       alert(`❌ Erro: ${msgErro}`);
     }
   };
@@ -46,7 +53,7 @@ export default function BensDelete() {
 
   return (
     <div className="inicio-page">
-      <h1>Excluir Bem #{bem.id}</h1>
+      <h1>Excluir Bem</h1>
 
       <div className="conteudo-wrapper">
 
@@ -57,7 +64,7 @@ export default function BensDelete() {
             <button onClick={() => navigate(-1)} className="atalho-btn">
               <FaArrowLeft /> Voltar
             </button>
-            <button onClick={() => navigate("/")} className="atalho-btn vermelho">
+            <button onClick={() => navigate("/bens")} className="atalho-btn">
               Cancelar
             </button>
           </div>
@@ -97,8 +104,14 @@ export default function BensDelete() {
 
           {/* Alerta de exclusão */}
           <div className="card alerta-exclusao">
-            <h2>Tem certeza que deseja excluir este bem? Essa ação não poderá ser desfeita.</h2>
-            <button onClick={handleDelete} className="btn-excluir"><FaTrash />Confirmar Exclusão</button>
+            <h2>Tem certeza que deseja Desativar/Reativar este bem?</h2>
+            <button onClick={handleStatusChange} className="btn-excluir">
+              {String(bem.status).toUpperCase() === "ATIVO" ? (
+                <>Desativar Bem</>
+              ) : (
+                <>Reativar Bem</>
+              )}
+            </button>
           </div>
         </div>
 

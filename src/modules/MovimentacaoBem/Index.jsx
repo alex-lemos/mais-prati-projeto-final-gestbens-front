@@ -1,18 +1,10 @@
 import { useEffect, useState } from "react";
 import { NavLink } from "react-router-dom";
-import { useAuth } from "../../contexts/Auth";
 import { movimentacaoService } from "../../services/movimentacaoService";
-import { bemService } from "../../services/bemService";
-import { localidadeService } from "../../services/localidadeService";
-import { usuarioService } from "../../services/usuarioService";
-import { FaExchangeAlt, FaEye, FaEdit, FaTrash } from "react-icons/fa";
+import { FaExchangeAlt, FaEye } from "react-icons/fa";
 
 export default function Index() {
-  const { usuario } = useAuth();
   const [movimentacoes, setMovimentacoes] = useState([]);
-  const [bens, setBens] = useState([]);
-  const [localidades, setLocalidades] = useState([]);
-  const [usuarios, setUsuarios] = useState([]);
   const [carregando, setCarregando] = useState(true);
   const [erro, setErro] = useState("");
   const [filtros, setFiltros] = useState({ bem: "", usuario: "" });
@@ -24,36 +16,37 @@ export default function Index() {
       try {
         setCarregando(true);
         setErro("");
-        const [dadosMovimentacoes, dadosBens, dadosLocalidades, dadosUsuarios] = await Promise.all([
-          movimentacaoService.getAll(),
-          bemService.getAll(),
-          localidadeService.getAll(),
-          usuarioService.getAll(),
-        ]);
-        setMovimentacoes(Array.isArray(dadosMovimentacoes) ? [...dadosMovimentacoes].sort((a, b) => Number(a.id) - Number(b.id)) : []);
-        setBens(Array.isArray(dadosBens) ? dadosBens : []);
-        setLocalidades(Array.isArray(dadosLocalidades) ? dadosLocalidades : []);
-        setUsuarios(Array.isArray(dadosUsuarios) ? dadosUsuarios : []);
+        const dadosMovimentacoes = await movimentacaoService.getAll();
+        setMovimentacoes(Array.isArray(dadosMovimentacoes) ? dadosMovimentacoes : []);
       } catch (error) {
         console.error("Erro ao carregar movimentações:", error);
-        setErro("Não foi possível carregar as movimentações.");
+        setErro(
+          error.response?.data?.mensagem ||
+          error.response?.data?.message ||
+          `Não foi possível carregar as movimentações${error.response?.status ? ` (HTTP ${error.response.status})` : ""}.`
+        );
       } finally {
         setCarregando(false);
       }
     }
-
     carregarDados();
   }, []);
 
-  const movimentacoesFiltradas = movimentacoes.filter((movimentacao) =>
-    (!filtros.bem || String(movimentacao.bem_id ?? movimentacao.bemId ?? movimentacao.bem?.id) === filtros.bem) &&
-    (!filtros.usuario || String(movimentacao.usuario_id ?? movimentacao.usuarioId ?? movimentacao.usuario?.id) === filtros.usuario)
-  );
+  const movimentacoesFiltradas = movimentacoes
+    .filter((movimentacao) =>
+      (!filtros.bem || String(movimentacao.bemId) === filtros.bem) &&
+      (!filtros.usuario || (movimentacao.usuario || "").toLowerCase().includes(filtros.usuario.toLowerCase()))
+    )
+    .sort((a, b) => {
+      const dataA = Date.parse(a.data_movimentacao ?? a.dataMovimentacao ?? "");
+      const dataB = Date.parse(b.data_movimentacao ?? b.dataMovimentacao ?? "");
+
+      if (Number.isNaN(dataA)) return Number.isNaN(dataB) ? 0 : 1;
+      if (Number.isNaN(dataB)) return -1;
+      return dataB - dataA;
+    });
   const totalPaginas = Math.max(1, Math.ceil(movimentacoesFiltradas.length / itensPorPagina));
   const movimentacoesPagina = movimentacoesFiltradas.slice((pagina - 1) * itensPorPagina, pagina * itensPorPagina);
-  const nomePorId = (lista, id) => lista.find((item) => String(item.id) === String(id))?.nome || `#${id}`;
-  const nomeReferencia = (referencia, lista, id) => referencia?.nome || (typeof referencia === "string" ? referencia : null) ||
-    nomePorId(lista, id ?? referencia?.id);
 
   return (
     <div className="inicio-page">
@@ -69,41 +62,63 @@ export default function Index() {
           <div className="card filtros">
             <h2>Filtros:</h2>
             <div className="filtros-form">
-              <select value={filtros.bem} onChange={(event) => { setFiltros((prev) => ({ ...prev, bem: event.target.value })); setPagina(1); }}>
-                <option value="">Todos os bens</option>
-                {bens.map((bem) => <option key={bem.id} value={bem.id}>{bem.id} - {bem.nome}</option>)}
-              </select>
-              <select value={filtros.usuario} onChange={(event) => { setFiltros((prev) => ({ ...prev, usuario: event.target.value })); setPagina(1); }}>
-                <option value="">Todos os responsáveis</option>
-                {usuarios.map((item) => <option key={item.id} value={item.id}>{item.nome}</option>)}
-              </select>
-              <button className="atalho-btn" onClick={() => { setFiltros({ bem: "", usuario: "" }); setPagina(1); }}>Limpar</button>
+              <input
+                type="text"
+                inputMode="numeric"
+                pattern="[0-9]*"
+                aria-label="Filtrar por patrimônio do bem"
+                placeholder="Patrimônio"
+                value={filtros.bem}
+                onChange={(event) => {
+                  const bemId = event.target.value.replace(/\D/g, "");
+                  setFiltros((prev) => ({ ...prev, bem: bemId }));
+                  setPagina(1);
+                }}
+              />
+              <input
+                type="text"
+                aria-label="Filtrar por responsável"
+                placeholder="Responsável"
+                value={filtros.usuario}
+                onChange={(event) => {
+                  setFiltros((prev) => ({ ...prev, usuario: event.target.value }));
+                  setPagina(1);
+                }}
+              />
+              <button className="atalho-btn" onClick={() => {
+                setFiltros({ bem: "", usuario: "" });
+                setPagina(1);
+              }}>Limpar</button>
             </div>
           </div>
           {carregando && <p>Carregando movimentações...</p>}
           {erro && <p className="form-error">⚠️ {erro}</p>}
           <div className="card" style={{ flexDirection: "column", alignItems: "stretch" }}>
             <table className="tabela">
-                <thead><tr><th>ID</th><th>Data</th><th>Bem</th><th>Origem</th><th>Destino</th><th>Responsável</th><th>Ações</th></tr></thead>
+                <thead>
+                  <tr>
+                    <th>Data</th>
+                    <th>Bem</th>
+                    <th>Origem</th>
+                    <th>Destino</th>
+                    <th>Responsável</th>
+                    <th>Ações</th>
+                  </tr>
+                </thead>
                 <tbody>
                   {movimentacoesPagina.map((movimentacao) => (
                     <tr key={movimentacao.id}>
-                      <td>{movimentacao.id}</td>
-                      <td>{(movimentacao.data_movimentacao || movimentacao.dataMovimentacao)?.slice(0, 10)}</td>
-                      <td>{nomeReferencia(movimentacao.bem, bens, movimentacao.bem_id ?? movimentacao.bemId)}</td>
-                      <td>{nomeReferencia(movimentacao.localidadeOrigem, localidades, movimentacao.localidade_origem_id ?? movimentacao.localidadeOrigemId)}</td>
-                      <td>{nomeReferencia(movimentacao.localidadeDestino, localidades, movimentacao.localidade_destino_id ?? movimentacao.localidadeDestinoId)}</td>
-                      <td>{nomeReferencia(movimentacao.usuario, usuarios, movimentacao.usuario_id ?? movimentacao.usuarioId)}</td>
+                      <td>{(movimentacao.data_movimentacao ?? movimentacao.dataMovimentacao)?.slice(0, 10) || "—"}</td>
+                      <td>{movimentacao.bem || "—"}</td>
+                      <td>{movimentacao.localidadeOrigem || "—"}</td>
+                      <td>{movimentacao.localidadeDestino || "—"}</td>
+                      <td>{movimentacao.usuario || "—"}</td>
                       <td className="acoes">
                         <NavLink to={`/movimentacoes/show/${movimentacao.id}`} data-tooltip="Visualizar movimentação"><FaEye /></NavLink>
-                        {usuario?.papel === "ADMIN" && <>
-                          <NavLink to={`/movimentacoes/edit/${movimentacao.id}`} data-tooltip="Editar movimentação"><FaEdit /></NavLink>
-                          <NavLink to={`/movimentacoes/delete/${movimentacao.id}`} data-tooltip="Excluir movimentação"><FaTrash /></NavLink>
-                        </>}
                       </td>
                     </tr>
                   ))}
-                  {!movimentacoesPagina.length && !carregando && <tr><td colSpan="7">Nenhuma movimentação encontrada.</td></tr>}
+                  {!movimentacoesPagina.length && !carregando && <tr><td colSpan="6">Nenhuma movimentação encontrada.</td></tr>}
                 </tbody>
             </table>
           </div>

@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { NavLink } from "react-router-dom";
 import { usuarioService } from "../../services/usuarioService";
-import { FaUserPlus, FaEye, FaEdit, FaTrash } from "react-icons/fa";
+import { FaUserPlus, FaEdit, FaBan } from "react-icons/fa";
 
 export default function Index() {
   const [usuarios, setUsuarios] = useState([]);
@@ -25,13 +25,14 @@ export default function Index() {
         setCarregando(false);
       }
     }
-
     carregarUsuarios();
   }, []);
 
-  const usuariosFiltrados = usuarios.filter((usuario) =>
-    `${usuario.nome} ${usuario.email}`.toLowerCase().includes(filtro.toLowerCase())
-  );
+  const usuariosFiltrados = usuarios
+    .filter((usuario) =>
+      `${usuario.nome} ${usuario.email}`.toLowerCase().includes(filtro.toLowerCase())
+    )
+    .sort((a, b) => a.nome.localeCompare(b.nome, "pt-BR", { sensitivity: "base" }));
   const totalPaginas = Math.max(1, Math.ceil(usuariosFiltrados.length / itensPorPagina));
   const usuariosPagina = usuariosFiltrados.slice((pagina - 1) * itensPorPagina, pagina * itensPorPagina);
 
@@ -52,25 +53,23 @@ export default function Index() {
             <h2>Filtros:</h2>
             <div className="filtros-form">
               <input aria-label="Filtrar por nome ou e-mail" value={filtro} onChange={(event) => { setFiltro(event.target.value); setPagina(1); }} placeholder="Nome ou e-mail" />
-              <button className="atalho-btn" onClick={() => setFiltro("")}>Limpar</button>
+              <button className="atalho-btn" onClick={() => { setFiltro(""); setPagina(1); }}>Limpar</button>
             </div>
           </div>
           {carregando && <p>Carregando usuários...</p>}
           {erro && <p className="form-error">⚠️ {erro}</p>}
           <div className="card" style={{ flexDirection: "column", alignItems: "stretch" }}>
             <table className="tabela">
-                <thead><tr><th>ID</th><th>Nome</th><th>E-mail</th><th>Perfil</th><th>Ações</th></tr></thead>
+                <thead><tr><th>Nome</th><th>E-mail</th><th>Perfil</th><th>Ações</th></tr></thead>
                 <tbody>
                   {usuariosPagina.map((usuario) => (
                     <tr key={usuario.id}>
-                      <td>{usuario.id}</td>
                       <td>{usuario.nome}</td>
                       <td>{usuario.email}</td>
                       <td>{usuario.admin ? "Administrador" : "Usuário"}</td>
                       <td className="acoes">
-                        <NavLink to={`/usuarios/show/${usuario.id}`} data-tooltip="Visualizar usuário"><FaEye /></NavLink>
                         <NavLink to={`/usuarios/edit/${usuario.id}`} data-tooltip="Editar usuário"><FaEdit /></NavLink>
-                        <NavLink to={`/usuarios/delete/${usuario.id}`} data-tooltip="Excluir usuário"><FaTrash /></NavLink>
+                        <NavLink className="excluir" to={`/usuarios/status/${usuario.id}`} data-tooltip="Gerenciar status e perfil do usuário"><FaBan /></NavLink>
                       </td>
                     </tr>
                   ))}
