@@ -19,7 +19,7 @@ export default function BensIndex() {
   const [bens, setBens] = useState([]);
   const [categorias, setCategorias] = useState([]);
   const [localidades, setLocalidades] = useState([]);
-  
+
   const [carregando, setCarregando] = useState(true);
   const [erro, setErro] = useState("");
   const [resultadoBuscaPatrimonio, setResultadoBuscaPatrimonio] = useState({
@@ -28,11 +28,11 @@ export default function BensIndex() {
     buscando: false,
     erro: "",
   });
-  
+
   const [filtros, setFiltros] = useState({
     patrimonio: "",
-    localidade: "", 
-    categoria: "",  
+    localidade: "",
+    categoria: "",
     status: "",
   });
   const [pagina, setPagina] = useState(1);
@@ -45,26 +45,30 @@ export default function BensIndex() {
         setCarregando(true);
         setErro("");
 
-        const [dadosBens, dadosCategorias, dadosLocalidades] = await Promise.all([
-          bemService.getAll(),
-          categoriaService.getAll(),
-          localidadeService.getAll(),
-        ]);
+        const [dadosBens, dadosCategorias, dadosLocalidades] =
+          await Promise.all([
+            bemService.getAll(),
+            categoriaService.getAll(),
+            localidadeService.getAll(),
+          ]);
 
-        setBens(Array.isArray(dadosBens) ? [...dadosBens].sort((a, b) => Number(b.id) - Number(a.id)) : []);
-        
+        setBens(
+          Array.isArray(dadosBens)
+            ? [...dadosBens].sort((a, b) => Number(b.id) - Number(a.id))
+            : [],
+        );
+
         setCategorias(
-          Array.isArray(dadosCategorias) 
-            ? [...dadosCategorias].sort((a, b) => a.nome.localeCompare(b.nome)) 
-            : []
-        );
-        
-        setLocalidades(
-          Array.isArray(dadosLocalidades) 
-            ? [...dadosLocalidades].sort((a, b) => a.nome.localeCompare(b.nome)) 
-            : []
+          Array.isArray(dadosCategorias)
+            ? [...dadosCategorias].sort((a, b) => a.nome.localeCompare(b.nome))
+            : [],
         );
 
+        setLocalidades(
+          Array.isArray(dadosLocalidades)
+            ? [...dadosLocalidades].sort((a, b) => a.nome.localeCompare(b.nome))
+            : [],
+        );
       } catch (error) {
         console.error("Erro ao carregar dados do gerenciador:", error);
         setErro("Não foi possível carregar a lista de bens ou filtros.");
@@ -121,26 +125,35 @@ export default function BensIndex() {
     };
   }, [filtros.patrimonio]);
 
-  // Filtros 
-  const bemEncontrado = resultadoBuscaPatrimonio.patrimonio === filtros.patrimonio &&
+  // Filtros
+  const bemEncontrado =
+    resultadoBuscaPatrimonio.patrimonio === filtros.patrimonio &&
     String(resultadoBuscaPatrimonio.bem?.id) === filtros.patrimonio
-    ? resultadoBuscaPatrimonio.bem
-    : null;
-  const buscandoPatrimonio = resultadoBuscaPatrimonio.patrimonio === filtros.patrimonio &&
+      ? resultadoBuscaPatrimonio.bem
+      : null;
+  const buscandoPatrimonio =
+    resultadoBuscaPatrimonio.patrimonio === filtros.patrimonio &&
     resultadoBuscaPatrimonio.buscando;
-  const erroBuscaPatrimonio = resultadoBuscaPatrimonio.patrimonio === filtros.patrimonio
-    ? resultadoBuscaPatrimonio.erro
-    : "";
-  const bensFiltrados = (filtros.patrimonio ? (bemEncontrado ? [bemEncontrado] : []) : bens).filter((bem) => {
+  const erroBuscaPatrimonio =
+    resultadoBuscaPatrimonio.patrimonio === filtros.patrimonio
+      ? resultadoBuscaPatrimonio.erro
+      : "";
+  const bensFiltrados = (
+    filtros.patrimonio ? (bemEncontrado ? [bemEncontrado] : []) : bens
+  ).filter((bem) => {
     return (
-      (filtros.localidade === "" || bem.nomeLocalidade === filtros.localidade) && 
-      (filtros.categoria === "" || bem.nomeCategoria === filtros.categoria) &&   
+      (filtros.localidade === "" ||
+        bem.nomeLocalidade === filtros.localidade) &&
+      (filtros.categoria === "" || bem.nomeCategoria === filtros.categoria) &&
       (filtros.status === "" || bem.status?.toUpperCase() === filtros.status)
     );
   });
 
   // Paginação local
-  const totalPaginas = Math.max(1, Math.ceil(bensFiltrados.length / itensPorPagina));
+  const totalPaginas = Math.max(
+    1,
+    Math.ceil(bensFiltrados.length / itensPorPagina),
+  );
   const inicio = (pagina - 1) * itensPorPagina;
   const fim = inicio + itensPorPagina;
   const bensPagina = bensFiltrados.slice(inicio, fim);
@@ -177,7 +190,10 @@ export default function BensIndex() {
                 placeholder="Patrimônio"
                 value={filtros.patrimonio}
                 onChange={(event) => {
-                  setFiltros((prev) => ({ ...prev, patrimonio: event.target.value.replace(/\D/g, "") }));
+                  setFiltros((prev) => ({
+                    ...prev,
+                    patrimonio: event.target.value.replace(/\D/g, ""),
+                  }));
                   setPagina(1);
                 }}
               />
@@ -185,7 +201,10 @@ export default function BensIndex() {
               <select
                 value={filtros.localidade}
                 onChange={(event) => {
-                  setFiltros((prev) => ({ ...prev, localidade: event.target.value }));
+                  setFiltros((prev) => ({
+                    ...prev,
+                    localidade: event.target.value,
+                  }));
                   setPagina(1);
                 }}
               >
@@ -200,7 +219,10 @@ export default function BensIndex() {
               <select
                 value={filtros.categoria}
                 onChange={(event) => {
-                  setFiltros((prev) => ({ ...prev, categoria: event.target.value }));
+                  setFiltros((prev) => ({
+                    ...prev,
+                    categoria: event.target.value,
+                  }));
                   setPagina(1);
                 }}
               >
@@ -215,7 +237,10 @@ export default function BensIndex() {
               <select
                 value={filtros.status}
                 onChange={(event) => {
-                  setFiltros((prev) => ({ ...prev, status: event.target.value }));
+                  setFiltros((prev) => ({
+                    ...prev,
+                    status: event.target.value,
+                  }));
                   setPagina(1);
                 }}
               >
@@ -225,15 +250,23 @@ export default function BensIndex() {
                 <option value="EM_MANUTENCAO">Em manutenção</option>
               </select>
 
-              <button onClick={limparFiltros} className="atalho-btn">Limpar</button>
+              <button onClick={limparFiltros} className="atalho-btn">
+                Limpar
+              </button>
             </div>
           </div>
 
-          {carregando && <p>Carregando bens do servidor...</p>}
+          {carregando && (
+            <p style={{ textAlign: "center" }}>
+              Carregando bens do servidor...
+            </p>
+          )}
           {erro && <p className="form-error">⚠️ {erro}</p>}
           {buscandoPatrimonio && <p>Buscando patrimônio...</p>}
-          {erroBuscaPatrimonio && <p className="form-error">⚠️ {erroBuscaPatrimonio}</p>}
-          
+          {erroBuscaPatrimonio && (
+            <p className="form-error">⚠️ {erroBuscaPatrimonio}</p>
+          )}
+
           {/* Tabela */}
           <div className="card">
             <table className="tabela">
@@ -248,7 +281,9 @@ export default function BensIndex() {
                 </tr>
               </thead>
               <tbody>
-                {bensPagina.length === 0 && !carregando && !buscandoPatrimonio ? (
+                {bensPagina.length === 0 &&
+                !carregando &&
+                !buscandoPatrimonio ? (
                   <tr>
                     <td colSpan="6">Nenhum bem encontrado.</td>
                   </tr>
@@ -260,16 +295,35 @@ export default function BensIndex() {
                       <td>{bem.nomeCategoria || "Não informada"}</td>
                       <td>{bem.nomeLocalidade || "Não informado"}</td>
                       <td>
-                        <span className={`status ${statusInfo[bem.status?.toUpperCase()]?.classe || ""}`}>
-                          {statusInfo[bem.status?.toUpperCase()]?.label || bem.status || "N/A"}
+                        <span
+                          className={`status ${statusInfo[bem.status?.toUpperCase()]?.classe || ""}`}
+                        >
+                          {statusInfo[bem.status?.toUpperCase()]?.label ||
+                            bem.status ||
+                            "N/A"}
                         </span>
                       </td>
                       <td className="acoes">
-                        <NavLink to={`/bens/show/${bem.id}`} data-tooltip="Visualizar Bem"><FaEye /></NavLink>
+                        <NavLink
+                          to={`/bens/show/${bem.id}`}
+                          data-tooltip="Visualizar Bem"
+                        >
+                          <FaEye />
+                        </NavLink>
                         {usuario?.papel === "ADMIN" && (
                           <>
-                            <NavLink to={`/bens/edit/${bem.id}`} data-tooltip="Editar Bem"><FaEdit /></NavLink>
-                            <NavLink to={`/bens/status/${bem.id}`} data-tooltip="Desativar/Reativar Bem"><FaBan /></NavLink>
+                            <NavLink
+                              to={`/bens/edit/${bem.id}`}
+                              data-tooltip="Editar Bem"
+                            >
+                              <FaEdit />
+                            </NavLink>
+                            <NavLink
+                              to={`/bens/status/${bem.id}`}
+                              data-tooltip="Desativar/Reativar Bem"
+                            >
+                              <FaBan />
+                            </NavLink>
                           </>
                         )}
                       </td>
@@ -282,9 +336,21 @@ export default function BensIndex() {
 
           {/* Paginação */}
           <div className="paginacao">
-            <button disabled={pagina === 1} onClick={() => setPagina(pagina - 1)}>Anterior</button>
-            <span>Página {pagina} de {totalPaginas}</span>
-            <button disabled={pagina === totalPaginas}onClick={() => setPagina(pagina + 1)}>Próxima</button>
+            <button
+              disabled={pagina === 1}
+              onClick={() => setPagina(pagina - 1)}
+            >
+              Anterior
+            </button>
+            <span>
+              Página {pagina} de {totalPaginas}
+            </span>
+            <button
+              disabled={pagina === totalPaginas}
+              onClick={() => setPagina(pagina + 1)}
+            >
+              Próxima
+            </button>
           </div>
         </div>
       </div>
