@@ -6,8 +6,8 @@ export const authService = {
     return response.data; // Retorna o LoginResponse do Spring Boot { token, nome, role }
   },
 
-  // loginGoogle: async (credencial) => {
-  //   const response = await api.post("/auth/login/google", { credencial });
-  //   return response.data;
-  // },
+  loginGoogle: async (credential) => {
+    const response = await api.post("/auth/login/google", { credential });
+    return response.data;
+  },
 };

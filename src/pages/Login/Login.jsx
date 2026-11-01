@@ -3,9 +3,10 @@ import { useAuth } from "../../contexts/Auth";
 import { useNavigate } from "react-router-dom";
 import "./Login.css";
 import logoGestBens from "../../assets/img/logo-gestbens.png";
+import { GoogleLogin } from "@react-oauth/google";
 
 export default function Login() {
-  const { login } = useAuth();
+  const { login, loginGoogle } = useAuth();
   const navigate = useNavigate();
 
   const [email, setEmail] = useState("");
@@ -17,7 +18,6 @@ export default function Login() {
     e.preventDefault();
     setErro("");
     setLoading(true);
-
     try {
       await login(email, senha);
       navigate("/");
@@ -25,6 +25,15 @@ export default function Login() {
       setErro(err.message);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleGoogleLogin = async (resposta) => {
+    try {
+      await loginGoogle(resposta.credential);
+      navigate("/");
+    } catch (err) {
+      setErro(err.message);
     }
   };
 
@@ -76,11 +85,20 @@ export default function Login() {
                 {loading ? "Entrando..." : "Entrar"}
               </button>
             </div>
-          </form>
 
-          <div className="login-extra">
-            <p>Não tem conta? <a href="/cadastro">Cadastre-se</a></p>
-          </div>
+            <div className="login-extra">
+              <p>Não tem conta? <a href="/cadastro">Cadastre-se</a></p>
+            </div>
+
+            <h2 className="login-subtitle">Ou entre com:</h2>
+
+            <div>
+              <GoogleLogin 
+                onSuccess={handleGoogleLogin}
+                onError={() => setErro("Falha no login com Google.")}
+              />
+            </div>
+          </form>          
         </div>
       </div>
     </div>

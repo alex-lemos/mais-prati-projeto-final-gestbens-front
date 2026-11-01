@@ -1,9 +1,11 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import "./Cadastro.css";
 import logo from "../../assets/img/logo-gestbens.png";
 import { usuarioService } from "../../services/usuarioService";
 
 export default function Cadastro() {
+  const navigate = useNavigate();
   const [form, setForm] = useState({
     nome: "",
     email: "",
@@ -39,14 +41,7 @@ export default function Cadastro() {
       };
 
       await usuarioService.create(novoUsuario);
-      setMensagem("✅ Usuário cadastrado com sucesso!");
-      setForm({
-        nome: "",
-        email: "",
-        confirmarEmail: "",
-        senha: "",
-        confirmarSenha: ""
-      });
+      navigate("/login");
     } catch (err) {
       setMensagem("❌ Erro ao cadastrar usuário: " + (err.message || "Tente novamente"));
     }

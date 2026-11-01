@@ -82,6 +82,14 @@
   font-size: clamp(1.25rem, 2vw, 2rem);
 }
 
+.login-subtitle {
+  text-align: center;
+  margin-top: var(--espaco-medio);
+  font-family: var(--fonte-titulo);
+  font-weight: var(--peso-bold);
+  font-size: clamp(1rem, 1.5vw, 1.4rem);
+}
+
 /* Mensagem de erro */
 .form-error {
   text-align: center;

@@ -20,17 +20,33 @@ export function AuthProvider({ children }) {
       const data = await authService.login(email, senha);
       // O backend retorna: { token, nome, papel }
       const dadosUsuario = { nome: data.nome, papel: data.papel };
-
       // Salva no localStorage
       localStorage.setItem("token", data.token);
       localStorage.setItem("usuario", JSON.stringify(dadosUsuario));
-
       // Atualiza o estado global
       setToken(data.token);
       setUsuario(dadosUsuario);
     } catch (err) {
       throw new Error(
         err.response?.data?.message || "E-mail ou senha incorretos.",
+      );
+    }
+  }
+
+  async function loginGoogle(credencial) {
+    try {
+      const data = await authService.loginGoogle(credencial);
+      // O backend retorna: { token, nome, papel }
+      const dadosUsuario = { nome: data.nome, papel: data.papel };
+      // Salva no localStorage
+      localStorage.setItem("token", data.token);
+      localStorage.setItem("usuario", JSON.stringify(dadosUsuario));
+      // Atualiza o estado global
+      setToken(data.token);
+      setUsuario(dadosUsuario);
+    } catch (err) {
+      throw new Error(
+        err.response?.data?.message || "Falha no login com Google.",
       );
     }
   }
@@ -43,7 +59,7 @@ export function AuthProvider({ children }) {
   }
 
   return (
-    <AuthContext.Provider value={{ usuario, token, login, logout }}>
+    <AuthContext.Provider value={{ usuario, token, login, loginGoogle, logout }}>
       {children}
     </AuthContext.Provider>
   );

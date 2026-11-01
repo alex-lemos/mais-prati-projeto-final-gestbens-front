@@ -9,13 +9,16 @@ import { AuthProvider } from "./contexts/Auth"; // Importa o AuthProvider para f
 import App from "./App.jsx"; // Importa o componente principal da aplicação
 // CSS
 import "./main.css";
+import { GoogleOAuthProvider } from "@react-oauth/google";
 
 createRoot(document.getElementById("root")).render(
   <StrictMode>
-    <BrowserRouter>
-      <AuthProvider>
-        <App />
-      </AuthProvider>
-    </BrowserRouter>
+    <GoogleOAuthProvider clientId={import.meta.env.VITE_GOOGLE_CLIENT_ID}>
+      <BrowserRouter>
+        <AuthProvider>
+          <App />
+        </AuthProvider>
+      </BrowserRouter>
+    </GoogleOAuthProvider>
   </StrictMode>,
 );
