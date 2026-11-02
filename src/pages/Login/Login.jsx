@@ -92,7 +92,7 @@ export default function Login() {
 
             <h2 className="login-subtitle">Ou entre com:</h2>
 
-            <div>
+            <div className="login-google">
               <GoogleLogin 
                 onSuccess={handleGoogleLogin}
                 onError={() => setErro("Falha no login com Google.")}

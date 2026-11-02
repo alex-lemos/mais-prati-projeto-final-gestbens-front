@@ -90,6 +90,12 @@
   font-size: clamp(1rem, 1.5vw, 1.4rem);
 }
 
+.login-google {
+  display: flex;
+  justify-content: center;
+  margin-top: var(--espaco-pequeno);
+}
+
 /* Mensagem de erro */
 .form-error {
   text-align: center;
