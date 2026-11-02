@@ -90,7 +90,7 @@ export default function Login() {
               <p>Não tem conta? <a href="/cadastro">Cadastre-se</a></p>
             </div>
 
-            <h2 className="login-subtitle">Ou entre com:</h2>
+            <h2 className="login-subtitle">Ou entre com</h2>
 
             <div className="login-google">
               <GoogleLogin 
