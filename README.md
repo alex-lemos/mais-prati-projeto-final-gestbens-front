@@ -1,8 +1,8 @@
-### GestBens - Simplificando 
+### GestBens - Simplificando a gestão patrimonial
 
 ## RESUMO
 
-GestBens - Simplificando a Gestão de Bens é um sistema desenvolvido para auxiliar organizações de pequeno e médio porte no controle e gerenciamento de seus bens patrimoniais. A plataforma centraliza informações sobre ativos da instituição, permitindo o cadastro, acompanhamento e histórico completo de cada bem ao longo de seu ciclo de vida.
+GestBens - é um sistema desenvolvido para auxiliar organizações de pequeno e médio porte no controle e gerenciamento de seus bens patrimoniais. A plataforma centraliza informações sobre ativos da instituição, permitindo o cadastro, acompanhamento e histórico completo de cada bem ao longo de seu ciclo de vida.
 O sistema possibilita controlar a localização dos bens, registrar movimentações entre setores, acompanhar manutenções realizadas e gerenciar usuários com diferentes níveis de acesso. Dessa forma, contribui para uma administração patrimonial mais organizada, segura e transparente.
 
 ## 2 OBJETIVO
