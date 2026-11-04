@@ -3,6 +3,12 @@ import { useEffect, useState } from "react";
 import { FaArrowLeft } from "react-icons/fa";
 import { bemService } from "../../services/bemService";
 
+const statusInfo = {
+  ATIVO: { label: "Ativo", classe: "ativo" },
+  INATIVO: { label: "Inativo", classe: "inativo" },
+  EM_MANUTENCAO: { label: "Em manutenção", classe: "em-manutencao" },
+};
+
 export default function BensStatus() {
   const { id } = useParams();
   const navigate = useNavigate();
@@ -94,8 +100,8 @@ export default function BensStatus() {
               <div className="campo">
                 <strong>Status:</strong>
                 <p>
-                  <span className={`status ${bem.status ? bem.status.toLowerCase() : ""}`}>
-                    {bem.status || "N/A"}
+                  <span className={`status ${statusInfo[bem.status?.toUpperCase()]?.classe || ""}`}>
+                    {statusInfo[bem.status?.toUpperCase()]?.label || bem.status || "N/A"}
                   </span>
                 </p>
               </div>
@@ -106,10 +112,10 @@ export default function BensStatus() {
           <div className="card alerta-exclusao">
             <h2>Tem certeza que deseja Desativar/Reativar este bem?</h2>
             <button onClick={handleStatusChange} className="btn-excluir">
-              {String(bem.status).toUpperCase() === "ATIVO" ? (
-                <>Desativar Bem</>
-              ) : (
+              {String(bem.status).toUpperCase() === "INATIVO" ? (
                 <>Reativar Bem</>
+              ) : (
+                <>Desativar Bem</>
               )}
             </button>
           </div>

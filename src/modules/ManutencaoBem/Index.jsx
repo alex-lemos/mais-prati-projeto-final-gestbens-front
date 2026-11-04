@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import { manutencaoService } from "../../services/manutencaoService";
-import { FaWrench, FaEye, FaEdit } from "react-icons/fa";
+import { FaWrench } from "react-icons/fa";
 
 function formatarData(data) {
   if (!data) return "—";
@@ -13,6 +13,7 @@ function formatarData(data) {
 }
 
 export default function Index() {
+  const navigate = useNavigate();
   const [manutencoes, setManutencoes] = useState([]);
   const [carregando, setCarregando] = useState(true);
   const [erro, setErro] = useState("");
@@ -126,25 +127,32 @@ export default function Index() {
                     <th>Bem</th>
                     <th>Responsável</th>
                     <th>Custo</th>
-                    <th>Ações</th>
                   </tr>
                 </thead>
                 <tbody>
                   {manutencoesPagina.map((manutencao) => (
-                    <tr key={manutencao.id}>
+                    <tr
+                      key={manutencao.id}
+                      className="manutencao-link"
+                      role="link"
+                      tabIndex={0}
+                      aria-label={`Ver detalhes da manutenção do bem ${manutencao.bem || manutencao.id}`}
+                      onClick={() => navigate(`/manutencoes/show/${manutencao.id}`)}
+                      onKeyDown={(event) => {
+                        if (event.key === "Enter") {
+                          navigate(`/manutencoes/show/${manutencao.id}`);
+                        }
+                      }}
+                    >
                       <td>
                         {formatarData(manutencao.dataRetorno)}
                       </td>
                       <td>{manutencao.bem || "—"}</td>
                       <td>{manutencao.usuario || "—"}</td>
                       <td>{manutencao.custo == null ? "—" : `R$ ${Number(manutencao.custo).toFixed(2)}`}</td>
-                      <td className="acoes">
-                        <NavLink to={`/manutencoes/show/${manutencao.id}`} data-tooltip="Visualizar manutenção"><FaEye /></NavLink>
-                        <NavLink to={`/manutencoes/edit/${manutencao.id}`} data-tooltip="Editar manutenção"><FaEdit /></NavLink>
-                      </td>
                     </tr>
                   ))}
-                  {!manutencoesPagina.length && !carregando && <tr><td colSpan="5">Nenhuma manutenção encontrada.</td></tr>}
+                  {!manutencoesPagina.length && !carregando && <tr><td colSpan="4">Nenhuma manutenção encontrada.</td></tr>}
                 </tbody>
             </table>
           </div>

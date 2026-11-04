@@ -4,8 +4,7 @@
 .tabela {
   width: 100%;
   border-collapse: collapse;
-  table-layout: fixed;
-  /* garante distribuição proporcional */
+  table-layout: auto;
 }
 
 .tabela th,
@@ -26,6 +25,19 @@
   background: var(--cor-componente-secundario);
 }
 
+.tabela tbody tr.bem-link,
+.tabela tbody tr.manutencao-link,
+.tabela tbody tr.movimentacao-link {
+  cursor: pointer;
+}
+
+.tabela tbody tr.bem-link:focus-visible,
+.tabela tbody tr.manutencao-link:focus-visible,
+.tabela tbody tr.movimentacao-link:focus-visible {
+  outline: 2px solid var(--cor-secundaria);
+  outline-offset: -2px;
+}
+
 /* ===========================
    Status
    =========================== */
@@ -35,6 +47,12 @@
   font-weight: var(--peso-medio);
   text-transform: capitalize;
   white-space: nowrap;
+}
+
+.status-bem {
+  display: inline-block;
+  width: 7rem;
+  text-align: center;
 }
 
 .status.ativo {

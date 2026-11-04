@@ -41,6 +41,10 @@ p, span, small {
 /* Botões padrão */
 button,
 .atalho-btn {
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  gap: var(--espaco-pequeno);
   border: none;
   background-color: var(--cor-button);
   color: var(--cor-texto-alternativo);

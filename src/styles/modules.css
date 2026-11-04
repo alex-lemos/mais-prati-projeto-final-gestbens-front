@@ -94,6 +94,8 @@
    Ícones dentro dos cards
    =========================== */
 .icon {
+  display: inline-flex;
+  align-items: center;
   font-size: 1.8rem;
   color: var(--cor-principal);
 }
@@ -176,7 +178,7 @@
 .abas-container {
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
+  align-items: stretch;
   gap: var(--espaco-pequeno);
 }
 

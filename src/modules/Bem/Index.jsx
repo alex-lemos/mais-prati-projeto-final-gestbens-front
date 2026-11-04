@@ -1,7 +1,6 @@
 import { useState, useEffect } from "react";
-import { NavLink } from "react-router-dom";
-import { useAuth } from "../../contexts/Auth";
-import { FaBoxOpen, FaEye, FaEdit, FaBan } from "react-icons/fa";
+import { NavLink, useNavigate } from "react-router-dom";
+import { FaBoxOpen } from "react-icons/fa";
 
 import { bemService } from "../../services/bemService";
 import { categoriaService } from "../../services/categoriaService";
@@ -10,11 +9,11 @@ import { localidadeService } from "../../services/localidadeService";
 const statusInfo = {
   ATIVO: { label: "Ativo", classe: "ativo" },
   INATIVO: { label: "Inativo", classe: "inativo" },
-  EM_MANUTENCAO: { label: "Em manutenção", classe: "em-manutencao" },
+  EM_MANUTENCAO: { label: "manutenção", classe: "em-manutencao" },
 };
 
 export default function BensIndex() {
-  const { usuario } = useAuth(); 
+  const navigate = useNavigate();
 
   const [bens, setBens] = useState([]);
   const [categorias, setCategorias] = useState([]);
@@ -239,39 +238,39 @@ export default function BensIndex() {
             <table className="tabela">
               <thead>
                 <tr>
-                  <th>Patrimônio</th>
                   <th>Bem</th>
-                  <th>Categoria</th>
                   <th>Local Atual</th>
+                  <th>Categoria</th>
                   <th>Status</th>
-                  <th>Ações</th>
                 </tr>
               </thead>
               <tbody>
                 {bensPagina.length === 0 && !carregando && !buscandoPatrimonio ? (
                   <tr>
-                    <td colSpan="6">Nenhum bem encontrado.</td>
+                    <td colSpan={3}>Nenhum bem encontrado.</td>
                   </tr>
                 ) : (
                   bensPagina.map((bem) => (
-                    <tr key={bem.id}>
-                      <td>{bem.id}</td>
+                    <tr
+                      key={bem.id}
+                      className="bem-link"
+                      role="link"
+                      tabIndex={0}
+                      aria-label={`Ver detalhes de ${bem.nome}`}
+                      onClick={() => navigate(`/bens/show/${bem.id}`)}
+                      onKeyDown={(event) => {
+                        if (event.key === "Enter") {
+                          navigate(`/bens/show/${bem.id}`);
+                        }
+                      }}
+                    >
                       <td>{bem.nome}</td>
-                      <td>{bem.nomeCategoria || "Não informada"}</td>
                       <td>{bem.nomeLocalidade || "Não informado"}</td>
+                      <td>{bem.nomeCategoria || "Não informado"}</td>
                       <td>
-                        <span className={`status ${statusInfo[bem.status?.toUpperCase()]?.classe || ""}`}>
+                        <span className={`status status-bem ${statusInfo[bem.status?.toUpperCase()]?.classe || ""}`}>
                           {statusInfo[bem.status?.toUpperCase()]?.label || bem.status || "N/A"}
                         </span>
-                      </td>
-                      <td className="acoes">
-                        <NavLink to={`/bens/show/${bem.id}`} data-tooltip="Visualizar Bem"><FaEye /></NavLink>
-                        {usuario?.papel === "ADMIN" && (
-                          <>
-                            <NavLink to={`/bens/edit/${bem.id}`} data-tooltip="Editar Bem"><FaEdit /></NavLink>
-                            <NavLink to={`/bens/status/${bem.id}`} data-tooltip="Desativar/Reativar Bem"><FaBan /></NavLink>
-                          </>
-                        )}
                       </td>
                     </tr>
                   ))

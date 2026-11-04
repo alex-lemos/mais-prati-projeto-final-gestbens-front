@@ -1,9 +1,10 @@
 import { useEffect, useState } from "react";
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import { movimentacaoService } from "../../services/movimentacaoService";
-import { FaExchangeAlt, FaEye } from "react-icons/fa";
+import { FaExchangeAlt } from "react-icons/fa";
 
 export default function Index() {
+  const navigate = useNavigate();
   const [movimentacoes, setMovimentacoes] = useState([]);
   const [carregando, setCarregando] = useState(true);
   const [erro, setErro] = useState("");
@@ -102,23 +103,31 @@ export default function Index() {
                     <th>Origem</th>
                     <th>Destino</th>
                     <th>Responsável</th>
-                    <th>Ações</th>
                   </tr>
                 </thead>
                 <tbody>
                   {movimentacoesPagina.map((movimentacao) => (
-                    <tr key={movimentacao.id}>
+                    <tr
+                      key={movimentacao.id}
+                      className="movimentacao-link"
+                      role="link"
+                      tabIndex={0}
+                      aria-label={`Ver detalhes da movimentação ${movimentacao.id}`}
+                      onClick={() => navigate(`/movimentacoes/show/${movimentacao.id}`)}
+                      onKeyDown={(event) => {
+                        if (event.key === "Enter") {
+                          navigate(`/movimentacoes/show/${movimentacao.id}`);
+                        }
+                      }}
+                    >
                       <td>{(movimentacao.data_movimentacao ?? movimentacao.dataMovimentacao)?.slice(0, 10) || "—"}</td>
                       <td>{movimentacao.bem || "—"}</td>
                       <td>{movimentacao.localidadeOrigem || "—"}</td>
                       <td>{movimentacao.localidadeDestino || "—"}</td>
                       <td>{movimentacao.usuario || "—"}</td>
-                      <td className="acoes">
-                        <NavLink to={`/movimentacoes/show/${movimentacao.id}`} data-tooltip="Visualizar movimentação"><FaEye /></NavLink>
-                      </td>
                     </tr>
                   ))}
-                  {!movimentacoesPagina.length && !carregando && <tr><td colSpan="6">Nenhuma movimentação encontrada.</td></tr>}
+                  {!movimentacoesPagina.length && !carregando && <tr><td colSpan="5">Nenhuma movimentação encontrada.</td></tr>}
                 </tbody>
             </table>
           </div>
