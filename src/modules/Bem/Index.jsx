@@ -21,15 +21,15 @@ export default function BensIndex() {
   
   const [carregando, setCarregando] = useState(true);
   const [erro, setErro] = useState("");
-  const [resultadoBuscaPatrimonio, setResultadoBuscaPatrimonio] = useState({
-    patrimonio: "",
+  const [resultadoBusca, setResultadoBusca] = useState({
+    termo: "",
     bem: null,
     buscando: false,
     erro: "",
   });
   
   const [filtros, setFiltros] = useState({
-    patrimonio: "",
+    busca: "",
     localidade: "", 
     categoria: "",  
     status: "",
@@ -76,23 +76,24 @@ export default function BensIndex() {
   }, []);
 
   useEffect(() => {
-    if (!filtros.patrimonio) return undefined;
+    const termo = filtros.busca.trim();
+    if (!/^\d+$/.test(termo)) return undefined;
 
     let ativo = true;
 
     const timeout = setTimeout(async () => {
-      setResultadoBuscaPatrimonio({
-        patrimonio: filtros.patrimonio,
+      setResultadoBusca({
+        termo,
         bem: null,
         buscando: true,
         erro: "",
       });
 
       try {
-        const resultado = await bemService.getById(filtros.patrimonio);
+        const resultado = await bemService.getById(termo);
         if (ativo) {
-          setResultadoBuscaPatrimonio({
-            patrimonio: filtros.patrimonio,
+          setResultadoBusca({
+            termo,
             bem: resultado,
             buscando: false,
             erro: "",
@@ -105,8 +106,8 @@ export default function BensIndex() {
         if (!naoEncontrado) {
           console.error("Erro ao buscar patrimônio:", error);
         }
-        setResultadoBuscaPatrimonio({
-          patrimonio: filtros.patrimonio,
+        setResultadoBusca({
+          termo,
           bem: null,
           buscando: false,
           erro: naoEncontrado ? "" : "Não foi possível buscar o patrimônio.",
@@ -118,20 +119,27 @@ export default function BensIndex() {
       ativo = false;
       clearTimeout(timeout);
     };
-  }, [filtros.patrimonio]);
+  }, [filtros.busca]);
 
   // Filtros 
-  const bemEncontrado = resultadoBuscaPatrimonio.patrimonio === filtros.patrimonio &&
-    String(resultadoBuscaPatrimonio.bem?.id) === filtros.patrimonio
-    ? resultadoBuscaPatrimonio.bem
+  const termoBusca = filtros.busca.trim();
+  const bemEncontrado = resultadoBusca.termo === termoBusca &&
+    String(resultadoBusca.bem?.id) === termoBusca
+    ? resultadoBusca.bem
     : null;
-  const buscandoPatrimonio = resultadoBuscaPatrimonio.patrimonio === filtros.patrimonio &&
-    resultadoBuscaPatrimonio.buscando;
-  const erroBuscaPatrimonio = resultadoBuscaPatrimonio.patrimonio === filtros.patrimonio
-    ? resultadoBuscaPatrimonio.erro
+  const buscandoPatrimonio = /^\d+$/.test(termoBusca) &&
+    resultadoBusca.termo === termoBusca &&
+    resultadoBusca.buscando;
+  const erroBuscaPatrimonio = resultadoBusca.termo === termoBusca
+    ? resultadoBusca.erro
     : "";
-  const bensFiltrados = (filtros.patrimonio ? (bemEncontrado ? [bemEncontrado] : []) : bens).filter((bem) => {
+  const bensParaFiltrar = bemEncontrado && !bens.some((bem) => String(bem.id) === termoBusca)
+    ? [...bens, bemEncontrado]
+    : bens;
+  const bensFiltrados = bensParaFiltrar.filter((bem) => {
+    const nomeCorresponde = bem.nome?.toLocaleLowerCase().includes(termoBusca.toLocaleLowerCase());
     return (
+      (termoBusca === "" || String(bem.id) === termoBusca || nomeCorresponde) &&
       (filtros.localidade === "" || bem.nomeLocalidade === filtros.localidade) && 
       (filtros.categoria === "" || bem.nomeCategoria === filtros.categoria) &&   
       (filtros.status === "" || bem.status?.toUpperCase() === filtros.status)
@@ -145,7 +153,7 @@ export default function BensIndex() {
   const bensPagina = bensFiltrados.slice(inicio, fim);
 
   const limparFiltros = () => {
-    setFiltros({ patrimonio: "", localidade: "", categoria: "", status: "" });
+    setFiltros({ busca: "", localidade: "", categoria: "", status: "" });
     setPagina(1);
   };
 
@@ -171,12 +179,10 @@ export default function BensIndex() {
             <div className="filtros-form">
               <input
                 type="text"
-                inputMode="numeric"
-                pattern="[0-9]*"
-                placeholder="Patrimônio"
-                value={filtros.patrimonio}
+                placeholder="Nome ou patrimônio"
+                value={filtros.busca}
                 onChange={(event) => {
-                  setFiltros((prev) => ({ ...prev, patrimonio: event.target.value.replace(/\D/g, "") }));
+                  setFiltros((prev) => ({ ...prev, busca: event.target.value }));
                   setPagina(1);
                 }}
               />
@@ -247,7 +253,7 @@ export default function BensIndex() {
               <tbody>
                 {bensPagina.length === 0 && !carregando && !buscandoPatrimonio ? (
                   <tr>
-                    <td colSpan={3}>Nenhum bem encontrado.</td>
+                    <td colSpan={4}>Nenhum bem encontrado.</td>
                   </tr>
                 ) : (
                   bensPagina.map((bem) => (
