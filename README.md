@@ -21,7 +21,7 @@ https://drive.google.com/file/d/1RCwASy_KOI51KbgjZ7xDxGGJQrllzwdk/view?usp=drive
 ```
 gestbens-front/
 │
-├── informacoes-projeto/        # documentação extra do projeto (diagramas, notas)
+├── documentacao-projeto/        # documentação extra do projeto (diagramas, notas)
 │
 ├── node_modules/               # dependências instaladas pelo npm
 │
