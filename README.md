@@ -12,6 +12,9 @@ O principal objetivo do GestBens é simplificar a gestão patrimonial das organi
 ## Repositório Back-end
 https://github.com/Marcelo-Silva-Codes/api-rest-gestbens 
 
+## Vídeo de demonstração do site
+https://drive.google.com/file/d/1RCwASy_KOI51KbgjZ7xDxGGJQrllzwdk/view?usp=drive_link
+
 ---
 
 # Estrutura de pastas e arquivos Front-End GestBens
