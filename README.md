@@ -1,4 +1,4 @@
-### GestBens - Simplificando a gestão patrimonial
+# GestBens - Simplificando a gestão patrimonial
 
 ## RESUMO
 
@@ -9,9 +9,12 @@ O sistema possibilita controlar a localização dos bens, registrar movimentaç�
 	
 O principal objetivo do GestBens é simplificar a gestão patrimonial das organizações, fornecendo uma ferramenta prática para registrar, localizar, monitorar e manter bens de forma eficiente. Com isso, busca-se reduzir perdas de informações, melhorar a rastreabilidade dos ativos e apoiar a tomada de decisões relacionadas ao patrimônio da instituição.
 
---------------------------------------------------------------
+## Repositório Back-end
+https://github.com/Marcelo-Silva-Codes/api-rest-gestbens 
 
-### Estrutura de pastas e arquivos Front-End GestBens
+---
+
+# Estrutura de pastas e arquivos Front-End GestBens
 ```
 gestbens-front/
 │
@@ -133,4 +136,4 @@ gestbens-front/
 └── vite.config.js              # configuração do Vite
 ```
 
---------------------------------------------------------------
+---
